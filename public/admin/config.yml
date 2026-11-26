@@ -15,7 +15,7 @@ media_libraries:
       transformations:
         raster_image:
           format: webp
-          quality: 75
+          quality: 80
 
 collections:
   - name: posts
