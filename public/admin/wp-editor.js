@@ -4,6 +4,8 @@
 		return;
 	}
 
+	const SITE_BASE = "https://raitoklaus.github.io/axia-zone-id";
+
 	const escapeHtml = (value) =>
 		String(value ?? "")
 			.replace(/&/g, "&amp;")
@@ -13,6 +15,9 @@
 			.replace(/'/g, "&#39;");
 
 	cms.registerPreviewStyle("./wp-preview.css");
+	cms.registerPreviewStyle(
+		"https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css",
+	);
 
 	cms.registerEditorComponent({
 		id: "wiki-link-card",
@@ -80,7 +85,8 @@
 				required: true,
 			},
 		],
-		pattern: /^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\r?\n((?:>.*(?:\r?\n|$))+)/,
+		pattern:
+			/^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\r?\n((?:>.*(?:\r?\n|$))+)/,
 		fromBlock: (match) => {
 			const lines = (match[2] || "")
 				.split(/\r?\n/)
@@ -276,7 +282,360 @@
 			`<div class="wp-preview-block"><div class="wp-preview-badge">Mermaid Diagram</div><pre>${escapeHtml(data.code || "")}</pre></div>`,
 	});
 
-	/* ================= Firefly Live Preview Templates ================= */
+	/* ================= Firefly Markdown/MDX/KaTeX/Mermaid Engine ================= */
+	const formatSlugLabel = (slug) => {
+		const clean = String(slug || "")
+			.replace(/^.*\//, "")
+			.replace(/\.(md|mdx)$/i, "")
+			.trim();
+		if (!clean) return "Untitled";
+		return clean
+			.split("-")
+			.map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ""))
+			.join(" ");
+	};
+
+	const parseAttr = (attrs, name) => {
+		const m = String(attrs || "").match(
+			new RegExp(`${name}=["']([^"']*)["']`),
+		);
+		return m ? m[1] : "";
+	};
+
+	const dedentBlock = (text) => {
+		const lines = String(text || "").replace(/\r\n/g, "\n").split("\n");
+		while (lines.length && !lines[0].trim()) lines.shift();
+		while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+		const indents = lines
+			.filter((l) => l.trim().length > 0)
+			.map((l) => l.match(/^[ \t]*/)[0].length);
+		const minIndent = indents.length ? Math.min(...indents) : 0;
+		return lines.map((l) => l.slice(minIndent)).join("\n");
+	};
+
+	const resolveAssetUrl = (getAsset, path) => {
+		if (!path) return "";
+		try {
+			const resolved = getAsset ? getAsset(path) : null;
+			if (resolved && typeof resolved.toString === "function") {
+				return resolved.toString();
+			}
+		} catch {
+			// Fallback below
+		}
+		if (String(path).startsWith("/uploads/")) {
+			return `/axia-zone-id${path}`;
+		}
+		return String(path);
+	};
+
+	const parseMarkdownSimple = (md) => {
+		if (window.marked && typeof window.marked.parse === "function") {
+			return window.marked.parse(md, { gfm: true, breaks: false });
+		}
+		return md
+			.split(/\n{2,}/)
+			.map((p) => `<p>${escapeHtml(p).replace(/\n/g, "<br/>")}</p>`)
+			.join("\n");
+	};
+
+	const renderInlineTransforms = (text) => {
+		let out = text;
+
+		// Inline KaTeX math ($...$) skipping escaped \$ and currency like $100
+		if (window.katex && typeof window.katex.renderToString === "function") {
+			out = out.replace(
+				/(?<!\\)\$(?!\s)([^\n$]+?)(?<!\s|\d)\$/g,
+				(full, expr) => {
+					try {
+						return window.katex.renderToString(expr.trim(), {
+							displayMode: false,
+							throwOnError: false,
+						});
+					} catch {
+						return full;
+					}
+				},
+			);
+		}
+
+		// Inline MDX <Badge type="...">...</Badge>
+		out = out.replace(
+			/<Badge(?:\s+type=["']([^"']+)["'])?\s*>([\s\S]*?)<\/Badge>/gi,
+			(_m, type, label) => {
+				const kind = (type || "default").toLowerCase();
+				return `<span class="axia-mdx-badge axia-mdx-badge-${escapeHtml(kind)}">${escapeHtml(String(label || "").trim())}</span>`;
+			},
+		);
+
+		// Spoiler :spoiler[...]
+		out = out.replace(
+			/:spoiler\[([^\]]+)\]/g,
+			(_m, txt) =>
+				`<span class="axia-spoiler" tabindex="0" title="Click or hover to reveal">${escapeHtml(txt)}</span>`,
+		);
+
+		// Inline [[Wiki Links]] (excluding standalone lines already handled)
+		out = out.replace(
+			/\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]/g,
+			(_m, target, label) => {
+				const cleanTarget = String(target || "").trim();
+				const display = label
+					? String(label).trim()
+					: formatSlugLabel(cleanTarget);
+				return `<span class="axia-wiki-inline">${escapeHtml(display)}</span>`;
+			},
+		);
+
+		return out;
+	};
+
+	const renderFireflyMarkdown = (rawBody, getAsset) => {
+		const placeholders = [];
+		const pushPlaceholder = (html) => {
+			const token = `@@AXIA_BLOCK_${placeholders.length}@@`;
+			placeholders.push(html);
+			return `\n\n${token}\n\n`;
+		};
+
+		let text = String(rawBody || "").replace(/\r\n/g, "\n");
+
+		// 1. Extract fenced code blocks (including indented MDX blocks inside TabGroup)
+		text = text.replace(
+			/^[ \t]*```([a-zA-Z0-9_-]*)([^\n]*)\n([\s\S]*?)^[ \t]*```[ \t]*$/gm,
+			(_m, lang, meta, code) => {
+				const cleanLang = (lang || "").toLowerCase();
+				const cleanCode = dedentBlock(code);
+				if (cleanLang === "mermaid") {
+					return pushPlaceholder(
+						`<div class="axia-mermaid-box" data-mermaid="${encodeURIComponent(cleanCode)}"><pre>${escapeHtml(cleanCode)}</pre></div>`,
+					);
+				}
+				const title = parseAttr(meta, "title") || cleanLang.toUpperCase();
+				const header = title
+					? `<div class="axia-code-header"><span>${escapeHtml(title)}</span></div>`
+					: "";
+				return pushPlaceholder(
+					`<div class="axia-code-frame">${header}<pre><code>${escapeHtml(cleanCode)}</code></pre></div>`,
+				);
+			},
+		);
+
+		// 2. Strip top-level ESM import lines (outside fenced code blocks)
+		text = text.replace(
+			/^\s*import\s+[\s\S]*?\s+from\s+["'][^"']+["'];?\s*$/gm,
+			"",
+		);
+
+		// 3. Block KaTeX $$...$$
+		if (window.katex && typeof window.katex.renderToString === "function") {
+			text = text.replace(/\$\$\n?([\s\S]*?)\n?\$\$/g, (_m, expr) => {
+				try {
+					const rendered = window.katex.renderToString(expr.trim(), {
+						displayMode: true,
+						throwOnError: false,
+					});
+					return pushPlaceholder(
+						`<div class="axia-katex-block">${rendered}</div>`,
+					);
+				} catch {
+					return pushPlaceholder(
+						`<pre><code>${escapeHtml(expr.trim())}</code></pre>`,
+					);
+				}
+			});
+		}
+
+		// 4. MDX <TabGroup labels={[...]}>...</TabGroup>
+		text = text.replace(
+			/<TabGroup\s+labels=\{\[([^\]]+)\]\}\s*[^>]*>([\s\S]*?)<\/TabGroup>/gi,
+			(_m, labelsRaw, inner) => {
+				const labels = [];
+				const lblRegex = /["']([^"']+)["']/g;
+				let lm = lblRegex.exec(labelsRaw);
+				while (lm) {
+					labels.push(lm[1]);
+					lm = lblRegex.exec(labelsRaw);
+				}
+				const chunks = inner
+					.trim()
+					.split(/(?=@@AXIA_BLOCK_\d+@@)/)
+					.map((c) => c.trim())
+					.filter(Boolean);
+				const panelsHtml = labels
+					.map((label, idx) => {
+						const rawChunk = chunks[idx] ?? chunks[chunks.length - 1] ?? "";
+						const compiledChunk = parseMarkdownSimple(
+							renderInlineTransforms(rawChunk),
+						);
+						return `<div class="axia-tab-panel${idx === 0 ? " is-active" : ""}" data-tab-index="${idx}">${compiledChunk}</div>`;
+					})
+					.join("");
+				const btnsHtml = labels
+					.map(
+						(label, idx) =>
+							`<button type="button" class="axia-tab-btn" role="tab" aria-selected="${idx === 0 ? "true" : "false"}" data-tab-index="${idx}">${escapeHtml(label)}</button>`,
+					)
+					.join("");
+				return pushPlaceholder(
+					`<div class="axia-tabs"><div class="axia-tabs-header" role="tablist">${btnsHtml}</div>${panelsHtml}</div>`,
+				);
+			},
+		);
+
+		// 5. MDX <Steps>...</Steps>
+		text = text.replace(/<Steps[^>]*>([\s\S]*?)<\/Steps>/gi, (_m, inner) => {
+			let stepIndex = 0;
+			const items = [];
+			const itemRegex = /<StepItem([^>]*)>([\s\S]*?)<\/StepItem>/gi;
+			let sm = itemRegex.exec(inner);
+			while (sm) {
+				stepIndex += 1;
+				const title = parseAttr(sm[1], "title") || `Step ${stepIndex}`;
+				const bodyMd = dedentBlock(sm[2]);
+				const bodyHtml = parseMarkdownSimple(renderInlineTransforms(bodyMd));
+				items.push(
+					`<div class="axia-step-item"><span class="axia-step-num">${stepIndex}</span><div class="axia-step-title">${escapeHtml(title)}</div><div>${bodyHtml}</div></div>`,
+				);
+				sm = itemRegex.exec(inner);
+			}
+			return pushPlaceholder(`<div class="axia-steps">${items.join("")}</div>`);
+		});
+
+		// 6. MDX <Timeline>...</Timeline>
+		text = text.replace(
+			/<Timeline[^>]*>([\s\S]*?)<\/Timeline>/gi,
+			(_m, inner) => {
+				const items = [];
+				const itemRegex = /<TimelineItem([^>]*)>([\s\S]*?)<\/TimelineItem>/gi;
+				let tm = itemRegex.exec(inner);
+				while (tm) {
+					const date = parseAttr(tm[1], "date");
+					const title = parseAttr(tm[1], "title") || "Milestone";
+					const bodyMd = dedentBlock(tm[2]);
+					const bodyHtml = parseMarkdownSimple(renderInlineTransforms(bodyMd));
+					items.push(
+						`<div class="axia-timeline-item">${date ? `<span class="axia-timeline-date">${escapeHtml(date)}</span>` : ""}<div class="axia-timeline-title">${escapeHtml(title)}</div><div>${bodyHtml}</div></div>`,
+					);
+					tm = itemRegex.exec(inner);
+				}
+				return pushPlaceholder(
+					`<div class="axia-timeline">${items.join("")}</div>`,
+				);
+			},
+		);
+
+		// 7. Firefly [grid]...[/grid]
+		text = text.replace(/\[grid\]\n([\s\S]*?)\n\[\/grid\]/g, (_m, inner) => {
+			const imgs = [];
+			const imgRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+			let im = imgRegex.exec(inner);
+			while (im) {
+				const resolvedSrc = resolveAssetUrl(getAsset, im[2]);
+				imgs.push(
+					`<img src="${escapeHtml(resolvedSrc)}" alt="${escapeHtml(im[1] || "")}" loading="lazy" />`,
+				);
+				im = imgRegex.exec(inner);
+			}
+			return pushPlaceholder(
+				`<div class="axia-img-grid">${imgs.join("")}</div>`,
+			);
+		});
+
+		// 8. Firefly ::github{repo="owner/repo"}
+		text = text.replace(
+			/^::github\{repo=["']([^"']+)["']\}\s*$/gm,
+			(_m, repo) =>
+				pushPlaceholder(
+					`<div class="axia-gh-card"><div><div class="axia-gh-repo">${escapeHtml(repo)}</div><div class="axia-gh-sub">GitHub Repository Card</div></div><span class="axia-badge axia-badge-tag">GitHub</span></div>`,
+				),
+		);
+
+		// 9. Standalone Obsidian [[Wiki Link]] Card lines
+		text = text.replace(
+			/^\s*\[\[([^\]|]+?)(?:\|([^\]]+))?\]\]\s*$/gm,
+			(_m, target, label) => {
+				const cleanTarget = String(target || "").trim();
+				const parts = cleanTarget.split("/");
+				const col =
+					parts.length > 1 ? parts[0].toUpperCase() : "WIKI LINK";
+				const title = label
+					? String(label).trim()
+					: formatSlugLabel(cleanTarget);
+				return pushPlaceholder(
+					`<div class="axia-wiki-card"><div><div class="axia-wiki-card-title">${escapeHtml(title)}</div><div class="axia-wiki-card-meta">${escapeHtml(cleanTarget)}</div></div><span class="axia-badge axia-badge-tag">${escapeHtml(col)}</span></div>`,
+				);
+			},
+		);
+
+		// 10. GitHub Callouts (> [!TYPE]\n> ...)
+		text = text.replace(
+			/^> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n((?:>.*(?:\n|$))+)/gm,
+			(_m, type, bodyLines) => {
+				const kind = String(type || "NOTE").toLowerCase();
+				const stripped = bodyLines
+					.split("\n")
+					.filter((l) => l.startsWith(">"))
+					.map((l) => l.replace(/^>\s?/, ""))
+					.join("\n");
+				const bodyHtml = parseMarkdownSimple(renderInlineTransforms(stripped));
+				return pushPlaceholder(
+					`<div class="axia-callout axia-callout-${escapeHtml(kind)}"><div class="axia-callout-title">${escapeHtml(type)}</div><div class="axia-callout-body">${bodyHtml}</div></div>`,
+				);
+			},
+		);
+
+		// 11. Parse remaining Markdown + inline transforms
+		let html = parseMarkdownSimple(renderInlineTransforms(text));
+
+		// 12. Restore placeholders recursively (TabGroup/Steps may wrap fenced blocks)
+		for (let pass = 0; pass < 3; pass += 1) {
+			html = html.replace(
+				/(?:<p>\s*)?@@AXIA_BLOCK_(\d+)@@(?:\s*<\/p>)?/g,
+				(_m, idxStr) => placeholders[Number(idxStr)] || "",
+			);
+		}
+
+		// 13. Sanitize final HTML safely
+		if (window.DOMPurify && typeof window.DOMPurify.sanitize === "function") {
+			html = window.DOMPurify.sanitize(html, {
+				ADD_TAGS: [
+					"math",
+					"semantics",
+					"mrow",
+					"mi",
+					"mo",
+					"mn",
+					"msup",
+					"msub",
+					"mfrac",
+					"msqrt",
+					"mroot",
+					"mtable",
+					"mtr",
+					"mtd",
+					"mtext",
+					"annotation",
+					"button",
+				],
+				ADD_ATTR: [
+					"data-mermaid",
+					"data-tab-index",
+					"role",
+					"tabindex",
+					"aria-selected",
+					"xmlns",
+					"encoding",
+					"aria-hidden",
+					"style",
+				],
+			});
+		}
+
+		return html;
+	};
+
+	/* ================= Firefly Live Preview React Templates ================= */
 	const React = cms.React;
 	if (React && typeof cms.registerPreviewTemplate === "function") {
 		const h = React.createElement;
@@ -295,25 +654,18 @@
 			return toPlain(raw) || {};
 		};
 
+		const getEntrySlug = (entry) => {
+			if (!entry) return "";
+			const slug =
+				typeof entry.get === "function" ? entry.get("slug") : entry.slug;
+			return String(slug || "")
+				.replace(/\.(md|mdx)$/i, "")
+				.trim();
+		};
+
 		const asArray = (val) => {
 			const plain = toPlain(val);
 			return Array.isArray(plain) ? plain : [];
-		};
-
-		const resolveAsset = (getAsset, path) => {
-			if (!path) return "";
-			try {
-				const resolved = getAsset ? getAsset(path) : null;
-				if (resolved && typeof resolved.toString === "function") {
-					return resolved.toString();
-				}
-			} catch {
-				// Fallback below
-			}
-			if (String(path).startsWith("/uploads/")) {
-				return `/axia-zone-id${path}`;
-			}
-			return String(path);
 		};
 
 		const parseDate = (val) => {
@@ -337,7 +689,10 @@
 			const s = parseDate(start);
 			if (!s) return start ? String(start) : "TBA";
 			const e = parseDate(end);
-			if (!e || s.toISOString().slice(0, 10) === e.toISOString().slice(0, 10)) {
+			if (
+				!e ||
+				s.toISOString().slice(0, 10) === e.toISOString().slice(0, 10)
+			) {
 				return formatSingleDate(s);
 			}
 			return `${formatSingleDate(s)} - ${formatSingleDate(e)}`;
@@ -383,7 +738,12 @@
 			const raw = String(ig || "").trim();
 			if (!raw) return null;
 			if (raw.startsWith("http://") || raw.startsWith("https://")) {
-				return { handle: raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@").replace(/\/$/, ""), url: raw };
+				return {
+					handle: raw
+						.replace(/^https?:\/\/(www\.)?instagram\.com\//, "@")
+						.replace(/\/$/, ""),
+					url: raw,
+				};
 			}
 			const handle = raw.startsWith("@") ? raw : `@${raw}`;
 			return {
@@ -392,7 +752,113 @@
 			};
 		};
 
-		const PreviewLayout = ({ routeLabel, iframeDoc, hue, children }) => {
+		let mermaidRenderCounter = 0;
+		const PreviewThemeContext = React.createContext("dark");
+
+		const FireflyProse = ({ body, getAsset, fallbackWidget }) => {
+			const theme = React.useContext(PreviewThemeContext);
+			const containerRef = React.useRef(null);
+			const hasStringBody = typeof body === "string" && body.trim().length > 0;
+			const html = React.useMemo(
+				() => (hasStringBody ? renderFireflyMarkdown(body, getAsset) : ""),
+				[body, hasStringBody, getAsset],
+			);
+
+			React.useEffect(() => {
+				const root = containerRef.current;
+				if (!root || !hasStringBody) return;
+
+				const onClick = (ev) => {
+					const tabBtn = ev.target?.closest?.(".axia-tab-btn");
+					if (tabBtn && root.contains(tabBtn)) {
+						const tabGroup = tabBtn.closest(".axia-tabs");
+						const targetIdx = tabBtn.getAttribute("data-tab-index");
+						if (tabGroup) {
+							tabGroup.querySelectorAll(".axia-tab-btn").forEach((btn) => {
+								btn.setAttribute(
+									"aria-selected",
+									btn.getAttribute("data-tab-index") === targetIdx
+										? "true"
+										: "false",
+								);
+							});
+							tabGroup.querySelectorAll(".axia-tab-panel").forEach((panel) => {
+								if (panel.getAttribute("data-tab-index") === targetIdx) {
+									panel.classList.add("is-active");
+								} else {
+									panel.classList.remove("is-active");
+								}
+							});
+						}
+						return;
+					}
+
+					const spoiler = ev.target?.closest?.(".axia-spoiler");
+					if (spoiler && root.contains(spoiler)) {
+						spoiler.classList.toggle("is-revealed");
+					}
+				};
+
+				root.addEventListener("click", onClick);
+
+				let cancelled = false;
+				const mermaidNodes = root.querySelectorAll(".axia-mermaid-box");
+				if (
+					mermaidNodes.length > 0 &&
+					window.mermaid &&
+					typeof window.mermaid.render === "function"
+				) {
+					try {
+						window.mermaid.initialize({
+							startOnLoad: false,
+							securityLevel: "strict",
+							theme: theme === "dark" ? "dark" : "default",
+						});
+					} catch {
+						// Ignore re-init warnings
+					}
+
+					mermaidNodes.forEach(async (box) => {
+						const encoded = box.getAttribute("data-mermaid");
+						if (!encoded) return;
+						const code = decodeURIComponent(encoded);
+						mermaidRenderCounter += 1;
+						const renderId = `axia-mmd-${mermaidRenderCounter}`;
+						try {
+							const res = await window.mermaid.render(renderId, code);
+							if (!cancelled && res && res.svg) {
+								box.innerHTML = res.svg;
+							}
+						} catch {
+							// Keep <pre> code fallback if diagram has partial typing errors
+						}
+					});
+				}
+
+				return () => {
+					cancelled = true;
+					root.removeEventListener("click", onClick);
+				};
+			}, [html, theme, hasStringBody]);
+
+			if (!hasStringBody) {
+				return h("div", { className: "axia-prose" }, fallbackWidget);
+			}
+
+			return h("div", {
+				ref: containerRef,
+				className: "axia-prose",
+				dangerouslySetInnerHTML: { __html: html },
+			});
+		};
+
+		const PreviewLayout = ({
+			routeLabel,
+			liveUrl,
+			iframeDoc,
+			hue,
+			children,
+		}) => {
 			const getInitialTheme = () => {
 				try {
 					const parentTheme =
@@ -409,14 +875,24 @@
 			};
 
 			const [theme, setTheme] = React.useState(getInitialTheme);
+			const [mode, setMode] = React.useState("draft");
+			const [showChrome, setShowChrome] = React.useState(true);
+			const [frameKey, setFrameKey] = React.useState(0);
 			const activeHue = Number.isFinite(Number(hue)) ? Number(hue) : 165;
 
 			React.useEffect(() => {
 				if (iframeDoc?.documentElement) {
 					iframeDoc.documentElement.dataset.previewTheme = theme;
-					iframeDoc.documentElement.style.setProperty("--hue", String(activeHue));
+					iframeDoc.documentElement.style.setProperty(
+						"--hue",
+						String(activeHue),
+					);
 				}
 			}, [theme, iframeDoc, activeHue]);
+
+			const cacheBustUrl = liveUrl
+				? `${liveUrl}${liveUrl.includes("?") ? "&" : "?"}preview_ts=${frameKey}`
+				: "";
 
 			return h(
 				"div",
@@ -441,23 +917,213 @@
 								: null,
 						),
 						h(
-							"button",
-							{
-								type: "button",
-								className: "axia-theme-toggle",
-								onClick: () =>
-									setTheme((prev) => (prev === "dark" ? "light" : "dark")),
-							},
-							theme === "dark" ? "Preview: Dark" : "Preview: Light",
+							"div",
+							{ className: "axia-topbar-controls" },
+							h(
+								"div",
+								{
+									className: "axia-mode-tabs",
+									role: "tablist",
+									"aria-label": "Preview Mode",
+								},
+								h(
+									"button",
+									{
+										type: "button",
+										role: "tab",
+										className: "axia-mode-tab",
+										"aria-selected": mode === "draft" ? "true" : "false",
+										onClick: () => setMode("draft"),
+									},
+									"Live Draft",
+								),
+								h(
+									"button",
+									{
+										type: "button",
+										role: "tab",
+										className: "axia-mode-tab",
+										"aria-selected": mode === "published" ? "true" : "false",
+										onClick: () => setMode("published"),
+									},
+									"Published Site (1:1)",
+								),
+							),
+							mode === "draft"
+								? h(
+										"button",
+										{
+											type: "button",
+											className: "axia-theme-toggle",
+											onClick: () => setShowChrome((prev) => !prev),
+										},
+										showChrome ? "Chrome: On" : "Chrome: Off",
+									)
+								: null,
+							mode === "draft"
+								? h(
+										"button",
+										{
+											type: "button",
+											className: "axia-theme-toggle",
+											onClick: () =>
+												setTheme((prev) => (prev === "dark" ? "light" : "dark")),
+										},
+										theme === "dark" ? "Dark" : "Light",
+									)
+								: null,
 						),
 					),
-					children,
+					mode === "published"
+						? h(
+								"div",
+								{ className: "axia-live-frame-wrap" },
+								liveUrl
+									? [
+											h(
+												"div",
+												{ key: "bar", className: "axia-live-frame-bar" },
+												h(
+													"div",
+													null,
+													h("strong", null, "Built Page: "),
+													h("span", { className: "axia-live-url" }, liveUrl),
+												),
+												h(
+													"div",
+													{ className: "axia-topbar-controls" },
+													h(
+														"button",
+														{
+															type: "button",
+															className: "axia-theme-toggle",
+															onClick: () => setFrameKey((k) => k + 1),
+														},
+														"Reload",
+													),
+													h(
+														"a",
+														{
+															href: liveUrl,
+															target: "_blank",
+															rel: "noopener noreferrer",
+															className: "axia-theme-toggle",
+														},
+														"Open Live Page",
+													),
+												),
+											),
+											h("iframe", {
+												key: `frame-${frameKey}`,
+												src: cacheBustUrl,
+												title: `Published preview for ${routeLabel || "Axia Zone ID"}`,
+												className: "axia-live-iframe",
+											}),
+										]
+									: h(
+											"div",
+											{ className: "axia-card" },
+											h(
+												"div",
+												{ className: "axia-cover-note" },
+												"This entry does not have a published URL yet (new unsaved draft). Save and wait ~1 minute for GitHub Actions to deploy, or use the Live Draft tab while writing.",
+											),
+										),
+							)
+						: [
+								showChrome
+									? h(
+											"div",
+											{ key: "banner", className: "axia-site-banner" },
+											h(
+												"div",
+												null,
+												h(
+													"div",
+													{ className: "axia-site-banner-title" },
+													"Axia Zone ID",
+												),
+												h(
+													"p",
+													{ className: "axia-site-banner-sub" },
+													"Indonesian ACG Blog, Event Calendar & Performer Wiki",
+												),
+											),
+											h(
+												"div",
+												{ className: "axia-site-nav-pills" },
+												h("span", { className: "axia-site-nav-pill" }, "Blog"),
+												h("span", { className: "axia-site-nav-pill" }, "Events"),
+												h(
+													"span",
+													{ className: "axia-site-nav-pill" },
+													"Performers",
+												),
+												h("span", { className: "axia-site-nav-pill" }, "About"),
+											),
+										)
+									: null,
+								h(
+									"div",
+									{
+										key: "grid",
+										className: `axia-site-grid${showChrome ? " with-sidebar" : ""}`,
+									},
+									showChrome
+										? h(
+												"aside",
+												{ className: "axia-site-sidebar" },
+												h("div", { className: "axia-sidebar-avatar" }, "AZ"),
+												h(
+													"div",
+													{ className: "axia-sidebar-name" },
+													"Axia Zone ID",
+												),
+												h(
+													"p",
+													{ className: "axia-sidebar-bio" },
+													"Indonesian ACG blog, event calendar, and performer wiki.",
+												),
+												h(
+													"div",
+													{ className: "axia-sidebar-links" },
+													h(
+														"span",
+														{ className: "axia-badge axia-badge-tag" },
+														"Events",
+													),
+													h(
+														"span",
+														{ className: "axia-badge axia-badge-tag" },
+														"Wiki",
+													),
+													h(
+														"span",
+														{ className: "axia-badge axia-badge-tag" },
+														"RSS",
+													),
+												),
+											)
+										: null,
+									h(
+										PreviewThemeContext.Provider,
+										{ value: theme },
+										children,
+									),
+								),
+							],
 				),
 			);
 		};
 
-		const EventsPreview = ({ entry, widgetFor, getAsset, document: iframeDoc }) => {
+		const EventsPreview = ({
+			entry,
+			widgetFor,
+			getAsset,
+			document: iframeDoc,
+		}) => {
 			const d = getEntryData(entry);
+			const slug = getEntrySlug(entry);
 			const status = String(d.status || "upcoming").toLowerCase();
 			const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
 			const countdown = computeCountdown(d.startDate, d.endDate);
@@ -474,18 +1140,26 @@
 			const highlights = asArray(d.highlights);
 			const tags = asArray(d.tags);
 			const lineup = asArray(d.lineup);
-			const coverUrl = resolveAsset(getAsset, d.image);
+			const coverUrl = resolveAssetUrl(getAsset, d.image);
 
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/wiki/events/preview/", iframeDoc },
+				{
+					routeLabel: slug ? `/wiki/events/${slug}/` : "/wiki/events/draft/",
+					liveUrl: slug ? `${SITE_BASE}/wiki/events/${slug}/` : "",
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
 					h(
 						"div",
 						{ className: "axia-breadcrumb" },
-						h("span", { className: "axia-breadcrumb-link" }, "All Events & Calendar"),
+						h(
+							"span",
+							{ className: "axia-breadcrumb-link" },
+							"All Events & Calendar",
+						),
 						h("span", { "aria-hidden": "true" }, "/"),
 						h("span", null, "Performer Wiki"),
 					),
@@ -497,7 +1171,11 @@
 							{ className: "axia-title-row" },
 							h("h1", { className: "axia-title" }, d.title || "Untitled Event"),
 							d.draft
-								? h("span", { className: "axia-badge axia-badge-draft" }, "Draft")
+								? h(
+										"span",
+										{ className: "axia-badge axia-badge-draft" },
+										"Draft",
+									)
 								: null,
 							h(
 								"span",
@@ -516,7 +1194,11 @@
 							"div",
 							{ className: "axia-badges" },
 							d.eventType
-								? h("span", { className: "axia-badge axia-badge-type" }, d.eventType)
+								? h(
+										"span",
+										{ className: "axia-badge axia-badge-type" },
+										d.eventType,
+									)
 								: null,
 							h(
 								"span",
@@ -605,14 +1287,21 @@
 							? h(
 									"div",
 									null,
-									h("div", { className: "axia-section-title" }, "Event Highlights"),
+									h(
+										"div",
+										{ className: "axia-section-title" },
+										"Event Highlights",
+									),
 									h(
 										"div",
 										{ className: "axia-badges" },
 										highlights.map((item, idx) =>
 											h(
 												"span",
-												{ key: idx, className: "axia-badge axia-badge-highlight" },
+												{
+													key: idx,
+													className: "axia-badge axia-badge-highlight",
+												},
 												item,
 											),
 										),
@@ -636,7 +1325,11 @@
 							"div",
 							{ className: "axia-actions" },
 							d.ticketUrl
-								? h("span", { className: "axia-btn axia-btn-primary" }, "Get Tickets")
+								? h(
+										"span",
+										{ className: "axia-btn axia-btn-primary" },
+										"Get Tickets",
+									)
 								: null,
 							h(
 								"span",
@@ -673,27 +1366,39 @@
 							? h(
 									"ul",
 									{ className: "axia-lineup-grid" },
-									lineup.map((slug, idx) =>
+									lineup.map((itemSlug, idx) =>
 										h(
 											"li",
 											{ key: idx, className: "axia-lineup-card" },
 											h(
 												"div",
 												{ className: "axia-lineup-avatar" },
-												getInitials(String(slug).replace(/-/g, " ")),
+												getInitials(String(itemSlug).replace(/-/g, " ")),
 											),
 											h(
 												"div",
 												null,
-												h("div", { className: "axia-lineup-slug" }, String(slug)),
-												h("div", { className: "axia-lineup-sub" }, "Performer Wiki link"),
+												h(
+													"div",
+													{ className: "axia-lineup-slug" },
+													String(itemSlug),
+												),
+												h(
+													"div",
+													{ className: "axia-lineup-sub" },
+													"Performer Wiki link",
+												),
 											),
 										),
 									),
 								)
 							: h("p", { className: "axia-lead" }, "Lineup to be announced."),
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 				),
 			);
 		};
@@ -705,13 +1410,20 @@
 			document: iframeDoc,
 		}) => {
 			const d = getEntryData(entry);
-			const avatarUrl = resolveAsset(getAsset, d.avatar);
+			const slug = getEntrySlug(entry);
+			const avatarUrl = resolveAssetUrl(getAsset, d.avatar);
 			const tags = asArray(d.tags);
 			const socials = asArray(d.socials);
 
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/wiki/performers/preview/", iframeDoc },
+				{
+					routeLabel: slug
+						? `/wiki/performers/${slug}/`
+						: "/wiki/performers/draft/",
+					liveUrl: slug ? `${SITE_BASE}/wiki/performers/${slug}/` : "",
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
@@ -788,7 +1500,11 @@
 								: null,
 						),
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 					h(
 						"div",
 						{ className: "axia-cover-note" },
@@ -798,14 +1514,24 @@
 			);
 		};
 
-		const PostsPreview = ({ entry, widgetFor, getAsset, document: iframeDoc }) => {
+		const PostsPreview = ({
+			entry,
+			widgetFor,
+			getAsset,
+			document: iframeDoc,
+		}) => {
 			const d = getEntryData(entry);
-			const coverUrl = resolveAsset(getAsset, d.image);
+			const slug = getEntrySlug(entry);
+			const coverUrl = resolveAssetUrl(getAsset, d.image);
 			const tags = asArray(d.tags);
 
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/posts/preview/", iframeDoc },
+				{
+					routeLabel: slug ? `/posts/${slug}/` : "/posts/draft/",
+					liveUrl: slug ? `${SITE_BASE}/posts/${slug}/` : "",
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
@@ -836,7 +1562,11 @@
 								? h("span", { className: "axia-badge axia-badge-tag" }, "Pinned")
 								: null,
 							d.draft
-								? h("span", { className: "axia-badge axia-badge-draft" }, "Draft")
+								? h(
+										"span",
+										{ className: "axia-badge axia-badge-draft" },
+										"Draft",
+									)
 								: null,
 							d.series
 								? h(
@@ -870,7 +1600,11 @@
 							? h("p", { className: "axia-lead" }, d.description)
 							: null,
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 					tags.length > 0
 						? h(
 								"div",
@@ -903,12 +1637,17 @@
 		const PagePreview = (routeLabel, defaultTitle) => ({
 			entry,
 			widgetFor,
+			getAsset,
 			document: iframeDoc,
 		}) => {
 			const d = getEntryData(entry);
 			return h(
 				PreviewLayout,
-				{ routeLabel, iframeDoc },
+				{
+					routeLabel,
+					liveUrl: `${SITE_BASE}${routeLabel}`,
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
@@ -920,16 +1659,29 @@
 							? h("p", { className: "axia-lead" }, d.description)
 							: null,
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 				),
 			);
 		};
 
-		const MomentsPreview = ({ entry, widgetFor, document: iframeDoc }) => {
+		const MomentsPreview = ({
+			entry,
+			widgetFor,
+			getAsset,
+			document: iframeDoc,
+		}) => {
 			const d = getEntryData(entry);
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/dynamic/", iframeDoc },
+				{
+					routeLabel: "/dynamic/",
+					liveUrl: `${SITE_BASE}/dynamic/`,
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
@@ -937,25 +1689,19 @@
 						"div",
 						{ className: "axia-meta-row" },
 						h("strong", null, "Axia Zone ID"),
-						d.published
-							? h("span", null, formatSingleDate(d.published))
-							: null,
+						d.published ? h("span", null, formatSingleDate(d.published)) : null,
 						d.location
-							? h(
-									"span",
-									{ className: "axia-badge axia-badge-type" },
-									d.location,
-								)
+							? h("span", { className: "axia-badge axia-badge-type" }, d.location)
 							: null,
 						d.pinned
-							? h(
-									"span",
-									{ className: "axia-badge axia-badge-tag" },
-									"Pinned",
-								)
+							? h("span", { className: "axia-badge axia-badge-tag" }, "Pinned")
 							: null,
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 				),
 			);
 		};
@@ -967,13 +1713,18 @@
 			document: iframeDoc,
 		}) => {
 			const d = getEntryData(entry);
-			const coverUrl = resolveAsset(getAsset, d.image);
+			const slug = getEntrySlug(entry);
+			const coverUrl = resolveAssetUrl(getAsset, d.image);
 			const tags = asArray(d.tags);
 			const links = asArray(d.link);
 
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/projects/", iframeDoc },
+				{
+					routeLabel: slug ? `/projects/${slug}/` : "/projects/",
+					liveUrl: slug ? `${SITE_BASE}/projects/${slug}/` : `${SITE_BASE}/projects/`,
+					iframeDoc,
+				},
 				h(
 					"article",
 					{ className: "axia-card" },
@@ -994,13 +1745,13 @@
 						h(
 							"div",
 							{ className: "axia-title-row" },
-							h("h1", { className: "axia-title" }, d.title || "Untitled Project"),
+							h(
+								"h1",
+								{ className: "axia-title" },
+								d.title || "Untitled Project",
+							),
 							d.status
-								? h(
-										"span",
-										{ className: "axia-badge axia-badge-tag" },
-										d.status,
-									)
+								? h("span", { className: "axia-badge axia-badge-tag" }, d.status)
 								: null,
 							d.draft
 								? h(
@@ -1040,7 +1791,11 @@
 								)
 							: null,
 					),
-					h("div", { className: "axia-prose" }, widgetFor("body")),
+					h(FireflyProse, {
+						body: d.body,
+						getAsset,
+						fallbackWidget: widgetFor("body"),
+					}),
 				),
 			);
 		};
@@ -1057,7 +1812,12 @@
 
 			return h(
 				PreviewLayout,
-				{ routeLabel: "/ (Site Settings)", iframeDoc, hue },
+				{
+					routeLabel: "/ (Site Settings)",
+					liveUrl: `${SITE_BASE}/`,
+					iframeDoc,
+					hue,
+				},
 				h(
 					"div",
 					{ className: "axia-card" },
@@ -1151,7 +1911,10 @@
 		cms.registerPreviewTemplate("events", EventsPreview);
 		cms.registerPreviewTemplate("performers", PerformersPreview);
 		cms.registerPreviewTemplate("posts", PostsPreview);
-		cms.registerPreviewTemplate("about", PagePreview("/about/", "About Axia Zone ID"));
+		cms.registerPreviewTemplate(
+			"about",
+			PagePreview("/about/", "About Axia Zone ID"),
+		);
 		cms.registerPreviewTemplate(
 			"guestbook",
 			PagePreview("/guestbook/", "Guestbook"),
