@@ -73,6 +73,65 @@ export type PerformerData = {
 	draft: boolean;
 };
 
+export const EVENT_REGIONS: readonly [
+	"Jabodetabek",
+	"Jawa Barat",
+	"Jawa Tengah & DIY",
+	"Jawa Timur",
+	"Bali & Nusa Tenggara",
+	"Sumatera",
+	"Kalimantan",
+	"Sulawesi",
+	"Maluku & Papua",
+	"Online",
+] = [
+	"Jabodetabek",
+	"Jawa Barat",
+	"Jawa Tengah & DIY",
+	"Jawa Timur",
+	"Bali & Nusa Tenggara",
+	"Sumatera",
+	"Kalimantan",
+	"Sulawesi",
+	"Maluku & Papua",
+	"Online",
+] as const;
+
+export const EVENT_TYPES: readonly [
+	"Convention / Expo",
+	"Matsuri / Bunkasai",
+	"Idol / Anisong Live",
+	"Anikura / DJ Night",
+	"Cosplay Event",
+	"Doujin / Creator Market",
+	"Community Gathering",
+] = [
+	"Convention / Expo",
+	"Matsuri / Bunkasai",
+	"Idol / Anisong Live",
+	"Anikura / DJ Night",
+	"Cosplay Event",
+	"Doujin / Creator Market",
+	"Community Gathering",
+] as const;
+
+export const EVENT_ENTRY_TYPES: readonly ["free", "paid", "tba"] = [
+	"free",
+	"paid",
+	"tba",
+] as const;
+
+export const EVENT_TIMEZONES: readonly ["WIB", "WITA", "WIT"] = [
+	"WIB",
+	"WITA",
+	"WIT",
+] as const;
+
+export type EventRegion = (typeof EVENT_REGIONS)[number] | "";
+export type EventType = (typeof EVENT_TYPES)[number] | "";
+export type EventEntryType = (typeof EVENT_ENTRY_TYPES)[number];
+export type EventTimezone = (typeof EVENT_TIMEZONES)[number];
+
 export type EventStatus =
 	| "upcoming"
 	| "ongoing"
@@ -86,6 +145,17 @@ export type EventData = {
 	endDate?: Date;
 	venue: string;
 	city: string;
+	region: EventRegion;
+	eventType: EventType;
+	entryType: EventEntryType;
+	htm: string;
+	time: string;
+	timezone: EventTimezone;
+	organizer: string;
+	instagram: string;
+	officialUrl: string;
+	mapsUrl: string;
+	highlights: string[];
 	status: EventStatus;
 	ticketUrl: string;
 	lineup: { collection: "performers"; id: string }[];
@@ -220,6 +290,17 @@ const eventsCollection: ContentCollection<EventData> = defineCollection({
 		endDate: z.coerce.date().optional(),
 		venue: z.string(),
 		city: z.string(),
+		region: z.enum(EVENT_REGIONS).or(z.literal("")).optional().default(""),
+		eventType: z.enum(EVENT_TYPES).or(z.literal("")).optional().default(""),
+		entryType: z.enum(EVENT_ENTRY_TYPES).optional().default("tba"),
+		htm: z.string().optional().default(""),
+		time: z.string().optional().default(""),
+		timezone: z.enum(EVENT_TIMEZONES).optional().default("WIB"),
+		organizer: z.string().optional().default(""),
+		instagram: z.string().optional().default(""),
+		officialUrl: z.string().optional().default(""),
+		mapsUrl: z.string().optional().default(""),
+		highlights: z.array(z.string()).optional().default([]),
 		status: z
 			.enum(["upcoming", "ongoing", "completed", "cancelled", "postponed"])
 			.optional()

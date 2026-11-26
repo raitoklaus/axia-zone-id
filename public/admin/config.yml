@@ -89,6 +89,93 @@ collections:
       - { label: "Venue", name: "venue", widget: "string", required: true }
       - { label: "City", name: "city", widget: "string", required: true }
       - {
+          label: "Region",
+          name: "region",
+          widget: "select",
+          options:
+            [
+              "Jabodetabek",
+              "Jawa Barat",
+              "Jawa Tengah & DIY",
+              "Jawa Timur",
+              "Bali & Nusa Tenggara",
+              "Sumatera",
+              "Kalimantan",
+              "Sulawesi",
+              "Maluku & Papua",
+              "Online",
+            ],
+          required: false,
+        }
+      - {
+          label: "Event Type",
+          name: "eventType",
+          widget: "select",
+          options:
+            [
+              "Convention / Expo",
+              "Matsuri / Bunkasai",
+              "Idol / Anisong Live",
+              "Anikura / DJ Night",
+              "Cosplay Event",
+              "Doujin / Creator Market",
+              "Community Gathering",
+            ],
+          required: false,
+        }
+      - {
+          label: "Admission Type",
+          name: "entryType",
+          widget: "select",
+          options:
+            [
+              { label: "Free Entry", value: "free" },
+              { label: "Paid HTM", value: "paid" },
+              { label: "TBA", value: "tba" },
+            ],
+          default: "tba",
+          required: false,
+        }
+      - {
+          label: "HTM / Ticket Price Label",
+          name: "htm",
+          widget: "string",
+          required: false,
+          hint: "e.g. Free Entry, Rp 50.000, or Presale Rp 75.000 / OTS Rp 100.000",
+        }
+      - {
+          label: "Open Gate / Hours",
+          name: "time",
+          widget: "string",
+          required: false,
+          hint: "e.g. 10:00 - 21:00",
+        }
+      - {
+          label: "Timezone",
+          name: "timezone",
+          widget: "select",
+          options: ["WIB", "WITA", "WIT"],
+          default: "WIB",
+          required: false,
+        }
+      - { label: "Organizer (EO)", name: "organizer", widget: "string", required: false }
+      - {
+          label: "Official Instagram",
+          name: "instagram",
+          widget: "string",
+          required: false,
+          hint: "@handle or full https://instagram.com/... URL",
+        }
+      - { label: "Official Link", name: "officialUrl", widget: "string", required: false }
+      - { label: "Google Maps URL", name: "mapsUrl", widget: "string", required: false }
+      - {
+          label: "Activity Highlights",
+          name: "highlights",
+          widget: "list",
+          required: false,
+          hint: "e.g. Coswalk, Artist Alley, Idol Stage, Anikura / DJ",
+        }
+      - {
           label: "Status",
           name: "status",
           widget: "select",

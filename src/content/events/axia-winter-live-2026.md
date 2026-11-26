@@ -4,6 +4,20 @@ startDate: 2026-12-19
 endDate: 2026-12-20
 venue: "Balai Sarbini"
 city: "Jakarta"
+region: "Jabodetabek"
+eventType: "Idol / Anisong Live"
+entryType: "paid"
+htm: "Presale Rp 120.000 / OTS Rp 150.000"
+time: "13:00 - 21:00"
+timezone: "WIB"
+organizer: "Axia Project ID"
+instagram: "@axiazone.id"
+officialUrl: "https://example.com/axia-winter-live-2026"
+mapsUrl: "https://maps.google.com/?q=Balai+Sarbini+Jakarta"
+highlights:
+  - "Live Anisong Stage"
+  - "Anikura / DJ Session"
+  - "Merchandise Booth"
 status: "upcoming"
 ticketUrl: "https://example.com/tickets/axia-winter-live-2026"
 lineup:
@@ -15,7 +29,7 @@ image: ""
 draft: false
 ---
 
-This is a sample upcoming event entry showing how `lineup` references link directly to performer wiki pages and surface on the homepage schedule.
+This is a sample upcoming event entry showing how `lineup` references link directly to performer wiki pages and surface on the homepage schedule and interactive calendar.
 
 ## Stage Notes
 

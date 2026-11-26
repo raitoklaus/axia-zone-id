@@ -505,7 +505,9 @@ function createWikiLinkCard(parsed, context) {
 	);
 	const category =
 		(typeof meta.data.category === "string" && meta.data.category.trim()) ||
+		(typeof meta.data.eventType === "string" && meta.data.eventType.trim()) ||
 		(typeof meta.data.role === "string" && meta.data.role.trim()) ||
+		(typeof meta.data.region === "string" && meta.data.region.trim()) ||
 		(typeof meta.data.city === "string" && meta.data.city.trim()) ||
 		"";
 	const tags = Array.isArray(meta.data.tags)

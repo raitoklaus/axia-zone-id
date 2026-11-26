@@ -69,6 +69,17 @@ All schemas live in `src/content.config.ts`.
 | `endDate` | `date` | No | - | Optional end date for multi-day events |
 | `venue` | `string` | Yes | - | Venue name |
 | `city` | `string` | Yes | - | City name |
+| `region` | `enum` | No | `""` | Curated ID region (`Jabodetabek`, `Jawa Barat`, `Jawa Tengah & DIY`, `Jawa Timur`, `Bali & Nusa Tenggara`, `Sumatera`, `Kalimantan`, `Sulawesi`, `Maluku & Papua`, `Online`) |
+| `eventType` | `enum` | No | `""` | `Convention / Expo`, `Matsuri / Bunkasai`, `Idol / Anisong Live`, `Anikura / DJ Night`, `Cosplay Event`, `Doujin / Creator Market`, `Community Gathering` |
+| `entryType` | `enum` | No | `"tba"` | `"free" \| "paid" \| "tba"` |
+| `htm` | `string` | No | `""` | Freeform ticket price / admission label (e.g. `"Free Entry"`, `"Rp 50.000"`) |
+| `time` | `string` | No | `""` | Open gate / event hours (e.g. `"10:00 - 21:00"`) |
+| `timezone` | `enum` | No | `"WIB"` | `"WIB" \| "WITA" \| "WIT"` |
+| `organizer` | `string` | No | `""` | Event Organizer (EO) name |
+| `instagram` | `string` | No | `""` | `@handle` or full Instagram URL |
+| `officialUrl` | `string` | No | `""` | Official info or registration URL |
+| `mapsUrl` | `string` | No | `""` | Google Maps link |
+| `highlights` | `string[]` | No | `[]` | Activity highlights (e.g. `Coswalk`, `Artist Alley`, `Idol Stage`) |
 | `status` | `enum` | No | `"upcoming"` | `"upcoming" \| "ongoing" \| "completed" \| "cancelled" \| "postponed"` |
 | `ticketUrl` | `string` | No | `""` | External ticket/registration URL |
 | `lineup` | `reference("performers")[]` | No | `[]` | Array of performer entry IDs (filename slugs without `.md`) |
@@ -119,7 +130,7 @@ All schemas live in `src/content.config.ts`.
 
 - **Live Site URL**: `https://raitoklaus.github.io/axia-zone-id/`
 - **GitHub Repository**: `https://github.com/raitoklaus/axia-zone-id` (`origin`), tracking Firefly theme updates on `upstream` (`https://github.com/CuteLeaf/Firefly.git`, push disabled).
-- **Automated Deployment**: `.github/workflows/deploy.yml` builds with Node.js 22 and pnpm on every push to `main` and deploys `dist/` to GitHub Pages.
+- **Automated Deployment**: `.github/workflows/deploy.yml` builds with Node.js 22 and pnpm on every push to `main` and via a daily `0 17 * * *` UTC cron (00:00 WIB) to keep upcoming/past event rollovers fresh, deploying `dist/` to GitHub Pages.
   - `src/config/siteConfig.ts` keeps `site_url: "https://raitoklaus.github.io"` (origin only).
   - `astro.config.mjs` sets `BASE_PATH = "/axia-zone-id/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`).
 - **Dual Online / Mobile CMS (Swappable Anytime)**:

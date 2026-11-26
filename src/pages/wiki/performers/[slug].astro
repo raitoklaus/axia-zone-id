@@ -6,6 +6,7 @@ import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getEventUrl, removeFileExtension, url } from "@/utils/url-utils";
 import {
 	formatEventDateRange,
+	getAdmissionMeta,
 	getAllPerformers,
 	getEventStatusMeta,
 	getEventsForPerformer,
@@ -181,6 +182,10 @@ const resolvedAvatar = avatar
 						<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
 							{upcoming.map((event) => {
 								const statusMeta = getEventStatusMeta(event.data.status);
+								const admissionMeta = getAdmissionMeta(
+									event.data.entryType,
+									event.data.htm,
+								);
 								return (
 									<li class="rounded-xl border border-(--line-divider) p-4 bg-(--page-bg)/60 dark:bg-white/[0.03]">
 										<div class="flex flex-wrap items-center justify-between gap-2">
@@ -194,12 +199,23 @@ const resolvedAvatar = avatar
 												{statusMeta.label}
 											</span>
 										</div>
-										<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+										<div class="flex flex-wrap items-center gap-1.5 mt-2">
+											{event.data.eventType && (
+												<span class="px-2 py-0.5 rounded-md text-xs font-medium bg-neutral-200/75 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+													{event.data.eventType}
+												</span>
+											)}
+											<span class={`px-2 py-0.5 rounded-md text-xs font-semibold ${admissionMeta.className}`}>
+												{admissionMeta.label}
+											</span>
+										</div>
+										<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1.5">
 											<time datetime={event.data.startDate.toISOString()}>
 												{formatEventDateRange(event.data.startDate, event.data.endDate)}
 											</time>
 											{" · "}
 											{event.data.venue}, {event.data.city}
+											{event.data.region ? ` (${event.data.region})` : ""}
 										</p>
 										{event.data.ticketUrl && (
 											<a
@@ -242,6 +258,10 @@ const resolvedAvatar = avatar
 						<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
 							{past.map((event) => {
 								const statusMeta = getEventStatusMeta(event.data.status);
+								const admissionMeta = getAdmissionMeta(
+									event.data.entryType,
+									event.data.htm,
+								);
 								return (
 									<li class="rounded-xl border border-(--line-divider) p-4 bg-(--page-bg)/60 dark:bg-white/[0.03]">
 										<div class="flex flex-wrap items-center justify-between gap-2">
@@ -255,12 +275,23 @@ const resolvedAvatar = avatar
 												{statusMeta.label}
 											</span>
 										</div>
-										<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+										<div class="flex flex-wrap items-center gap-1.5 mt-2">
+											{event.data.eventType && (
+												<span class="px-2 py-0.5 rounded-md text-xs font-medium bg-neutral-200/75 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+													{event.data.eventType}
+												</span>
+											)}
+											<span class={`px-2 py-0.5 rounded-md text-xs font-semibold ${admissionMeta.className}`}>
+												{admissionMeta.label}
+											</span>
+										</div>
+										<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1.5">
 											<time datetime={event.data.startDate.toISOString()}>
 												{formatEventDateRange(event.data.startDate, event.data.endDate)}
 											</time>
 											{" · "}
 											{event.data.venue}, {event.data.city}
+											{event.data.region ? ` (${event.data.region})` : ""}
 										</p>
 									</li>
 								);

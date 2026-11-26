@@ -104,6 +104,79 @@ content:
         label: City
         type: string
         required: true
+      - name: region
+        label: Region
+        type: select
+        options:
+          values:
+            - Jabodetabek
+            - Jawa Barat
+            - Jawa Tengah & DIY
+            - Jawa Timur
+            - Bali & Nusa Tenggara
+            - Sumatera
+            - Kalimantan
+            - Sulawesi
+            - Maluku & Papua
+            - Online
+      - name: eventType
+        label: Event Type
+        type: select
+        options:
+          values:
+            - Convention / Expo
+            - Matsuri / Bunkasai
+            - Idol / Anisong Live
+            - Anikura / DJ Night
+            - Cosplay Event
+            - Doujin / Creator Market
+            - Community Gathering
+      - name: entryType
+        label: Admission Type
+        type: select
+        default: tba
+        options:
+          values:
+            - value: free
+              label: Free Entry
+            - value: paid
+              label: Paid HTM
+            - value: tba
+              label: TBA
+      - name: htm
+        label: HTM / Ticket Price Label
+        type: string
+        description: Examples: "Free Entry", "Rp 50.000", "Presale Rp 75.000 / OTS Rp 100.000"
+      - name: time
+        label: Open Gate / Hours
+        type: string
+        description: Example: "10:00 - 21:00"
+      - name: timezone
+        label: Timezone
+        type: select
+        default: WIB
+        options:
+          values:
+            - WIB
+            - WITA
+            - WIT
+      - name: organizer
+        label: Organizer (EO)
+        type: string
+      - name: instagram
+        label: Official Instagram
+        type: string
+        description: Handle (@event.id) or full Instagram URL
+      - name: officialUrl
+        label: Official Link / Registration
+        type: string
+      - name: mapsUrl
+        label: Google Maps Link
+        type: string
+      - name: highlights
+        label: Activity Highlights
+        type: string
+        list: true
       - name: status
         label: Status
         type: select
