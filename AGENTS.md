@@ -128,14 +128,14 @@ All schemas live in `src/content.config.ts`.
 
 ## Deployment & Online CMS
 
-- **Live Site URL**: `https://raitoklaus.github.io/axia-zone-id/`
+- **Live Site URL**: `https://axia.zone.id/` (`public/CNAME` sets `axia.zone.id`)
 - **GitHub Repository**: `https://github.com/raitoklaus/axia-zone-id` (`origin`), tracking Firefly theme updates on `upstream` (`https://github.com/CuteLeaf/Firefly.git`, push disabled).
 - **Automated Deployment**: `.github/workflows/deploy.yml` builds with Node.js 22 and pnpm on every push to `main` and via a daily `0 17 * * *` UTC cron (00:00 WIB) to keep upcoming/past event rollovers fresh, deploying `dist/` to GitHub Pages.
-  - `src/config/siteConfig.ts` keeps `site_url: "https://raitoklaus.github.io"` (origin only).
-  - `astro.config.mjs` sets `BASE_PATH = "/axia-zone-id/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`).
+  - `src/config/siteConfig.ts` sets `site_url: "https://axia.zone.id"`.
+  - `astro.config.mjs` sets `BASE_PATH = "/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`).
 - **Dual Online / Mobile CMS (Swappable Anytime)**:
   - **Pages CMS**: Open `https://app.pagescms.org` on desktop or mobile and connect `raitoklaus/axia-zone-id`. Configured in `.pages.yml` with zero OAuth server needed.
-  - **Sveltia CMS**: Open `https://raitoklaus.github.io/axia-zone-id/admin/` (configured in `public/admin/index.html`, `public/admin/config.yml`, `public/admin/wp-theme.css`, `public/admin/wp-preview.css`, and `public/admin/wp-editor.js`). Styled like the WordPress Admin dashboard and editor, with custom block inserters (`Wiki Link Card`, `Callout Box`, `Spoiler Text`, `Image Gallery Grid`, `GitHub Repository Card`, `YouTube Embed`, `Mermaid Diagram`), live preview styles, and searchable `relation` dropdowns for `events.lineup`; sign in directly with a GitHub Personal Access Token (PAT) or add an external OAuth proxy `base_url` later.
+  - **Sveltia CMS**: Open `https://axia.zone.id/admin/` (configured in `public/admin/index.html`, `public/admin/config.yml`, `public/admin/wp-theme.css`, `public/admin/wp-preview.css`, and `public/admin/wp-editor.js`). Styled like the WordPress Admin dashboard and editor, with custom block inserters (`Wiki Link Card`, `Callout Box`, `Spoiler Text`, `Image Gallery Grid`, `GitHub Repository Card`, `YouTube Embed`, `Mermaid Diagram`), live preview templates (`Live Draft` + `Published Site (1:1)`), and searchable `relation` dropdowns for `events.lineup`; sign in directly with a GitHub Personal Access Token (PAT) or add an external OAuth proxy `base_url` later.
   - **CMS Coverage & Site Settings**: Both `.pages.yml` and `public/admin/config.yml` cover all `posts` frontmatter (including `updated`, `series`, `seriesOrder`, `author`, `sourceLink`, `licenseName`, `licenseUrl`, `password`, `passwordHint`), `events`, `performers`, `pages` (`src/content/spec/about.md` and `src/content/spec/guestbook.md`), `dynamic` (`Moments`), `projects` (`Projects`), and `src/data/siteSettings.json` (imported by `src/config/siteConfig.ts`, `backgroundWallpaper.ts`, `announcementConfig.ts`, `profileConfig.ts`, `friendsConfig.ts`, `booknavConfig.ts`, `galleryConfig.ts`, and `sponsorConfig.ts`).
-  - **Media Uploads**: Both CMSs upload assets to `public/uploads/` and reference them as `/uploads/...` (automatically prefixed with `/axia-zone-id/` at build time).
+  - **Media Uploads**: Both CMSs upload assets to `public/uploads/` and reference them as `/uploads/...` (served directly from `/uploads/...` at the root domain).
   - **Cover Image & Raw Markdown Safety**: Leave `image` blank and toggle `useRandomCover: true` for Firefly's random cover API (`resolvePostCoverInput()` in `src/utils/image-utils.ts`). Pages CMS uses raw Markdown code editors, while Sveltia CMS defaults to `rich_text` with the WordPress-style formatting toolbar + block inserter and a 1-click toggle to `raw` Markdown mode.

@@ -41,7 +41,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: siteSettings.site.subtitle,
 
 	// 站点 URL
-	site_url: "https://raitoklaus.github.io",
+	site_url: "https://axia.zone.id",
 
 	// 站点描述
 	description: siteSettings.site.description,

@@ -67,7 +67,7 @@ const adapter = process.env.CF_WORKERS
 		})
 	: undefined;
 
-const BASE_PATH = "/axia-zone-id/";
+const BASE_PATH = "/";
 
 // https://astro.build/config
 export default defineConfig({

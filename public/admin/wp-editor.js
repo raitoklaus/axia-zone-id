@@ -4,7 +4,7 @@
 		return;
 	}
 
-	const SITE_BASE = "https://raitoklaus.github.io/axia-zone-id";
+	const SITE_BASE = "https://axia.zone.id";
 
 	const escapeHtml = (value) =>
 		String(value ?? "")
@@ -323,8 +323,8 @@
 		} catch {
 			// Fallback below
 		}
-		if (String(path).startsWith("/uploads/")) {
-			return `/axia-zone-id${path}`;
+		if (String(path).startsWith("/")) {
+			return String(path);
 		}
 		return String(path);
 	};

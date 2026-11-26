@@ -4,9 +4,9 @@ backend:
   branch: main
   # Sign in with a GitHub Personal Access Token (PAT), or add an OAuth proxy base_url later.
 
-site_url: https://raitoklaus.github.io/axia-zone-id/
-display_url: https://raitoklaus.github.io/axia-zone-id/
-logo_url: /axia-zone-id/favicon/firefly-192.png
+site_url: https://axia.zone.id/
+display_url: https://axia.zone.id/
+logo_url: /favicon/firefly-192.png
 media_folder: public/uploads
 public_folder: /uploads
 

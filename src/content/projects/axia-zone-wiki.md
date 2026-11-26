@@ -9,7 +9,7 @@ tags: ["Astro", "Firefly", "ACG", "Wiki"]
 link:
   - label: "Event Calendar"
     icon: "material-symbols:calendar-month-rounded"
-    value: "https://raitoklaus.github.io/axia-zone-id/wiki/events/"
+    value: "https://axia.zone.id/wiki/events/"
   - label: "GitHub"
     icon: "fa7-brands:github"
     value: "https://github.com/raitoklaus/axia-zone-id"
