@@ -6,13 +6,13 @@
 		"keywords": ["Firefly", "Fuwari", "Astro", "ACGN", "Axia Zone ID"],
 		"themeHue": 244,
 		"defaultMode": "light",
-		"pageWidth": 75,
+		"pageWidth": 100,
 		"navbarTitle": "Axia Zone ID",
 		"siteStartDate": "2025-01-01",
 		"timezone": "Asia/Jakarta",
 		"postsPerPage": 10,
-		"defaultPostLayout": "grid",
-		"categoryBar": false,
+		"defaultPostLayout": "list",
+		"categoryBar": true,
 		"showLastModified": true,
 		"shareButtons": true,
 		"relatedPosts": true
@@ -31,7 +31,7 @@
 		"mal": false
 	},
 	"banner": {
-		"mode": "none",
+		"mode": "banner",
 		"homeTextEnable": true,
 		"title": "Axia Zone ID",
 		"subtitles": [
@@ -39,8 +39,54 @@
 			"Conventions, Mall Matsuri, Anisong Lives & Anikura Nights",
 			"Track Upcoming Lineups & Connect Performers Across Events"
 		],
-		"typewriterEnable": false,
-		"dimOpacity": 0.2
+		"typewriterEnable": true,
+		"dimOpacity": 0.24,
+		"desktopImages": [
+			"assets/images/DesktopWallpaper/d1.avif",
+			"assets/images/DesktopWallpaper/d2.avif",
+			"assets/images/DesktopWallpaper/d3.avif",
+			"assets/images/DesktopWallpaper/d4.avif",
+			"assets/images/DesktopWallpaper/d5.avif",
+			"assets/images/DesktopWallpaper/d6.avif"
+		],
+		"mobileImages": [
+			"assets/images/MobileWallpaper/m1.avif",
+			"assets/images/MobileWallpaper/m2.avif",
+			"assets/images/MobileWallpaper/m3.avif",
+			"assets/images/MobileWallpaper/m4.avif",
+			"assets/images/MobileWallpaper/m5.avif",
+			"assets/images/MobileWallpaper/m6.avif"
+		],
+		"position": "0% 20%",
+		"wavesEnable": true,
+		"carouselEnable": false,
+		"carouselInterval": 5000,
+		"carouselEffect": "zoom"
+	},
+	"music": {
+		"showInNavbar": true,
+		"showInSidebar": true,
+		"mode": "local",
+		"volume": 0.7,
+		"playMode": "list",
+		"showLyrics": false,
+		"showFloatingLyrics": true,
+		"meting": {
+			"api": "https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r",
+			"server": "netease",
+			"type": "playlist",
+			"id": "10046455237",
+			"auth": ""
+		},
+		"playlist": [
+			{
+				"name": "使一颗心免于哀伤",
+				"artist": "知更鸟 / HOYO-MiX / Chevy",
+				"url": "/assets/music/使一颗心免于哀伤-哼唱.mp3",
+				"cover": "/assets/music/cover/109951169585655912.webp",
+				"lrc": ""
+			}
+		]
 	},
 	"announcement": {
 		"title": "",

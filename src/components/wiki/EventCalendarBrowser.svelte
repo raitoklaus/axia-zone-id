@@ -371,9 +371,9 @@ function selectDayCell(cell: CalendarCell): void {
 }
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-4">
 	<!-- Search & Filters Card -->
-	<div class="axia-sekai-card p-5 md:p-6">
+	<div class="card-base p-4 md:p-5">
 		<div class="flex flex-col gap-3.5">
 			<div class="relative">
 				<label for="event-search-input" class="sr-only">
@@ -599,7 +599,7 @@ function selectDayCell(cell: CalendarCell): void {
 									<h4 class="text-xs font-extrabold uppercase tracking-[0.12em] text-[#0c6fc4] dark:text-[#7ee8ff] mb-3" style="font-family: var(--font-montserrat, sans-serif)">
 										{group.monthLabel}
 									</h4>
-									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
+									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));">
 										{#each group.items as ev}
 											{@const countdown = getCountdownLabel(ev.startYmd, ev.endYmd, todayYmd)}
 											{@const tone = getEventCategoryTone(ev.eventType)}
@@ -727,7 +727,7 @@ function selectDayCell(cell: CalendarCell): void {
 									<h4 class="text-xs font-extrabold uppercase tracking-[0.12em] text-[#4b526e] dark:text-slate-300 mb-3" style="font-family: var(--font-montserrat, sans-serif)">
 										{group.monthLabel}
 									</h4>
-									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
+									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));">
 										{#each group.items as ev}
 											<li class="flex">
 												<article class="axia-sekai-card flex flex-col w-full min-w-0">

@@ -107,6 +107,40 @@ export function isEventUpcoming(
 	);
 }
 
+export type HomeScheduleScope = "kota-bandung" | "jabodetabek-major";
+
+export function isKotaBandungEvent(event: CollectionEntry<"events">): boolean {
+	const normalizedCity = event.data.city.trim().toLowerCase();
+	return (
+		normalizedCity.includes("bandung") &&
+		!normalizedCity.includes("barat") &&
+		!normalizedCity.includes("kabupaten")
+	);
+}
+
+export function isJabodetabekMajorEvent(
+	event: CollectionEntry<"events">,
+): boolean {
+	return (
+		event.data.region === "Jabodetabek" &&
+		(event.data.majorEvent === true ||
+			event.data.eventType === "Convention / Expo" ||
+			event.data.eventType === "Idol / Anisong Live")
+	);
+}
+
+export function getHomeScheduleScope(
+	event: CollectionEntry<"events">,
+): HomeScheduleScope | null {
+	if (isKotaBandungEvent(event)) {
+		return "kota-bandung";
+	}
+	if (isJabodetabekMajorEvent(event)) {
+		return "jabodetabek-major";
+	}
+	return null;
+}
+
 export async function getUpcomingEvents(
 	limit?: number,
 ): Promise<CollectionEntry<"events">[]> {
@@ -116,6 +150,24 @@ export async function getUpcomingEvents(
 		.sort((a, b) => a.data.startDate.getTime() - b.data.startDate.getTime());
 
 	return typeof limit === "number" ? upcoming.slice(0, limit) : upcoming;
+}
+
+export async function getHomepageUpcomingEvents(
+	limit?: number,
+): Promise<CollectionEntry<"events">[]> {
+	const upcoming = await getUpcomingEvents();
+	const scoped = upcoming
+		.filter((event) => getHomeScheduleScope(event) !== null)
+		.sort((a, b) => {
+			const priorityA = getHomeScheduleScope(a) === "kota-bandung" ? 0 : 1;
+			const priorityB = getHomeScheduleScope(b) === "kota-bandung" ? 0 : 1;
+			if (priorityA !== priorityB) {
+				return priorityA - priorityB;
+			}
+			return a.data.startDate.getTime() - b.data.startDate.getTime();
+		});
+
+	return typeof limit === "number" ? scoped.slice(0, limit) : scoped;
 }
 
 export async function getPastEvents(): Promise<CollectionEntry<"events">[]> {

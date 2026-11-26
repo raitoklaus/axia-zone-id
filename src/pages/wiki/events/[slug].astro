@@ -20,6 +20,7 @@ import {
 	formatEventDateRange,
 	getAdmissionMeta,
 	getAllEvents,
+	getEventCategoryTone,
 	getEventStatusMeta,
 	getPerformerInitials,
 	normalizeInstagramLink,
@@ -64,10 +65,12 @@ const slug = removeFileExtension(entry.id);
 const lineupPerformers = await resolveEventLineup(entry);
 const dateRange = formatEventDateRange(startDate, endDate);
 const statusMeta = getEventStatusMeta(status);
+const categoryTone = getEventCategoryTone(eventType);
 const admissionMeta = getAdmissionMeta(entryType, htm);
 const instagramLink = normalizeInstagramLink(instagram);
 const startYmd = formatDateToYYYYMMDD(startDate);
 const endYmd = endDate ? formatDateToYYYYMMDD(endDate) : startYmd;
+const displayDotDate = startYmd.replaceAll("-", ".");
 const coverBasePath = getFileDirFromPath(entry.filePath || "");
 
 const absoluteEventUrl =
@@ -84,7 +87,17 @@ const icsContent = buildIcsContent(entry, absoluteEventUrl);
 	headings={headings}
 >
 	<div class="flex flex-col gap-4 w-full">
-		<article class="card-base px-6 md:px-9 py-6 relative w-full">
+		<article class="card-base overflow-hidden relative w-full">
+			<div class="axia-split-bar">
+				<time datetime={startDate.toISOString()} class="axia-split-date">
+					<span>{displayDotDate}</span>
+				</time>
+				<div class="axia-split-type" data-cat-tone={categoryTone}>
+					<span class="truncate">{eventType || "ACG Event"}</span>
+					<span class="shrink-0 opacity-95">{statusMeta.label}</span>
+				</div>
+			</div>
+			<div class="px-6 md:px-9 py-6">
 			<nav aria-label="Wiki navigation" class="flex flex-wrap items-center gap-3 mb-5 text-sm">
 				<a
 					href={url("/wiki/events/")}
@@ -363,6 +376,7 @@ const icsContent = buildIcsContent(entry, absoluteEventUrl);
 				<Markdown class="markdown-content">
 					<Content />
 				</Markdown>
+			</div>
 			</div>
 		</article>
 	</div>

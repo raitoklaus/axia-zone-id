@@ -25,7 +25,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 <div class:list={["dropdown-container", className]} data-dropdown>
 	{hasChildren ? (
 		<button 
-			class="btn-plain scale-animation rounded-md h-10 px-3.5 pr-7 active:scale-95 dropdown-trigger relative font-bold text-[0.8125rem] tracking-[0.06em] uppercase"
+			class="btn-plain scale-animation rounded-md h-10 px-2.5 pr-6 xl:px-3.5 xl:pr-7 active:scale-95 dropdown-trigger relative font-bold text-[0.78rem] xl:text-[0.8125rem] tracking-[0.05em] xl:tracking-[0.06em] uppercase"
 			style="font-family: var(--font-montserrat, inherit)"
 			aria-expanded="false"
 			aria-haspopup="true"
@@ -35,7 +35,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.05rem] navbar-icon" />}
 				{processedLink.name}
 			</div>
-			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.15rem] transition-transform duration-200 dropdown-arrow absolute right-2 top-1/2 -translate-y-1/2" />
+			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.15rem] transition-transform duration-200 dropdown-arrow absolute right-1.5 xl:right-2 top-1/2 -translate-y-1/2" />
 		</button>
 		<div class="dropdown-menu" data-dropdown-menu>
 			<DropdownPanel class="dropdown-content">
@@ -60,7 +60,7 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			aria-label={processedLink.name} 
 			href={processedLink.external ? processedLink.url : url(processedLink.url)} 
 			target={processedLink.external ? "_blank" : null}
-			class="btn-plain scale-animation rounded-md h-10 px-3.5 active:scale-95 font-bold text-[0.8125rem] tracking-[0.06em] uppercase"
+			class="btn-plain scale-animation rounded-md h-10 px-2.5 xl:px-3.5 active:scale-95 font-bold text-[0.78rem] xl:text-[0.8125rem] tracking-[0.05em] xl:tracking-[0.06em] uppercase"
 			style="font-family: var(--font-montserrat, inherit)"
 		>
 			<div class="flex items-center gap-1.5">

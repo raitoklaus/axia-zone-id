@@ -2,7 +2,6 @@
 import type { GetStaticPaths } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
 import PostPage from "@/components/layout/PostPage.astro";
-import AxiaHeroStage from "@/components/wiki/AxiaHeroStage.astro";
 import UpcomingEventSchedule from "@/components/wiki/UpcomingEventSchedule.astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
@@ -30,33 +29,17 @@ const heading =
 ---
 
 <MainGridLayout heading={heading}>
-  {page.currentPage === 1 && <AxiaHeroStage />}
   {page.currentPage === 1 && <UpcomingEventSchedule />}
-  <section aria-labelledby="latest-articles-heading" class="axia-open-section mb-10">
-    <div class="axia-sekai-heading">
-      <span class="axia-sekai-watermark" aria-hidden="true">
-        ARTICLES &nbsp; ARTICLES &nbsp; ARTICLES
-      </span>
-      <h2 id="latest-articles-heading" class="axia-sekai-title">
-        {page.currentPage === 1 ? "Latest Articles" : `Articles · Page ${page.currentPage}`}
-      </h2>
-      <div class="axia-sekai-rule" aria-hidden="true"></div>
-      <p class="axia-sekai-subtitle">
-        Reports, showcase guides, scene highlights, and event recaps from Axia Zone ID
-      </p>
-    </div>
-
-    <PostPage page={page} />
-    {
-      page.total > page.size && (
-        <Pagination
-          class="mx-auto onload-animation"
-          page={page}
-          style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
-        />
-      )
-    }
-  </section>
+  <PostPage page={page} />
+  {
+    page.total > page.size && (
+      <Pagination
+        class="mx-auto onload-animation"
+        page={page}
+        style={`animation-delay: calc(var(--content-delay) + ${len * 50}ms)`}
+      />
+    )
+  }
 </MainGridLayout>
 
 <script>

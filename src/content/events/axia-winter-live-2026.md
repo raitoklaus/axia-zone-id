@@ -19,6 +19,7 @@ highlights:
   - "Anikura / DJ Session"
   - "Merchandise Booth"
 status: "upcoming"
+majorEvent: true
 ticketUrl: "https://example.com/tickets/axia-winter-live-2026"
 lineup:
   - "hana-minase"

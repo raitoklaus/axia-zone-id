@@ -13,17 +13,28 @@ const serializedEvents = await serializeEventsForBrowser();
 ---
 
 <MainGridLayout title={title} description={description}>
-	<section class="page-shell">
-		<header class="axia-sekai-heading">
-			<span class="axia-sekai-watermark" aria-hidden="true">
-				EVENTS &nbsp; EVENTS &nbsp; EVENTS
-			</span>
-			<h2 class="axia-sekai-title">{title}</h2>
-			<div class="axia-sekai-rule" aria-hidden="true"></div>
-			<p class="axia-sekai-subtitle">{description}</p>
-			<div class="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white dark:bg-[#1c2236] border border-black/10 dark:border-white/12 text-xs font-bold text-[#2b314a] dark:text-slate-200 relative z-10 shadow-xs">
-				<Icon name="material-symbols:calendar-month-rounded" class="text-sm text-[#0c6fc4] dark:text-[#5ce1ff]" aria-hidden="true" />
-				<span>{serializedEvents.length} Indexed Events</span>
+	<section class="page-shell flex flex-col gap-4">
+		<header class="card-base axia-panel-header p-5 md:p-6 relative overflow-hidden">
+			<span class="axia-panel-watermark" aria-hidden="true">EVENTS</span>
+			<div class="relative z-10 flex flex-wrap items-start justify-between gap-3">
+				<div class="min-w-0">
+					<div class="flex items-center gap-2.5">
+						<span class="axia-prism-bar" aria-hidden="true"></span>
+						<h2
+							class="text-xl md:text-2xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+							style="font-family: var(--font-montserrat, sans-serif)"
+						>
+							{title}
+						</h2>
+					</div>
+					<p class="text-sm text-[#4a5170] dark:text-slate-300 mt-1.5 max-w-2xl">
+						{description}
+					</p>
+				</div>
+				<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-(--btn-regular-bg) text-(--btn-content) text-xs font-bold shrink-0">
+					<Icon name="material-symbols:calendar-month-rounded" class="text-sm" aria-hidden="true" />
+					<span>{serializedEvents.length} Indexed</span>
+				</div>
 			</div>
 		</header>
 

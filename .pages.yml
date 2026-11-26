@@ -222,6 +222,10 @@ content:
               label: Postponed
             - value: cancelled
               label: Cancelled
+      - name: majorEvent
+        label: Big / Major Event (Featured on Home for Jabodetabek)
+        type: boolean
+        default: false
       - name: ticketUrl
         label: Ticket URL
         type: string
@@ -591,6 +595,107 @@ content:
           - name: dimOpacity
             label: Banner Dim Opacity (0 - 1)
             type: number
+          - name: desktopImages
+            label: Desktop Wallpaper Images (Upload or URL)
+            type: image
+            list: true
+          - name: mobileImages
+            label: Mobile Wallpaper Images (Upload or URL)
+            type: image
+            list: true
+          - name: position
+            label: Wallpaper Focal Position (CSS object-position)
+            type: string
+            description: Examples - "0% 20%", "center", "top"
+          - name: wavesEnable
+            label: Show Animated Waves
+            type: boolean
+          - name: carouselEnable
+            label: Enable Wallpaper Carousel
+            type: boolean
+          - name: carouselInterval
+            label: Carousel Interval (ms)
+            type: number
+          - name: carouselEffect
+            label: Carousel Transition Effect
+            type: select
+            options:
+              values: [fade, zoom, slide, kenburns]
+      - name: music
+        label: Music Player
+        type: object
+        fields:
+          - name: showInNavbar
+            label: Show in Navbar
+            type: boolean
+          - name: showInSidebar
+            label: Show in Sidebar
+            type: boolean
+          - name: mode
+            label: Player Source Mode
+            type: select
+            options:
+              values: [local, meting]
+          - name: volume
+            label: Default Volume (0 - 1)
+            type: number
+          - name: playMode
+            label: Default Play Mode
+            type: select
+            options:
+              values: [list, one, random]
+          - name: showLyrics
+            label: Enable Lyrics Drawer
+            type: boolean
+          - name: showFloatingLyrics
+            label: Enable Floating Lyrics
+            type: boolean
+          - name: playlist
+            label: Local Playlist Tracks
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: Track Title
+                type: string
+                required: true
+              - name: artist
+                label: Artist
+                type: string
+                required: true
+              - name: url
+                label: Audio File / URL (.mp3, .ogg, .flac)
+                type: file
+                required: true
+              - name: cover
+                label: Cover Image
+                type: image
+              - name: lrc
+                label: Lyrics (LRC Text or Path)
+                type: text
+          - name: meting
+            label: Meting API Settings (when Mode = meting)
+            type: object
+            fields:
+              - name: server
+                label: Music Platform
+                type: select
+                options:
+                  values: [netease, tencent, kugou, xiami, baidu]
+              - name: type
+                label: Source Type
+                type: select
+                options:
+                  values: [playlist, song, album, search, artist]
+              - name: id
+                label: Playlist / Song / Album ID
+                type: string
+              - name: api
+                label: Meting API URL
+                type: string
+              - name: auth
+                label: Auth Token (optional)
+                type: string
       - name: announcement
         label: Announcement Bar
         type: object

@@ -1,16 +1,19 @@
-/* Axia Zone ID - Axia Electric Azure/Charcoal/White Palette + Project SEKAI / Colorful Stage Visual System */
+/* Axia Zone ID - Axia Electric Azure/Slate/White Palette + Project SEKAI / Colorful Stage Aesthetic */
 
 :root {
 	color-scheme: light;
 	--axia-slate: #2f3550;
-	--axia-slate-deep: #262b3d;
+	--axia-slate-deep: #242a40;
 	--axia-ink: #2b314a;
-	--axia-ink-muted: #4b526e;
+	--axia-ink-muted: #4a5170;
 	--axia-azure: #0c6fc4;
 	--axia-azure-bright: #1898f2;
+	--axia-mint: #3ee6d0;
 	--axia-cyan-cta: #5ce1ff;
 	--axia-cyan-glow: #7ee8ff;
-	--axia-ice: #e8f7ff;
+	--axia-violet: #7048d6;
+	--axia-rose: #c22774;
+	--axia-ice: #e6f5fd;
 	--axia-card-shadow: 0 10px 24px -8px rgba(47, 53, 80, 0.14);
 }
 
@@ -36,11 +39,11 @@
 	cursor: pointer;
 }
 
-/* Project SEKAI inspired iridescent azure-pastel canvas with sparse geometric confetti */
+/* Project SEKAI iridescent prism backdrop with sparse geometric confetti */
 body {
 	background-color: var(--page-bg);
 	background-image:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23c22774' stroke-opacity='0.13' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%235ce1ff' fill-opacity='0.18'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%231898f2' fill-opacity='0.16'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%235848c9' stroke-opacity='0.13' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='1.8'/%3E%3Ccircle cx='248' cy='312' r='3.5' fill='%23c22774' fill-opacity='0.16'/%3E%3C/svg%3E"),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23c22774' stroke-opacity='0.13' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%233ee6d0' fill-opacity='0.18'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%231898f2' fill-opacity='0.16'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%237048d6' stroke-opacity='0.13' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='1.8'/%3E%3Ccircle cx='248' cy='312' r='3.5' fill='%23c22774' fill-opacity='0.16'/%3E%3C/svg%3E"),
 		repeating-linear-gradient(
 			-28deg,
 			rgba(255, 255, 255, 0.34) 0px,
@@ -53,9 +56,9 @@ body {
 }
 
 :root.dark body {
-	background-color: #121726;
+	background-color: var(--page-bg);
 	background-image:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%235ce1ff' stroke-opacity='0.09' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23e879f9' stroke-opacity='0.08' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%2338bdf8' fill-opacity='0.09'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%235ce1ff' fill-opacity='0.10'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%23818cf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%2338bdf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3C/svg%3E"),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%235ce1ff' stroke-opacity='0.09' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23e879f9' stroke-opacity='0.08' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%233ee6d0' fill-opacity='0.09'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%235ce1ff' fill-opacity='0.10'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%23818cf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%2338bdf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3C/svg%3E"),
 		repeating-linear-gradient(
 			-28deg,
 			rgba(255, 255, 255, 0.022) 0px,
@@ -68,22 +71,11 @@ body {
 			rgba(28, 162, 255, 0.14) 0%,
 			transparent 68%
 		),
-		linear-gradient(125deg, #121726 0%, #171e32 52%, #1d1c33 100%);
+		linear-gradient(125deg, #111626 0%, #161d35 52%, #1d1a33 100%);
 	background-attachment: fixed;
 }
 
-/* Smooth banner bottom blend if user switches to banner mode in settings */
-html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
-	content: "";
-	position: absolute;
-	inset-inline: 0;
-	bottom: 0;
-	height: 5.5rem;
-	pointer-events: none;
-	background: linear-gradient(to bottom, transparent 0%, var(--page-bg) 100%);
-}
-
-/* Full-width bottom accent hairline on top navbar */
+/* Floating Firefly Navbar + Project SEKAI Prism Hairline & Colorful Stage Underline */
 #navbar > div {
 	position: relative;
 }
@@ -91,97 +83,202 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 #navbar > div::after {
 	content: "";
 	position: absolute;
-	left: 0;
-	right: 0;
+	left: 0.75rem;
+	right: 0.75rem;
 	bottom: 0;
 	height: 2px;
+	border-radius: 9999px;
 	background: linear-gradient(
 		90deg,
-		var(--axia-slate-deep) 0%,
-		var(--axia-azure-bright) 50%,
-		var(--axia-cyan-cta) 100%
+		var(--axia-slate) 0%,
+		var(--primary) 52%,
+		var(--axia-mint) 100%
 	);
 	opacity: 0.78;
 	pointer-events: none;
+	transition: opacity 0.25s ease;
 }
 
-/* Crisp Project SEKAI card elevation */
-.card-base {
+#navbar[data-full-width="true"] > div::after {
+	left: 0;
+	right: 0;
+	border-radius: 0;
+}
+
+@media (max-width: 767px) {
+	#navbar > div::after {
+		left: 0;
+		right: 0;
+		border-radius: 0;
+	}
+}
+
+#navbar[data-transparent-mode="semifull"]:not(.scrolled) > div::after {
+	opacity: 0;
+}
+
+/* Colorful Stage animated underline on top-level navbar items */
+#navbar .dropdown-container > a,
+#navbar .dropdown-container > .dropdown-trigger {
+	position: relative;
+}
+
+#navbar .dropdown-container > a::after,
+#navbar .dropdown-container > .dropdown-trigger::after {
+	content: "";
+	position: absolute;
+	left: 0.7rem;
+	right: 0.7rem;
+	bottom: 0.22rem;
+	height: 2px;
+	border-radius: 9999px;
+	background: linear-gradient(90deg, var(--primary) 0%, var(--axia-mint) 100%);
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+	pointer-events: none;
+}
+
+#navbar .dropdown-container > a:hover::after,
+#navbar .dropdown-container > a:focus-visible::after,
+#navbar .dropdown-container:hover > .dropdown-trigger::after,
+#navbar .dropdown-container:focus-within > .dropdown-trigger::after {
+	transform: scaleX(1);
+}
+
+/* None wallpaper mode: keep floating frosted navbar readable against pastel prism backdrop */
+html[data-wallpaper-mode="none"] #navbar > div {
+	--navbar-surface-blur: 14px;
+	background: rgba(255, 255, 255, 0.88) !important;
+	box-shadow: 0 6px 20px -6px rgba(47, 53, 80, 0.14) !important;
+}
+
+:root.dark[data-wallpaper-mode="none"] #navbar > div {
+	background: rgba(25, 32, 54, 0.88) !important;
+	box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Firefly Banner Hero Overlay — Project SEKAI / Colorful Stage Typography & Contrast */
+.banner-title {
+	font-family: var(--font-montserrat, var(--font-banner-title, inherit));
+	letter-spacing: 0.04em;
+	text-shadow:
+		0 4px 28px rgba(15, 23, 42, 0.72),
+		0 0 18px rgba(62, 230, 208, 0.25);
+}
+
+.banner-subtitle {
+	display: inline-block;
+	margin-inline: auto;
+	padding: 0.35rem 1rem;
+	border-radius: 9999px;
+	background: rgba(24, 32, 56, 0.42);
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	text-shadow: 0 2px 14px rgba(15, 23, 42, 0.78);
+}
+
+.banner-link {
+	background: rgba(24, 32, 56, 0.52) !important;
+	border: 1.5px solid rgba(255, 255, 255, 0.36) !important;
+	color: #ffffff !important;
+	box-shadow: 0 6px 18px -6px rgba(15, 23, 42, 0.45);
+	font-family: var(--font-montserrat, inherit);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+}
+
+.banner-link:hover {
+	background: rgba(24, 32, 56, 0.82) !important;
+	border-color: var(--axia-mint) !important;
+	color: var(--axia-cyan-glow) !important;
+	box-shadow: 0 8px 22px -6px rgba(62, 230, 208, 0.35);
+}
+
+/* Firefly .card-base & Sidebar Widgets — Project SEKAI Polish */
+.enable-card-border .card-base {
+	border-color: rgba(47, 53, 80, 0.09);
 	box-shadow: var(--axia-card-shadow);
 }
 
-/* Open Canvas Showcase Section (pjsekai NEWS / SCHEDULE rhythm without outer white box) */
-.axia-open-section {
-	position: relative;
-	padding-top: 0.5rem;
+:root.dark .enable-card-border .card-base {
+	border-color: rgba(148, 197, 255, 0.12);
+	box-shadow: var(--axia-card-shadow);
 }
 
-/* Centered Dual-Layer Repeating Outlined Watermark Header */
-.axia-sekai-heading {
+widget-layout .widget-title::before {
+	background: linear-gradient(180deg, var(--primary) 0%, var(--axia-mint) 100%);
+	transform: skewY(-14deg);
+	border-radius: 2px;
+}
+
+widget-layout .widget-name {
+	font-family: var(--font-montserrat, inherit);
+	letter-spacing: 0.02em;
+}
+
+/* Spinning Music Disc SEKAI Prism Accent */
+.music-player-widget .animate-spin-slow {
+	box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 40%, var(--axia-mint));
+}
+
+/* CategoryBar SEKAI Crisp Pills + Dark Mode Contrast Fix */
+.category-bar .category-pill {
+	font-family: var(--font-montserrat, inherit);
+	font-weight: 600;
+}
+
+:root.dark .category-pill[data-active],
+:root.dark .category-pill[data-active]:hover,
+:root.dark .category-pill[data-category-name=""][data-active],
+:root.dark .category-pill[data-category-name=""][data-active]:hover {
+	color: #0b1220 !important;
+	font-weight: 700;
+}
+
+:root.dark .category-pill[data-active] .pill-count {
+	background: rgba(11, 18, 32, 0.18);
+	color: #0b1220;
+	opacity: 1;
+}
+
+/* Contained Panel Watermark Header for Firefly Center Cards */
+.axia-panel-header {
 	position: relative;
 	overflow: hidden;
-	text-align: center;
-	padding: 2rem 0.5rem 1rem;
-	margin-bottom: 1rem;
 }
 
-.axia-sekai-watermark {
+.axia-panel-watermark {
 	position: absolute;
-	left: 50%;
-	top: 44%;
-	transform: translate(-50%, -68%);
+	right: 0.75rem;
+	top: 50%;
+	transform: translateY(-50%);
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: clamp(2.1rem, 1.35rem + 4.1vw, 4.75rem);
+	font-size: clamp(1.75rem, 1.25rem + 2.4vw, 3.1rem);
 	font-weight: 800;
-	letter-spacing: 0.16em;
+	letter-spacing: 0.14em;
 	line-height: 1;
 	text-transform: uppercase;
 	color: transparent;
-	-webkit-text-stroke: 1.5px rgba(47, 53, 80, 0.12);
+	-webkit-text-stroke: 1.4px rgba(47, 53, 80, 0.10);
 	pointer-events: none;
 	user-select: none;
 	white-space: nowrap;
 }
 
-:root.dark .axia-sekai-watermark {
-	-webkit-text-stroke: 1.5px rgba(126, 232, 255, 0.13);
+:root.dark .axia-panel-watermark {
+	-webkit-text-stroke: 1.4px rgba(126, 232, 255, 0.11);
 }
 
-.axia-sekai-title {
-	position: relative;
-	z-index: 1;
-	margin: 0;
-	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: clamp(1.45rem, 1.15rem + 1.25vw, 2.15rem);
-	font-weight: 800;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	line-height: 1.2;
-	color: var(--axia-ink);
-}
-
-.axia-sekai-rule {
-	position: relative;
-	z-index: 1;
-	width: 3.25rem;
-	height: 3px;
-	margin: 0.65rem auto 0;
-	border-radius: 999px;
-	background: linear-gradient(90deg, var(--axia-slate-deep) 0%, var(--axia-azure-bright) 100%);
-}
-
-:root.dark .axia-sekai-rule {
-	background: linear-gradient(90deg, var(--axia-azure-bright) 0%, var(--axia-cyan-cta) 100%);
-}
-
-.axia-sekai-subtitle {
-	position: relative;
-	z-index: 1;
-	margin: 0.65rem auto 0;
-	max-width: 40rem;
-	font-size: 0.92rem;
-	line-height: 1.5;
-	color: var(--axia-ink-muted);
+.axia-prism-bar {
+	display: inline-block;
+	width: 0.25rem;
+	height: 1.25rem;
+	border-radius: 2px;
+	background: linear-gradient(180deg, var(--primary) 0%, var(--axia-mint) 100%);
+	transform: skewY(-14deg);
+	flex-shrink: 0;
 }
 
 /* Iconic Colorful Stage Full-Pill CTA Buttons */
@@ -190,13 +287,13 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
-	min-height: 46px;
-	padding: 0.65rem 1.75rem;
+	min-height: 44px;
+	padding: 0.6rem 1.45rem;
 	border-radius: 9999px;
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: 0.84rem;
+	font-size: 0.8rem;
 	font-weight: 800;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.07em;
 	text-transform: uppercase;
 	text-decoration: none;
 	transition:
@@ -208,21 +305,21 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-stage-btn-cyan {
-	background-color: var(--axia-cyan-cta);
+	background-color: var(--axia-mint);
 	color: #182038;
 	border: 2px solid transparent;
-	box-shadow: 0 8px 20px -6px rgba(12, 111, 196, 0.34);
+	box-shadow: 0 8px 18px -6px rgba(12, 111, 196, 0.28);
 }
 
 .axia-stage-btn-cyan:hover {
 	background-color: var(--axia-slate-deep);
 	color: var(--axia-cyan-glow);
-	transform: translateY(-2px);
-	box-shadow: 0 12px 24px -8px rgba(38, 43, 61, 0.38);
+	transform: translateY(-1px);
+	box-shadow: 0 10px 22px -8px rgba(36, 42, 64, 0.36);
 }
 
 :root.dark .axia-stage-btn-cyan {
-	background-color: #38bdf8;
+	background-color: var(--axia-mint);
 	color: #0b1220;
 }
 
@@ -232,16 +329,16 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-stage-btn-outline {
-	background-color: #ffffff;
+	background-color: var(--card-bg);
 	color: var(--axia-ink);
 	border: 1.5px solid rgba(43, 49, 74, 0.22);
 	box-shadow: 0 4px 12px -4px rgba(47, 53, 80, 0.10);
 }
 
 .axia-stage-btn-outline:hover {
-	border-color: var(--axia-azure);
-	color: var(--axia-azure);
-	transform: translateY(-2px);
+	border-color: var(--primary);
+	color: var(--primary);
+	transform: translateY(-1px);
 }
 
 :root.dark .axia-stage-btn-outline {
@@ -251,21 +348,21 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 :root.dark .axia-stage-btn-outline:hover {
-	border-color: #5ce1ff;
-	color: #7ee8ff;
+	border-color: var(--axia-mint);
+	color: var(--axia-cyan-glow);
 }
 
-/* Compact Inline Pill CTA (used inside cards/lists) */
+/* Compact Inline Pill CTA */
 .axia-pill-cta {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	gap: 0.45rem;
+	gap: 0.4rem;
 	min-height: 44px;
-	padding: 0.45rem 1.05rem;
+	padding: 0.4rem 1rem;
 	border-radius: 9999px;
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: 0.75rem;
+	font-size: 0.72rem;
 	font-weight: 700;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
@@ -275,6 +372,12 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 		border-color 0.2s ease;
 }
 
+@media (min-width: 640px) {
+	.axia-pill-cta {
+		min-height: 36px;
+	}
+}
+
 .axia-pill-cta-primary {
 	background-color: var(--axia-slate);
 	color: #ffffff;
@@ -282,8 +385,8 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-pill-cta-primary:hover {
-	background-color: var(--axia-azure);
-	border-color: var(--axia-azure);
+	background-color: var(--primary);
+	border-color: var(--primary);
 	color: #ffffff;
 }
 
@@ -294,16 +397,17 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 :root.dark .axia-pill-cta-primary:hover {
-	background-color: var(--axia-azure-bright);
+	background-color: var(--axia-mint);
+	border-color: var(--axia-mint);
 	color: #0b1220;
 }
 
-/* Signature Project SEKAI Split-Header Card */
+/* Project SEKAI Split-Header Card (Firefly Card-Native Surface) */
 .axia-sekai-card,
 .axia-split-card {
-	border-radius: 6px;
-	border: 1px solid rgba(47, 53, 80, 0.10);
-	background-color: #ffffff;
+	border-radius: var(--radius-large, 0.875rem);
+	border: 1px solid rgba(47, 53, 80, 0.11);
+	background-color: var(--card-bg);
 	overflow: hidden;
 	box-shadow: var(--axia-card-shadow);
 	transition:
@@ -314,15 +418,34 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 
 :root.dark .axia-sekai-card,
 :root.dark .axia-split-card {
-	background-color: #1c2236;
-	border-color: rgba(255, 255, 255, 0.10);
+	background-color: var(--card-bg);
+	border-color: rgba(148, 197, 255, 0.14);
+}
+
+body.wallpaper-transparent .axia-sekai-card,
+body.wallpaper-transparent .axia-split-card {
+	background-color: var(--card-bg-transparent);
+	backdrop-filter: blur(var(--overlay-blur, 10px));
+	-webkit-backdrop-filter: blur(var(--overlay-blur, 10px));
 }
 
 .axia-sekai-card:hover,
 .axia-split-card:hover {
-	border-color: var(--axia-azure-bright);
-	transform: translateY(-3px);
-	box-shadow: 0 16px 32px -10px rgba(12, 111, 196, 0.22);
+	border-color: var(--primary);
+	transform: translateY(-2px);
+	box-shadow: 0 14px 28px -10px rgba(12, 111, 196, 0.24);
+}
+
+.axia-sekai-post-card {
+	border-radius: var(--radius-large, 0.875rem);
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.axia-sekai-post-card:hover {
+	border-color: var(--primary);
+	box-shadow: 0 14px 28px -10px rgba(12, 111, 196, 0.22);
 }
 
 .axia-split-bar {
@@ -354,13 +477,20 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	justify-content: space-between;
 	gap: 0.5rem;
 	padding: 0.42rem 0.85rem;
-	background-color: #0c6fc4;
+	background-color: var(--primary);
 	color: #ffffff;
 	min-width: 0;
 }
 
-.axia-split-type[data-cat-tone="live"],
 .axia-split-type[data-cat-tone="blog"] {
+	background-color: var(--primary);
+}
+
+:root.dark .axia-split-type[data-cat-tone="blog"] {
+	background-color: oklch(0.45 0.16 var(--hue));
+}
+
+.axia-split-type[data-cat-tone="live"] {
 	background-color: #0c6fc4;
 }
 
@@ -369,7 +499,7 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-split-type[data-cat-tone="anikura"] {
-	background-color: #5848c9;
+	background-color: #7048d6;
 }
 
 .axia-split-type[data-cat-tone="expo"] {
@@ -377,7 +507,7 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-split-type[data-cat-tone="past"] {
-	background-color: #4b526e;
+	background-color: #4a5170;
 }
 
 /* Card Stage Thumbnail / Stylized Editorial Banner */
@@ -402,7 +532,7 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 }
 
 .axia-event-stage.is-editorial {
-	min-height: 7.5rem;
+	min-height: 6.75rem;
 }
 
 :root.dark .axia-event-stage {
@@ -466,23 +596,17 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 		linear-gradient(125deg, #25204a 0%, #1b2544 65%, #2a1d42 100%);
 }
 
-@media (max-width: 640px) {
-	.axia-sekai-heading {
-		padding: 1.5rem 0.25rem 0.75rem;
-	}
-}
-
 @media (forced-colors: active) {
 	.card-base,
 	.axia-sekai-card,
 	.axia-split-card,
 	.axia-stage-btn,
 	.axia-pill-cta,
-	.axia-split-bar,
-	.axia-hero-card {
+	.axia-split-bar {
 		border: 1px solid CanvasText !important;
 	}
-	.axia-sekai-watermark {
+	.axia-panel-watermark,
+	.axia-prism-bar {
 		display: none;
 	}
 }
@@ -490,8 +614,11 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 @media (prefers-reduced-motion: reduce) {
 	.axia-sekai-card,
 	.axia-split-card,
+	.axia-sekai-post-card,
 	.axia-stage-btn,
-	.axia-pill-cta {
+	.axia-pill-cta,
+	#navbar .dropdown-container > a::after,
+	#navbar .dropdown-container > .dropdown-trigger::after {
 		transition-duration: 0.01ms !important;
 		transform: none !important;
 	}

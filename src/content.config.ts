@@ -157,6 +157,7 @@ export type EventData = {
 	mapsUrl: string;
 	highlights: string[];
 	status: EventStatus;
+	majorEvent: boolean;
 	ticketUrl: string;
 	lineup: { collection: "performers"; id: string }[];
 	description: string;
@@ -326,6 +327,7 @@ const eventsCollection: ContentCollection<EventData> = defineCollection({
 			.enum(["upcoming", "ongoing", "completed", "cancelled", "postponed"])
 			.optional()
 			.default("upcoming"),
+		majorEvent: z.boolean().optional().default(false),
 		ticketUrl: z.string().optional().default(""),
 		lineup: z.array(performerRef).optional().default([]),
 		description: z.string().optional().default(""),

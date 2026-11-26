@@ -238,6 +238,14 @@ collections:
           default: "upcoming",
           required: false,
         }
+      - {
+          label: "Big / Major Event",
+          name: "majorEvent",
+          widget: "boolean",
+          default: false,
+          required: false,
+          hint: "Highlight major conventions or concerts on the homepage schedule (used for big Jabodetabek events).",
+        }
       - { label: "Ticket URL", name: "ticketUrl", widget: "string", required: false }
       - {
           label: "Performer Lineup",
@@ -610,6 +618,81 @@ collections:
               - { label: "Banner Subtitles", name: "subtitles", widget: "list" }
               - { label: "Enable Typewriter Effect", name: "typewriterEnable", widget: "boolean" }
               - { label: "Banner Dim Opacity (0 - 1)", name: "dimOpacity", widget: "number", value_type: "float", min: 0, max: 1, step: 0.05 }
+              - label: "Desktop Wallpaper Images"
+                name: "desktopImages"
+                widget: "list"
+                required: false
+                hint: "Upload images (saved to /uploads/...) or keep src-relative asset paths (e.g. assets/images/DesktopWallpaper/d1.avif)."
+                field: { label: "Wallpaper Image", name: "image", widget: "image" }
+              - label: "Mobile Wallpaper Images"
+                name: "mobileImages"
+                widget: "list"
+                required: false
+                hint: "Upload mobile wallpapers or enter image paths/URLs."
+                field: { label: "Wallpaper Image", name: "image", widget: "image" }
+              - {
+                  label: "Wallpaper Focal Position",
+                  name: "position",
+                  widget: "string",
+                  default: "0% 20%",
+                  required: false,
+                  hint: "CSS object-position value such as '0% 20%', 'center', or 'top'.",
+                }
+              - { label: "Show Animated Waves", name: "wavesEnable", widget: "boolean", default: true }
+              - { label: "Enable Wallpaper Carousel", name: "carouselEnable", widget: "boolean", default: false }
+              - { label: "Carousel Interval (ms)", name: "carouselInterval", widget: "number", value_type: "int", min: 1000, default: 5000 }
+              - {
+                  label: "Carousel Transition Effect",
+                  name: "carouselEffect",
+                  widget: "select",
+                  options: ["fade", "zoom", "slide", "kenburns"],
+                  default: "zoom",
+                }
+          - label: "Music Player"
+            name: "music"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Show in Navbar", name: "showInNavbar", widget: "boolean", default: true }
+              - { label: "Show in Sidebar", name: "showInSidebar", widget: "boolean", default: true }
+              - {
+                  label: "Player Source Mode",
+                  name: "mode",
+                  widget: "select",
+                  options: ["local", "meting"],
+                  default: "local",
+                }
+              - { label: "Default Volume (0 - 1)", name: "volume", widget: "number", value_type: "float", min: 0, max: 1, step: 0.05, default: 0.7 }
+              - {
+                  label: "Default Play Mode",
+                  name: "playMode",
+                  widget: "select",
+                  options: ["list", "one", "random"],
+                  default: "list",
+                }
+              - { label: "Enable Lyrics Drawer", name: "showLyrics", widget: "boolean", default: false }
+              - { label: "Enable Floating Lyrics", name: "showFloatingLyrics", widget: "boolean", default: true }
+              - label: "Local Playlist Tracks"
+                name: "playlist"
+                widget: "list"
+                required: false
+                summary: "{{fields.name}} - {{fields.artist}}"
+                fields:
+                  - { label: "Track Title", name: "name", widget: "string", required: true }
+                  - { label: "Artist", name: "artist", widget: "string", required: true }
+                  - { label: "Audio File / URL", name: "url", widget: "file", required: true, hint: "Upload an MP3/audio file or paste a /assets/music/... path or URL." }
+                  - { label: "Cover Image", name: "cover", widget: "image", required: false }
+                  - { label: "Lyrics (LRC Text or Path)", name: "lrc", widget: "text", required: false }
+              - label: "Meting API Settings"
+                name: "meting"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Music Platform", name: "server", widget: "select", options: ["netease", "tencent", "kugou", "xiami", "baidu"], default: "netease" }
+                  - { label: "Source Type", name: "type", widget: "select", options: ["playlist", "song", "album", "search", "artist"], default: "playlist" }
+                  - { label: "Playlist / Song / Album ID", name: "id", widget: "string", required: false }
+                  - { label: "Meting API URL", name: "api", widget: "string", required: false }
+                  - { label: "Auth Token", name: "auth", widget: "string", required: false }
           - label: "Announcement Bar"
             name: "announcement"
             widget: "object"

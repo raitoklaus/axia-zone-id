@@ -157,10 +157,10 @@ const logoVariants = await Promise.all(
     </script>
     <div class:list={[
         className,
-        "overflow-visible! h-16 px-4"
+        "overflow-visible! h-18 px-4"
     ]}>
-        <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center">
-            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-3 md:px-5 font-bold active:scale-95">
+        <div class="mx-auto h-full w-full max-w-(--page-width) grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
+            <a href={url('/')} class="btn-plain scale-animation rounded-lg h-13 px-2.5 xl:px-4 font-bold active:scale-95 shrink-0">
                 <div class:list={[
                     "flex flex-row items-center text-md",
                     siteConfig.navbar.followTheme ? "text-(--primary)" : "dark:text-white text-black"
@@ -190,7 +190,7 @@ const logoVariants = await Promise.all(
                 </div>
             </a>
             <div class:list={[
-                "hidden lg:flex items-center space-x-1 col-start-2",
+                "hidden lg:flex items-center space-x-0.5 xl:space-x-1 col-start-2 min-w-0",
                 isNavbarMenuCentered
                     ? "justify-center"
                     : "justify-start pl-2"

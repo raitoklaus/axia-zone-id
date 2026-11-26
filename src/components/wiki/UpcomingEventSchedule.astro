@@ -8,19 +8,24 @@ import {
 	getEventCalendarParts,
 	getEventCategoryTone,
 	getEventStatusMeta,
-	getUpcomingEvents,
+	getHomepageUpcomingEvents,
+	getHomeScheduleScope,
 	resolveEventLineup,
 } from "@/utils/wiki-utils";
 
-const upcomingEvents = await getUpcomingEvents(6);
+const upcomingEvents = await getHomepageUpcomingEvents(6);
 const eventsWithMeta = await Promise.all(
 	upcomingEvents.map(async (event) => {
 		const startYmd = formatDateToYYYYMMDD(event.data.startDate);
 		const endYmd = event.data.endDate
 			? formatDateToYYYYMMDD(event.data.endDate)
 			: startYmd;
+		const scope = getHomeScheduleScope(event);
 		return {
 			event,
+			scope,
+			scopeLabel:
+				scope === "kota-bandung" ? "Kota Bandung" : "Jabodetabek · Big Event",
 			startYmd,
 			endYmd,
 			displayDotDate: startYmd.replaceAll("-", "."),
@@ -34,59 +39,80 @@ const eventsWithMeta = await Promise.all(
 	}),
 );
 
-const availableRegions = Array.from(
-	new Set(
-		eventsWithMeta
-			.map(({ event }) => event.data.region.trim())
-			.filter((region) => region.length > 0),
-	),
-);
+const bandungCount = eventsWithMeta.filter(
+	({ scope }) => scope === "kota-bandung",
+).length;
+const jabodetabekCount = eventsWithMeta.filter(
+	({ scope }) => scope === "jabodetabek-major",
+).length;
 ---
 
 <section
 	aria-labelledby="upcoming-schedule-heading"
-	class="axia-open-section mb-12 onload-animation"
+	class="card-base p-4 sm:p-5 md:p-6 mb-4 relative overflow-hidden onload-animation"
 >
 	<home-schedule-filter class="block">
-		<div class="axia-sekai-heading">
-			<span class="axia-sekai-watermark" aria-hidden="true">
-				SCHEDULE &nbsp; SCHEDULE &nbsp; SCHEDULE
-			</span>
-			<h2 id="upcoming-schedule-heading" class="axia-sekai-title">
-				Upcoming Schedule
-			</h2>
-			<div class="axia-sekai-rule" aria-hidden="true"></div>
-			<p class="axia-sekai-subtitle">
-				Indonesian ACG conventions, mall matsuri, anisong lives, and connected performer lineups
-			</p>
+		<div class="axia-panel-header flex flex-wrap items-start justify-between gap-3 pb-3.5 mb-4 border-b border-(--line-divider)">
+			<span class="axia-panel-watermark" aria-hidden="true">SCHEDULE</span>
+			<div class="relative z-10 min-w-0">
+				<div class="flex items-center gap-2.5">
+					<span class="axia-prism-bar" aria-hidden="true"></span>
+					<h2
+						id="upcoming-schedule-heading"
+						class="text-lg md:text-xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+						style="font-family: var(--font-montserrat, sans-serif)"
+					>
+						Upcoming Schedule
+					</h2>
+				</div>
+				<p class="text-xs sm:text-sm text-[#4a5170] dark:text-slate-300 mt-1">
+					Focused on Kota Bandung events and major Jabodetabek conventions &amp; live shows
+				</p>
+			</div>
+			<div class="relative z-10 shrink-0 hidden sm:flex items-center gap-2">
+				<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-(--btn-regular-bg) text-(--btn-content)">
+					<Icon name="material-symbols:calendar-month-rounded" class="text-sm" aria-hidden="true" />
+					<span>{eventsWithMeta.length} Featured</span>
+				</span>
+			</div>
 		</div>
 
 		{
-			availableRegions.length > 1 && (
+			eventsWithMeta.length > 0 && (
 				<div
-					class="flex flex-wrap items-center justify-center gap-2 mb-6"
+					class="flex flex-wrap items-center justify-start gap-2 mb-4"
 					role="group"
-					aria-label="Filter upcoming schedule by region"
+					aria-label="Filter upcoming schedule by area"
 				>
 					<button
 						type="button"
-						data-region="all"
+						data-scope="all"
 						data-active
 						aria-pressed="true"
-						class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+						class="home-region-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 					>
-						All Regions ({eventsWithMeta.length})
+						All Featured ({eventsWithMeta.length})
 					</button>
-					{availableRegions.map((region) => (
+					{bandungCount > 0 && (
 						<button
 							type="button"
-							data-region={region}
+							data-scope="kota-bandung"
 							aria-pressed="false"
-							class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+							class="home-region-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						>
-							{region}
+							Kota Bandung ({bandungCount})
 						</button>
-					))}
+					)}
+					{jabodetabekCount > 0 && (
+						<button
+							type="button"
+							data-scope="jabodetabek-major"
+							aria-pressed="false"
+							class="home-region-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+						>
+							Jabodetabek Big Events ({jabodetabekCount})
+						</button>
+					)}
 				</div>
 			)
 		}
@@ -97,6 +123,8 @@ const availableRegions = Array.from(
 					{eventsWithMeta.map(
 						({
 							event,
+							scope,
+							scopeLabel,
 							startYmd,
 							endYmd,
 							displayDotDate,
@@ -109,7 +137,7 @@ const availableRegions = Array.from(
 						}) => (
 							<li
 								class="home-schedule-item flex"
-								data-region={event.data.region}
+								data-scope={scope || "other"}
 							>
 								<article class="axia-sekai-card flex flex-col w-full min-w-0">
 									<div class="axia-split-bar">
@@ -152,29 +180,29 @@ const availableRegions = Array.from(
 												class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
 											/>
 										) : (
-											<div class="h-full w-full p-4 flex flex-col justify-between gap-3 relative overflow-hidden">
+											<div class="h-full w-full p-3.5 flex flex-col justify-between gap-2.5 relative overflow-hidden">
 												<span
 													aria-hidden="true"
-													class="pointer-events-none select-none absolute -right-2 -bottom-3 text-5xl font-extrabold uppercase tracking-wider text-[#2f3550]/[0.06] dark:text-white/[0.06]"
+													class="pointer-events-none select-none absolute -right-2 -bottom-2 text-4xl font-extrabold uppercase tracking-wider text-[#2f3550]/[0.06] dark:text-white/[0.06]"
 													style="font-family: var(--font-montserrat, sans-serif)"
 												>
 													{event.data.city}
 												</span>
 
 												<div class="flex items-start justify-between gap-2 relative z-10">
-													<span class="inline-flex items-center px-2.5 py-1 rounded text-[0.7rem] font-bold uppercase tracking-wider bg-[#2f3550] text-white">
-														{event.data.region || event.data.city}
+													<span class="inline-flex items-center px-2 py-0.5 rounded text-[0.68rem] font-bold uppercase tracking-wider bg-[#2f3550] text-white">
+														{scopeLabel}
 													</span>
 													<span
 														data-countdown-start={startYmd}
 														data-countdown-end={endYmd}
-														class="hidden items-center px-2.5 py-1 rounded text-[0.7rem] font-bold bg-white/95 text-[#2b314a] border border-black/10 dark:bg-[#14192b] dark:text-[#e2e8f0] dark:border-white/15"
+														class="hidden items-center px-2 py-0.5 rounded text-[0.68rem] font-bold bg-white/95 text-[#2b314a] border border-black/10 dark:bg-[#14192b] dark:text-[#e2e8f0] dark:border-white/15"
 													/>
 												</div>
 
 												<div class="flex items-end justify-between gap-2 relative z-10">
 													<div class="flex items-baseline gap-1.5 shrink-0 whitespace-nowrap" style="font-family: var(--font-montserrat, sans-serif)">
-														<span class="text-3xl font-extrabold leading-none text-[#2b314a] dark:text-white">
+														<span class="text-2xl font-extrabold leading-none text-[#2b314a] dark:text-white">
 															{dateParts.day}
 														</span>
 														<span class="text-xs font-extrabold tracking-widest uppercase text-[#0c6fc4] dark:text-[#7ee8ff]">
@@ -182,7 +210,7 @@ const availableRegions = Array.from(
 														</span>
 													</div>
 													<span
-														class={`inline-flex items-center px-2.5 py-1 rounded text-[0.68rem] leading-tight text-right font-bold max-w-[58%] ${admissionMeta.className}`}
+														class={`inline-flex items-center px-2 py-0.5 rounded text-[0.66rem] leading-tight text-right font-bold max-w-[60%] ${admissionMeta.className}`}
 													>
 														{admissionMeta.label}
 													</span>
@@ -191,8 +219,8 @@ const availableRegions = Array.from(
 										)}
 									</a>
 
-									<div class="p-5 flex-1 flex flex-col min-w-0">
-										<h3 class="text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug line-clamp-2">
+									<div class="p-4 flex-1 flex flex-col min-w-0">
+										<h3 class="text-base sm:text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug line-clamp-2">
 											<a
 												href={getEventUrl(event.id)}
 												class="hover:text-[#0c6fc4] dark:hover:text-[#7ee8ff] transition-colors"
@@ -201,7 +229,7 @@ const availableRegions = Array.from(
 											</a>
 										</h3>
 
-										<div class="flex flex-col gap-1 mt-2.5 text-sm text-[#4b526e] dark:text-slate-300">
+										<div class="flex flex-col gap-1 mt-2 text-xs sm:text-sm text-[#4a5170] dark:text-slate-300">
 											<span class="inline-flex items-center gap-1.5">
 												<Icon
 													name="material-symbols:calendar-today-outline-rounded"
@@ -229,13 +257,13 @@ const availableRegions = Array.from(
 											<ul
 												role="list"
 												aria-label={`Lineup for ${event.data.title}`}
-												class="flex flex-wrap items-center gap-1.5 mt-3 list-none p-0 m-0"
+												class="flex flex-wrap items-center gap-1.5 mt-2.5 list-none p-0 m-0"
 											>
 												{lineup.map((performer) => (
 													<li>
 														<a
 															href={getPerformerUrl(performer.id)}
-															class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] px-2.5 py-1 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+															class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[32px] px-2.5 py-1 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
 														>
 															<Icon
 																name="material-symbols:person-rounded"
@@ -249,7 +277,7 @@ const availableRegions = Array.from(
 											</ul>
 										)}
 
-										<div class="mt-auto pt-4 mt-4 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
+										<div class="mt-auto pt-3 mt-3 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
 											<a
 												href={getEventUrl(event.id)}
 												class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[36px] text-xs font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
@@ -283,8 +311,8 @@ const availableRegions = Array.from(
 					)}
 				</ul>
 			) : (
-				<div class="axia-sekai-card p-8 text-center">
-					<p class="text-sm text-[#4b526e] dark:text-slate-300">
+				<div class="axia-sekai-card p-6 text-center">
+					<p class="text-sm text-[#4a5170] dark:text-slate-300">
 						No upcoming events are scheduled yet. Browse past appearances in the{" "}
 						<a href={url("/wiki/events/")} class="text-[#0c6fc4] dark:text-[#7ee8ff] font-semibold hover:underline">
 							event archive
@@ -295,31 +323,31 @@ const availableRegions = Array.from(
 			)
 		}
 
-		<div class="home-schedule-filtered-empty hidden axia-sekai-card p-8 text-center mt-4">
-			<p class="text-sm text-[#4b526e] dark:text-slate-300">
-				No upcoming events match this region right now.
+		<div class="home-schedule-filtered-empty hidden axia-sekai-card p-6 text-center mt-4">
+			<p class="text-sm text-[#4a5170] dark:text-slate-300">
+				No featured events match this area filter right now.
 			</p>
 			<button
 				type="button"
-				data-reset-home-region
+				data-reset-home-scope
 				class="mt-3 min-h-[44px] px-4 py-2 rounded-full text-sm font-semibold bg-[#2f3550] text-white hover:bg-[#0c6fc4] cursor-pointer transition-colors"
 			>
-				Show all regions
+				Show all featured
 			</button>
 		</div>
 
-		<nav aria-label="Full schedule and performer wiki" class="mt-8 flex flex-wrap items-center justify-center gap-3">
-			<a
-				href={url("/wiki/events/")}
-				class="axia-stage-btn axia-stage-btn-cyan min-w-[230px]"
-			>
-				<span>All Events &amp; Calendar</span>
-			</a>
+		<nav aria-label="Full schedule and performer wiki" class="mt-5 flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
 			<a
 				href={url("/wiki/performers/")}
 				class="axia-stage-btn axia-stage-btn-outline"
 			>
 				<span>Performer Wiki</span>
+			</a>
+			<a
+				href={url("/wiki/events/")}
+				class="axia-stage-btn axia-stage-btn-cyan"
+			>
+				<span>All Events &amp; Calendar</span>
 			</a>
 		</nav>
 	</home-schedule-filter>
@@ -395,7 +423,7 @@ const availableRegions = Array.from(
 
 		if (!customElements.get("home-schedule-filter")) {
 			class HomeScheduleFilter extends HTMLElement {
-				selectedRegion = "all";
+				selectedScope = "all";
 				connectedCallback() {
 					this.addEventListener("click", this.handleClick);
 					updateCountdowns();
@@ -404,23 +432,23 @@ const availableRegions = Array.from(
 					this.removeEventListener("click", this.handleClick);
 				}
 				handleClick(e) {
-					var resetBtn = e.target.closest("[data-reset-home-region]");
+					var resetBtn = e.target.closest("[data-reset-home-scope]");
 					if (resetBtn) {
-						this.selectedRegion = "all";
+						this.selectedScope = "all";
 						this.syncButtons();
 						this.applyFilter();
 						return;
 					}
-					var pill = e.target.closest("button[data-region]");
+					var pill = e.target.closest("button[data-scope]");
 					if (!pill) return;
-					this.selectedRegion = pill.getAttribute("data-region") || "all";
+					this.selectedScope = pill.getAttribute("data-scope") || "all";
 					this.syncButtons();
 					this.applyFilter();
 				}
 				syncButtons() {
 					var self = this;
-					this.querySelectorAll("button[data-region]").forEach(function (btn) {
-						var active = btn.getAttribute("data-region") === self.selectedRegion;
+					this.querySelectorAll("button[data-scope]").forEach(function (btn) {
+						var active = btn.getAttribute("data-scope") === self.selectedScope;
 						btn.toggleAttribute("data-active", active);
 						btn.setAttribute("aria-pressed", String(active));
 					});
@@ -431,8 +459,8 @@ const availableRegions = Array.from(
 					var self = this;
 					items.forEach(function (item) {
 						var match =
-							self.selectedRegion === "all" ||
-							item.getAttribute("data-region") === self.selectedRegion;
+							self.selectedScope === "all" ||
+							item.getAttribute("data-scope") === self.selectedScope;
 						item.style.display = match ? "" : "none";
 						if (match) visibleCount += 1;
 					});
@@ -457,19 +485,18 @@ const availableRegions = Array.from(
 <style>
 	.axia-schedule-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
-		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
+		gap: 1rem;
 	}
 
 	.home-region-pill {
-		background: #ffffff;
-		color: #2b314a;
-		border: 1px solid rgba(47, 53, 80, 0.14);
-		box-shadow: 0 3px 10px -4px rgba(47, 53, 80, 0.10);
+		background: var(--btn-regular-bg);
+		color: var(--btn-content);
+		border: 1px solid color-mix(in oklab, var(--btn-content) 14%, transparent);
 	}
 	.home-region-pill:hover {
-		border-color: #0c6fc4;
-		color: #0c6fc4;
+		background: var(--btn-regular-bg-hover);
+		color: var(--primary);
 	}
 	.home-region-pill[data-active] {
 		background: #2f3550;
@@ -477,15 +504,6 @@ const availableRegions = Array.from(
 		border-color: #2f3550;
 	}
 
-	:global(:root.dark) .home-region-pill {
-		background: #1c2236;
-		color: #e2e8f0;
-		border-color: rgba(255, 255, 255, 0.14);
-	}
-	:global(:root.dark) .home-region-pill:hover {
-		border-color: #5ce1ff;
-		color: #7ee8ff;
-	}
 	:global(:root.dark) .home-region-pill[data-active] {
 		background: #0c6fc4;
 		color: #ffffff;

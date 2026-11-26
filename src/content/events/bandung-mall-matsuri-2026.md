@@ -3,7 +3,7 @@ title: "Bandung Mall Matsuri 2026"
 startDate: 2026-12-05
 endDate: 2026-12-06
 venue: "Cihampelas Walk Atrium"
-city: "Bandung"
+city: "Kota Bandung"
 region: "Jawa Barat"
 eventType: "Matsuri / Bunkasai"
 entryType: "free"

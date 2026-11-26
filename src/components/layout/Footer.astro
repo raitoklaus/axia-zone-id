@@ -25,113 +25,96 @@ try {
 }
 ---
 
-<!-- 页脚：普通流位于文档末尾。site-footer 是 immersive-reading 的隐藏选择器，
-     pointer-events-auto 用于覆盖首页或主容器的 pointer-events: none，两者勿删 -->
-<footer class="site-footer pointer-events-auto w-full mt-14">
-	<!-- Tier 1: Project SEKAI / Colorful Stage crisp brand strip -->
-	<div class="bg-white dark:bg-[#181e30] border-t border-black/8 dark:border-white/10 py-6 px-4">
-		<div class="max-w-(--page-width) mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-			<div class="flex items-center gap-3">
-				<Icon name="material-symbols:auto-awesome-rounded" class="text-2xl text-[#0c6fc4] dark:text-[#5ce1ff]" aria-hidden="true" />
+<!-- 页脚：位于 #content-panel-inner 内，宽度对齐侧栏与内容栏；site-footer 供沉浸阅读隐藏 -->
+<footer class="site-footer pointer-events-auto my-6">
+	<div class="card-base relative overflow-hidden px-5 md:px-7 py-5 md:py-6">
+		<div
+			aria-hidden="true"
+			class="absolute inset-x-0 top-0 h-[3px]"
+			style="background: linear-gradient(90deg, var(--axia-slate) 0%, var(--primary) 52%, var(--axia-mint) 100%);"
+		></div>
+
+		<div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-(--line-divider)">
+			<div class="flex items-center gap-3 text-center md:text-left">
+				<span class="w-10 h-10 rounded-xl bg-(--btn-regular-bg) text-(--primary) inline-flex items-center justify-center shrink-0">
+					<Icon name="material-symbols:auto-awesome-rounded" class="text-2xl" aria-hidden="true" />
+				</span>
 				<div>
 					<p class="font-bold text-base tracking-[0.06em] uppercase text-[#2b314a] dark:text-slate-100" style="font-family: var(--font-montserrat, sans-serif)">
 						{profileConfig.name}
 					</p>
-					<p class="text-xs text-[#4b526e] dark:text-slate-300">
+					<p class="text-xs text-[#4a5170] dark:text-slate-300">
 						{profileConfig.bio}
 					</p>
 				</div>
 			</div>
 
-			<nav aria-label="Footer quick navigation" class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.06em] text-[#2b314a] dark:text-slate-200" style="font-family: var(--font-montserrat, sans-serif)">
-				<a href={url("/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">Home</a>
-				<a href={url("/wiki/events/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">Events</a>
-				<a href={url("/wiki/performers/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">Performers</a>
-				<a href={url("/archive/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">Archive</a>
-				<a href={url("/about/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">About</a>
-				<a href={url("/admin/")} class="hover:text-[#0c6fc4] dark:hover:text-[#5ce1ff] py-1 transition-colors">CMS</a>
+			<nav aria-label="Footer quick navigation" class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs font-bold uppercase tracking-[0.06em] text-[#2b314a] dark:text-slate-200" style="font-family: var(--font-montserrat, sans-serif)">
+				<a href={url("/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">Home</a>
+				<a href={url("/wiki/events/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">Events</a>
+				<a href={url("/wiki/performers/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">Performers</a>
+				<a href={url("/archive/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">Archive</a>
+				<a href={url("/about/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">About</a>
+				<a href={url("/admin/")} class="min-h-[44px] sm:min-h-[36px] inline-flex items-center px-1.5 hover:text-(--primary) dark:hover:text-[#7ee8ff] transition-colors">CMS</a>
 			</nav>
 		</div>
-	</div>
 
-	<!-- Tier 2: Full-width Slate-Indigo Band -->
-	<div class="bg-[#3b405e] dark:bg-[#111524] text-white py-9 px-4">
-		<div class="max-w-(--page-width) mx-auto flex flex-col items-center text-center">
-			<p class="text-xs font-bold tracking-[0.14em] uppercase text-white/90 mb-4" style="font-family: var(--font-montserrat, sans-serif)">
-				Official Links
-			</p>
+		<div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#4a5170] dark:text-slate-300">
+			<div class="flex flex-col items-center sm:items-start gap-1 text-center sm:text-left">
+				{customFooterHtml && <div class="mb-1" set:html={customFooterHtml} />}
+				<div>
+					&copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}. All Rights Reserved.
+				</div>
+				<!--
+					注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
+					需要增加底部内容时，直接编辑 src/config/FooterConfig.html 即可，不需要修改 Footer.astro。
+				-->
+				<div class="flex items-center justify-center sm:justify-start gap-x-1.5 flex-wrap">
+					<span>Powered by</span>
+					<a class="text-(--primary) dark:text-[#7ee8ff] hover:underline font-semibold" target="_blank" rel="noopener noreferrer" href="https://astro.build">Astro</a>
+					<span aria-hidden="true">&amp;</span>
+					<a class="text-(--primary) dark:text-[#7ee8ff] hover:underline font-semibold" target="_blank" rel="noopener noreferrer" href="https://github.com/CuteLeaf/Firefly">Firefly</a>
+				</div>
+			</div>
 
-			<div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+			<div class="flex flex-wrap items-center justify-center gap-2">
 				<a
 					href="https://github.com/raitoklaus/axia-zone-id"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white text-[#2b314a] hover:bg-[#5ce1ff] hover:text-[#182038] text-xs font-bold uppercase tracking-wider transition-colors"
+					class="inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] px-3.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) text-xs font-bold uppercase tracking-wider transition-colors"
 					style="font-family: var(--font-montserrat, sans-serif)"
 				>
-					<Icon name="fa7-brands:github" class="text-base" aria-hidden="true" />
+					<Icon name="fa7-brands:github" class="text-sm" aria-hidden="true" />
 					<span>GitHub</span>
-				</a>
-				<a
-					href={url("/wiki/events/")}
-					class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white text-[#2b314a] hover:bg-[#5ce1ff] hover:text-[#182038] text-xs font-bold uppercase tracking-wider transition-colors"
-					style="font-family: var(--font-montserrat, sans-serif)"
-				>
-					<Icon name="material-symbols:calendar-month-rounded" class="text-base" aria-hidden="true" />
-					<span>Events</span>
 				</a>
 				<a
 					href={url("rss.xml")}
 					target="_blank"
-					class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white text-[#2b314a] hover:bg-[#5ce1ff] hover:text-[#182038] text-xs font-bold uppercase tracking-wider transition-colors"
+					class="inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] px-3.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) text-xs font-bold uppercase tracking-wider transition-colors"
 					style="font-family: var(--font-montserrat, sans-serif)"
 				>
-					<Icon name="fa7-solid:rss" class="text-sm" aria-hidden="true" />
+					<Icon name="fa7-solid:rss" class="text-xs" aria-hidden="true" />
 					<span>RSS</span>
 				</a>
 				<a
 					href={url("atom.xml")}
 					target="_blank"
-					class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white text-[#2b314a] hover:bg-[#5ce1ff] hover:text-[#182038] text-xs font-bold uppercase tracking-wider transition-colors"
+					class="inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] px-3.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) text-xs font-bold uppercase tracking-wider transition-colors"
 					style="font-family: var(--font-montserrat, sans-serif)"
 				>
-					<Icon name="fa7-solid:atom" class="text-sm" aria-hidden="true" />
+					<Icon name="fa7-solid:atom" class="text-xs" aria-hidden="true" />
 					<span>Atom</span>
 				</a>
 				<a
 					href={url("sitemap-index.xml")}
 					target="_blank"
-					class="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 rounded-full bg-white text-[#2b314a] hover:bg-[#5ce1ff] hover:text-[#182038] text-xs font-bold uppercase tracking-wider transition-colors"
+					class="inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[36px] px-3.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) text-xs font-bold uppercase tracking-wider transition-colors"
 					style="font-family: var(--font-montserrat, sans-serif)"
 				>
-					<Icon name="material-symbols:menu-book-rounded" class="text-base" aria-hidden="true" />
+					<Icon name="material-symbols:menu-book-rounded" class="text-sm" aria-hidden="true" />
 					<span>Sitemap</span>
 				</a>
-			</div>
-
-			{customFooterHtml && <div class="mb-3 text-sm text-white/85" set:html={customFooterHtml} />}
-
-			<div class="text-xs sm:text-sm text-white/85 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-				<span>&copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}. All Rights Reserved.</span>
-			</div>
-
-			<!--
-				注意：请勿随意修改或删除 "Powered by Astro & Firefly" 部分，这是对开源项目的尊重和支持。
-				需要增加底部内容时，直接编辑 src/config/FooterConfig.html 即可，不需要修改 Footer.astro。
-			-->
-			<div class="mt-2 text-xs sm:text-sm text-white/85 flex items-center justify-center gap-x-1.5 flex-wrap">
-				<span>Powered by</span>
-				<a
-					class="text-[#7ce4ff] hover:underline font-semibold"
-					target="_blank"
-					href="https://astro.build">Astro</a
-				>
-				<span aria-hidden="true">&amp;</span>
-				<a
-					class="text-[#7ce4ff] hover:underline font-semibold"
-					target="_blank"
-					href="https://github.com/CuteLeaf/Firefly">Firefly</a
-				>
 			</div>
 		</div>
 	</div>
