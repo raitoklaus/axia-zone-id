@@ -117,28 +117,27 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 	// 自定义导航栏链接
 	links.push({
-		name: "链接",
+		name: "Links",
 		url: "#",
 		icon: "material-symbols:link",
 		// 子菜单
 		children: [
 			{
 				name: "GitHub",
-				url: "https://github.com/CuteLeaf/Firefly",
+				url: "https://github.com/raitoklaus/axia-zone-id",
 				external: true,
 				icon: "fa7-brands:github",
 			},
 			{
-				name: "Gitee",
-				url: "https://gitee.com/CuteLeaf/Firefly",
+				name: "Pages CMS",
+				url: "https://app.pagescms.org",
 				external: true,
-				icon: "fa7-brands:gitee",
+				icon: "material-symbols:edit-document-rounded",
 			},
 			{
-				name: "Firefly文档",
-				url: "https://docs-firefly.cuteleaf.cn",
-				external: true,
-				icon: "material-symbols:docs",
+				name: "Sveltia CMS",
+				url: "/admin/",
+				icon: "material-symbols:admin-panel-settings-rounded",
 			},
 		],
 	});

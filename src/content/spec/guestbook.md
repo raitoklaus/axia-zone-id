@@ -1,9 +1,7 @@
 ---
-title: "留言板"
-description: "在这里留下你的足迹"
+title: "Guestbook"
+description: "Share event tips, performer updates, or site feedback."
 ---
 
-- 请保持友善和尊重，营造良好的交流氛围
-- 欢迎分享你的想法，也可以提出对网站的建议
-- 你的每一条留言都是对我最大的支持 ✨
-
+- Keep discussions respectful and welcoming for everyone in the community.
+- Feel free to share upcoming Indonesian ACG events, venue updates, or performer suggestions.
