@@ -1,0 +1,154 @@
+backend:
+  name: github
+  repo: raitoklaus/axia-zone-id
+  branch: main
+  # On GitHub Pages you can sign in immediately with a GitHub Personal Access Token (PAT).
+  # To enable 1-click browser OAuth login later, deploy a Sveltia/Decap OAuth proxy (Cloudflare Worker / Vercel)
+  # and set:
+  # base_url: https://your-oauth-proxy.example.com
+
+site_url: https://raitoklaus.github.io/axia-zone-id/
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: src/content/posts
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} ({{published}})"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Published Date",
+          name: "published",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: true,
+        }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - {
+          label: "Cover Image",
+          name: "image",
+          widget: "image",
+          required: false,
+          hint: "Optional cover image. Leave blank and enable Use Random Cover below for Firefly's random cover API.",
+        }
+      - {
+          label: "Use Random Cover (when image is blank)",
+          name: "useRandomCover",
+          widget: "boolean",
+          default: false,
+          required: false,
+        }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Category", name: "category", widget: "string", required: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Language", name: "lang", widget: "string", default: "en", required: false }
+      - { label: "Pin to Top", name: "pinned", widget: "boolean", default: false, required: false }
+      - { label: "Enable Comments", name: "comment", widget: "boolean", default: true, required: false }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          modes: ["raw", "rich_text"],
+          hint: "Keep raw mode active when writing [[Wiki Links]] or :::note / :::tip admonitions so brackets are never escaped.",
+        }
+
+  - name: events
+    label: Events & Schedule
+    label_singular: Event
+    folder: src/content/events
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} - {{startDate}} ({{city}})"
+    fields:
+      - { label: "Event Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Start Date",
+          name: "startDate",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: true,
+        }
+      - {
+          label: "End Date",
+          name: "endDate",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: false,
+        }
+      - { label: "Venue", name: "venue", widget: "string", required: true }
+      - { label: "City", name: "city", widget: "string", required: true }
+      - {
+          label: "Status",
+          name: "status",
+          widget: "select",
+          options: ["upcoming", "ongoing", "completed", "postponed", "cancelled"],
+          default: "upcoming",
+          required: false,
+        }
+      - { label: "Ticket URL", name: "ticketUrl", widget: "string", required: false }
+      - {
+          label: "Performer Lineup",
+          name: "lineup",
+          widget: "relation",
+          collection: "performers",
+          value_field: "{{slug}}",
+          display_fields: ["name", "role"],
+          search_fields: ["name", "role", "tags"],
+          multiple: true,
+          required: false,
+        }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Event Banner Image", name: "image", widget: "image", required: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          modes: ["raw", "rich_text"],
+        }
+
+  - name: performers
+    label: Performer Wiki
+    label_singular: Performer
+    folder: src/content/performers
+    create: true
+    slug: "{{slug}}"
+    summary: "{{name}} - {{role}}"
+    fields:
+      - { label: "Performer Name", name: "name", widget: "string", required: true }
+      - { label: "Primary Role", name: "role", widget: "string", required: true }
+      - { label: "Category", name: "category", widget: "string", required: false }
+      - { label: "Short Bio", name: "bio", widget: "text", required: false }
+      - { label: "Avatar Image", name: "avatar", widget: "image", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - {
+          label: "Social Links",
+          name: "socials",
+          widget: "list",
+          required: false,
+          fields:
+            [
+              { label: "Label", name: "label", widget: "string", required: true },
+              { label: "URL", name: "url", widget: "string", required: true },
+              { label: "Iconify Icon", name: "icon", widget: "string", required: false },
+            ],
+        }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          modes: ["raw", "rich_text"],
+        }

@@ -10,6 +10,7 @@ type PostData = {
 	draft: boolean;
 	description: string;
 	image: string;
+	useRandomCover: boolean;
 	tags: string[];
 	category: string | null;
 	lang: string;
@@ -48,6 +49,7 @@ type ProjectData = {
 	order?: number;
 	description: string;
 	image: string;
+	useRandomCover: boolean;
 	tags: string[];
 	link: ProjectLink[];
 	status: string;
@@ -107,6 +109,7 @@ const postsCollection: ContentCollection<PostData> = defineCollection({
 		draft: z.boolean().optional().default(false),
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
+		useRandomCover: z.boolean().optional().default(false),
 		tags: z.array(z.string()).optional().default([]),
 		category: z.string().optional().nullable().default(""),
 		lang: z.string().optional().default(""),
@@ -153,6 +156,7 @@ const projectsCollection: ContentCollection<ProjectData> = defineCollection({
 		order: z.number().optional(),
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
+		useRandomCover: z.boolean().optional().default(false),
 		tags: z.array(z.string()).optional().default([]),
 		link: z
 			.array(
@@ -197,6 +201,17 @@ const performersCollection: ContentCollection<PerformerData> = defineCollection(
 	},
 );
 
+const performerRef = z.preprocess(
+	(val) =>
+		typeof val === "string"
+			? val
+					.trim()
+					.replace(/^.*\//, "")
+					.replace(/\.(md|mdx|markdown)$/i, "")
+			: val,
+	reference("performers"),
+);
+
 const eventsCollection: ContentCollection<EventData> = defineCollection({
 	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/events" }),
 	schema: z.object({
@@ -210,7 +225,7 @@ const eventsCollection: ContentCollection<EventData> = defineCollection({
 			.optional()
 			.default("upcoming"),
 		ticketUrl: z.string().optional().default(""),
-		lineup: z.array(reference("performers")).optional().default([]),
+		lineup: z.array(performerRef).optional().default([]),
 		description: z.string().optional().default(""),
 		tags: z.array(z.string()).optional().default([]),
 		image: z.string().optional().default(""),

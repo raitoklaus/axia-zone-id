@@ -313,12 +313,14 @@ function createRemoteCoverImg(src, extraProperties) {
 }
 
 function createCoverNode(meta, resolvedPath, context) {
-	const rawImage =
+	const explicitImage =
 		typeof meta.data.image === "string" && meta.data.image.trim()
 			? meta.data.image.trim()
 			: typeof meta.data.avatar === "string"
 				? meta.data.avatar.trim()
 				: "";
+	const rawImage =
+		explicitImage || (meta.data.useRandomCover === true ? "api" : "");
 
 	if (!rawImage) {
 		return null;

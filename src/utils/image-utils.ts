@@ -27,6 +27,19 @@ function appendSeedParam(apiUrl: string, hash: number): string {
 }
 
 /**
+ * Resolve optional post cover input: explicit image wins; otherwise fall back to
+ * Firefly's "api" random cover when useRandomCover is enabled.
+ */
+export function resolvePostCoverInput(
+	image: string | undefined,
+	useRandomCover?: boolean,
+): string {
+	const trimmed = typeof image === "string" ? image.trim() : "";
+	if (trimmed) return trimmed;
+	return useRandomCover ? "api" : "";
+}
+
+/**
  * 处理文章封面图
  * 当image字段为"api"时，返回第一个API的URL（客户端会按顺序尝试所有API）
  * @param image - 文章frontmatter中的image字段值

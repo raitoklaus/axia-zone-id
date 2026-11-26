@@ -67,7 +67,7 @@ const adapter = process.env.CF_WORKERS
 		})
 	: undefined;
 
-const BASE_PATH = "/";
+const BASE_PATH = "/axia-zone-id/";
 
 // https://astro.build/config
 export default defineConfig({
@@ -242,7 +242,11 @@ export default defineConfig({
 			filter: (page) => {
 				// 根据页面开关配置过滤sitemap
 				const url = new URL(page);
-				const pathname = url.pathname;
+				const basePrefix = BASE_PATH.replace(/\/+$/, "");
+				const pathname =
+					basePrefix && url.pathname.startsWith(basePrefix)
+						? url.pathname.slice(basePrefix.length) || "/"
+						: url.pathname;
 				if (pathname === "/dynamic/" && !siteConfig.pages.dynamic) {
 					return false;
 				}

@@ -1,0 +1,214 @@
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: posts
+    label: Blog Posts
+    type: collection
+    path: src/content/posts
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, published, category, draft, pinned]
+      primary: title
+      sort: [published, title]
+      default:
+        sort: published
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: published
+        label: Published Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: Description
+        type: text
+      - name: image
+        label: Cover Image
+        type: image
+        description: Optional cover image. Leave blank or enable "Use Random Cover" below for Firefly's random cover API.
+      - name: useRandomCover
+        label: Use Random Cover (when image is blank)
+        type: boolean
+        default: false
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: category
+        label: Category
+        type: string
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: lang
+        label: Language
+        type: string
+        default: en
+      - name: pinned
+        label: Pin to Top
+        type: boolean
+        default: false
+      - name: comment
+        label: Enable Comments
+        type: boolean
+        default: true
+      - name: body
+        label: Content (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: events
+    label: Events & Schedule
+    type: collection
+    path: src/content/events
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, startDate, city, status, draft]
+      primary: title
+      sort: [startDate, title]
+      default:
+        sort: startDate
+        order: desc
+    fields:
+      - name: title
+        label: Event Title
+        type: string
+        required: true
+      - name: startDate
+        label: Start Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: endDate
+        label: End Date (optional)
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: venue
+        label: Venue
+        type: string
+        required: true
+      - name: city
+        label: City
+        type: string
+        required: true
+      - name: status
+        label: Status
+        type: select
+        default: upcoming
+        options:
+          values:
+            - value: upcoming
+              label: Upcoming
+            - value: ongoing
+              label: Ongoing
+            - value: completed
+              label: Completed
+            - value: postponed
+              label: Postponed
+            - value: cancelled
+              label: Cancelled
+      - name: ticketUrl
+        label: Ticket URL
+        type: string
+      - name: lineup
+        label: Performer Lineup
+        type: reference
+        options:
+          collection: performers
+          multiple: true
+          search: name
+          label: "{name}"
+          value: "{filename}"
+      - name: description
+        label: Summary
+        type: text
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: image
+        label: Event Banner Image
+        type: image
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: body
+        label: Event Notes (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: performers
+    label: Performer Wiki
+    type: collection
+    path: src/content/performers
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [name, role, category, draft]
+      primary: name
+      sort: [name]
+      default:
+        sort: name
+        order: asc
+    fields:
+      - name: name
+        label: Performer Name
+        type: string
+        required: true
+      - name: role
+        label: Primary Role
+        type: string
+        required: true
+      - name: category
+        label: Category
+        type: string
+      - name: bio
+        label: Short Bio
+        type: text
+      - name: avatar
+        label: Avatar Image
+        type: image
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: socials
+        label: Social Links
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Platform Label
+            type: string
+            required: true
+          - name: url
+            label: URL
+            type: string
+            required: true
+          - name: icon
+            label: Iconify Icon (e.g. fa7-brands:youtube)
+            type: string
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: body
+        label: Bio & Notes (Raw Markdown)
+        type: code
+        options:
+          language: markdown

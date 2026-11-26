@@ -16,7 +16,7 @@ const description = "";
 </MainGridLayout>
 
 {import.meta.env.PROD && (
-<script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
+<script is:inline define:vars={{ scriptUrl: url('/pagefind/pagefind.js'), baseUrl: url('/') }}>
     if (!window.pagefind) {
         async function loadPagefind() {
             const url = scriptUrl.replace(/\/$/, "")
@@ -27,6 +27,7 @@ const description = "";
                 }
                 const pagefind = await import(scriptUrl);
                 await pagefind.options({
+                    baseUrl,
                     "excerptLength": 20
                 });
                 window.pagefind = pagefind;

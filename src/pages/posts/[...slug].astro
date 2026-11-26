@@ -34,7 +34,11 @@ import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
 import { sponsorConfig } from "@/config/sponsorConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
-import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
+import {
+	getApiUrlList,
+	processCoverImageSync,
+	resolvePostCoverInput,
+} from "@/utils/image-utils";
 import {
 	getAuthorAvatarUrl,
 	getSiteLogo,
@@ -78,9 +82,13 @@ const bannerPostMeta = {
 	minutes: remarkPluginFrontmatter.minutes,
 };
 
-// 处理随机图：如果image为"api"，则从配置的API获取随机图
-const processedImage = processCoverImageSync(entry.data.image, entry.id);
-const apiUrls = getApiUrlList(entry.data.image, entry.id);
+// 处理随机图：如果image为"api"或启用了useRandomCover且image为空，则从配置的API获取随机图
+const coverInput = resolvePostCoverInput(
+	entry.data.image,
+	entry.data.useRandomCover,
+);
+const processedImage = processCoverImageSync(coverInput, entry.id);
+const apiUrls = getApiUrlList(coverInput, entry.id);
 const showPostCover = Boolean(processedImage && coverImageConfig.enableInPost);
 const usePostCoverOverlay =
 	showPostCover && (coverImageConfig.enableInPostOverlay ?? true);

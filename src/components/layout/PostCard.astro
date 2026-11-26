@@ -6,7 +6,11 @@ import CoverImage from "@/components/common/CoverImage.astro";
 import PostMetadata from "@/components/layout/PostMeta.astro";
 import PostStats from "@/components/layout/PostStats.astro";
 import { siteConfig } from "@/config";
-import { getApiUrlList, processCoverImageSync } from "@/utils/image-utils";
+import {
+	getApiUrlList,
+	processCoverImageSync,
+	resolvePostCoverInput,
+} from "@/utils/image-utils";
 import { getFileDirFromPath, getTagUrl } from "@/utils/url-utils";
 
 interface Props {
@@ -42,9 +46,10 @@ const {
 } = Astro.props;
 const className = Astro.props.class;
 
-// 处理随机图：如果image为"api"，则从配置的API获取随机图
-const processedImage = processCoverImageSync(image, entry.id);
-const apiUrls = getApiUrlList(image, entry.id);
+// 处理随机图：如果image为"api"或启用了useRandomCover且image为空，则从配置的API获取随机图
+const coverInput = resolvePostCoverInput(image, entry.data.useRandomCover);
+const processedImage = processCoverImageSync(coverInput, entry.id);
+const apiUrls = getApiUrlList(coverInput, entry.id);
 const hasCover =
 	processedImage !== undefined &&
 	processedImage !== null &&

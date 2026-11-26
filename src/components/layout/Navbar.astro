@@ -429,7 +429,7 @@ if (document.readyState === 'loading') {
 
 {
     import.meta.env.PROD && (
-        <script is:inline data-swup-ignore-script define:vars={{ scriptUrl: url('/pagefind/pagefind.js') }}>
+        <script is:inline data-swup-ignore-script define:vars={{ scriptUrl: url('/pagefind/pagefind.js'), baseUrl: url('/') }}>
             {/* 你的 loadPagefind 函数的完整内容放在这里 */}
             async function loadPagefind() {
                 try {
@@ -439,6 +439,7 @@ if (document.readyState === 'loading') {
                     }
                     const pagefind = await import(scriptUrl);
                     await pagefind.options({
+                        baseUrl,
                         excerptLength: 20
                     });
                     window.pagefind = pagefind;

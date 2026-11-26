@@ -37,6 +37,7 @@ All schemas live in `src/content.config.ts`.
 | `updated` | `date` | No | - | Last edited date |
 | `description` | `string` | No | `""` | Summary shown on cards & meta |
 | `image` | `string` | No | `""` | Local relative path, `/public` path, URL, or `"api"` |
+| `useRandomCover` | `boolean` | No | `false` | When `true` and `image` is empty, falls back to `"api"` random cover |
 | `tags` | `string[]` | No | `[]` | Tag list |
 | `category` | `string \| null` | No | `""` | Single category |
 | `draft` | `boolean` | No | `false` | Hidden in production builds when `true` |
@@ -116,4 +117,13 @@ All schemas live in `src/content.config.ts`.
 
 ## Deployment & Online CMS
 
-- Deployment and online CMS configuration will be documented here after Steps 5 and 6 are finalized.
+- **Live Site URL**: `https://raitoklaus.github.io/axia-zone-id/`
+- **GitHub Repository**: `https://github.com/raitoklaus/axia-zone-id` (`origin`), tracking Firefly theme updates on `upstream` (`https://github.com/CuteLeaf/Firefly.git`, push disabled).
+- **Automated Deployment**: `.github/workflows/deploy.yml` builds with Node.js 22 and pnpm on every push to `main` and deploys `dist/` to GitHub Pages.
+  - `src/config/siteConfig.ts` keeps `site_url: "https://raitoklaus.github.io"` (origin only).
+  - `astro.config.mjs` sets `BASE_PATH = "/axia-zone-id/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`).
+- **Dual Online / Mobile CMS (Swappable Anytime)**:
+  - **Pages CMS**: Open `https://app.pagescms.org` on desktop or mobile and connect `raitoklaus/axia-zone-id`. Configured in `.pages.yml` with zero OAuth server needed.
+  - **Sveltia CMS**: Open `https://raitoklaus.github.io/axia-zone-id/admin/` (configured in `public/admin/index.html` and `public/admin/config.yml`). Provides searchable `relation` dropdowns for `events.lineup`; sign in directly with a GitHub Personal Access Token (PAT) or add an external OAuth proxy `base_url` later.
+  - **Media Uploads**: Both CMSs upload assets to `public/uploads/` and reference them as `/uploads/...` (automatically prefixed with `/axia-zone-id/` at build time).
+  - **Cover Image & Raw Markdown Safety**: Leave `image` blank and toggle `useRandomCover: true` for Firefly's random cover API (`resolvePostCoverInput()` in `src/utils/image-utils.ts`). Pages CMS uses raw Markdown code editors and Sveltia CMS defaults to `raw` mode (`modes: ["raw", "rich_text"]`) so `[[Wiki Links]]` and `:::note` / `:::tip` / `> [!NOTE]` admonitions are never bracket-escaped.
