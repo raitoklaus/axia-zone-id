@@ -9,6 +9,13 @@ display_url: https://axia.zone.id/
 logo_url: /favicon/firefly-192.png
 media_folder: public/uploads
 public_folder: /uploads
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
 
 collections:
   - name: posts
