@@ -602,52 +602,41 @@ function selectDayCell(cell: CalendarCell): void {
 										{#each group.items as ev}
 											{@const countdown = getCountdownLabel(ev.startYmd, ev.endYmd, todayYmd)}
 											<li>
-												<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
-													<time
-														datetime={ev.startYmd}
-														class="w-16 shrink-0 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) px-2 py-2 text-center flex flex-col items-center justify-center"
-													>
-														<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
-															{ev.dateParts.month}
-														</span>
-														<span class="text-xl font-bold leading-tight mt-0.5">
-															{ev.dateParts.day}
-														</span>
-														<span class="text-[0.6875rem] font-medium leading-none opacity-85">
-															{ev.dateParts.year}
-														</span>
-													</time>
-
-													<div class="flex-1 min-w-0">
-														<div class="flex flex-wrap items-center gap-2">
-															<h5 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
-																<a href={ev.href} class="hover:text-(--primary) transition-colors">
-																	{ev.title}
-																</a>
-															</h5>
-															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${ev.statusClass}`}>
+												<article class="axia-split-card min-w-0">
+													<div class="axia-split-bar">
+														<time datetime={ev.startYmd} class="axia-split-date">
+															<span>{ev.dateParts.day} {ev.dateParts.month} {ev.dateParts.year}</span>
+														</time>
+														<div class="axia-split-type">
+															<span class="truncate">
+																{ev.eventType || "ACG Event"}{ev.region ? ` · ${ev.region}` : ""}
+															</span>
+															<span class="shrink-0 opacity-95">
 																{ev.statusLabel}
 															</span>
-															{#if countdown}
-																<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60">
-																	{countdown}
-																</span>
-															{/if}
 														</div>
+													</div>
 
-														<div class="flex flex-wrap items-center gap-2 mt-2">
-															{#if ev.eventType}
-																<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-neutral-200/75 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-																	{ev.eventType}
+													<div class="p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
+														<div class="flex-1 min-w-0">
+															<div class="flex flex-wrap items-center gap-2">
+																<h5 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+																	<a href={ev.href} class="hover:text-(--primary) transition-colors">
+																		{ev.title}
+																	</a>
+																</h5>
+																{#if countdown}
+																	<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60">
+																		{countdown}
+																	</span>
+																{/if}
+																<span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${ev.admissionClass}`}>
+																	{ev.admissionLabel}
 																</span>
-															{/if}
-															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold ${ev.admissionClass}`}>
-																{ev.admissionLabel}
-															</span>
-														</div>
+															</div>
 
-														<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
-															{ev.dateRange}{ev.time ? ` (${ev.time} ${ev.timezone})` : ""} · {ev.venue}, {ev.city}{ev.region ? ` (${ev.region})` : ""}
+															<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
+																{ev.dateRange}{ev.time ? ` (${ev.time} ${ev.timezone})` : ""} · {ev.venue}, {ev.city}
 														</p>
 
 														{#if ev.organizer}
@@ -699,7 +688,7 @@ function selectDayCell(cell: CalendarCell): void {
 																href={ev.ticketUrl}
 																target="_blank"
 																rel="noopener noreferrer"
-																class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-lg text-sm font-semibold bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-(--primary) dark:text-neutral-950 dark:hover:opacity-90 transition-colors"
+																class="axia-pill-cta axia-pill-cta-primary w-full sm:w-auto"
 															>
 																<span>Tickets</span>
 																<span class="sr-only"> for {ev.title}</span>
@@ -707,6 +696,7 @@ function selectDayCell(cell: CalendarCell): void {
 															</a>
 														</div>
 													{/if}
+													</div>
 												</article>
 											</li>
 										{/each}

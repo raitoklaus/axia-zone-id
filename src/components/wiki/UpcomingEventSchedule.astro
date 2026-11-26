@@ -45,8 +45,9 @@ const availableRegions = Array.from(
 	class="card-base p-5 md:p-6 mb-4 onload-animation"
 >
 	<home-schedule-filter class="block">
-		<div class="flex flex-wrap items-center justify-between gap-3">
-			<div class="flex items-center gap-2.5 min-w-0">
+		<div class="axia-section-header flex flex-wrap items-center justify-between gap-3">
+			<span class="axia-watermark" aria-hidden="true">SCHEDULE</span>
+			<div class="relative z-10 flex items-center gap-2.5 min-w-0">
 				<div
 					class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center shrink-0"
 					aria-hidden="true"
@@ -56,27 +57,28 @@ const availableRegions = Array.from(
 				<div>
 					<h2
 						id="upcoming-schedule-heading"
-						class="text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight"
+						class="axia-heading-title text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight"
 					>
 						Upcoming Event Schedule
 					</h2>
-					<p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300">
+					<div class="axia-accent-bar" aria-hidden="true" />
+					<p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 mt-1.5">
 						Indonesian ACG conventions, mall matsuri, anisong lives, and performer lineups
 					</p>
 				</div>
 			</div>
 
-			<nav aria-label="Event and performer wiki links" class="flex flex-wrap items-center gap-2">
+			<nav aria-label="Event and performer wiki links" class="relative z-10 flex flex-wrap items-center gap-2">
 				<a
 					href={url("/wiki/events/")}
-					class="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
+					class="axia-pill-cta axia-pill-cta-primary"
 				>
 					<Icon name="material-symbols:event-note-rounded" class="text-base" aria-hidden="true" />
 					<span>All Events & Calendar</span>
 				</a>
 				<a
 					href={url("/wiki/performers/")}
-					class="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium border border-(--line-divider) text-neutral-800 dark:text-neutral-200 hover:border-(--primary) hover:text-(--primary) transition-colors"
+					class="axia-pill-cta axia-pill-cta-secondary"
 				>
 					<Icon name="material-symbols:groups-rounded" class="text-base" aria-hidden="true" />
 					<span>Performer Wiki</span>
@@ -96,7 +98,7 @@ const availableRegions = Array.from(
 						data-region="all"
 						data-active
 						aria-pressed="true"
-						class="home-region-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer"
 					>
 						All Regions ({eventsWithMeta.length})
 					</button>
@@ -105,7 +107,7 @@ const availableRegions = Array.from(
 							type="button"
 							data-region={region}
 							aria-pressed="false"
-							class="home-region-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+							class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer"
 						>
 							{region}
 						</button>
@@ -116,7 +118,7 @@ const availableRegions = Array.from(
 
 		{
 			eventsWithMeta.length > 0 ? (
-				<ul role="list" class="flex flex-col gap-3 mt-4 list-none p-0 m-0">
+				<ul role="list" class="flex flex-col gap-3.5 mt-4 list-none p-0 m-0">
 					{eventsWithMeta.map(
 						({
 							event,
@@ -132,125 +134,115 @@ const availableRegions = Array.from(
 								class="home-schedule-item"
 								data-region={event.data.region}
 							>
-								<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
-									<time
-										datetime={event.data.startDate.toISOString()}
-										class="w-16 shrink-0 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) px-2 py-2 text-center flex flex-col items-center justify-center"
-									>
-										<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
-											{dateParts.month}
-										</span>
-										<span class="text-xl font-bold leading-tight mt-0.5">
-											{dateParts.day}
-										</span>
-										<span class="text-[0.6875rem] font-medium leading-none opacity-85">
-											{dateParts.year}
-										</span>
-									</time>
-
-									<div class="flex-1 min-w-0">
-										<div class="flex flex-wrap items-center gap-2">
-											<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
-												<a
-													href={getEventUrl(event.id)}
-													class="hover:text-(--primary) transition-colors"
-												>
-													{event.data.title}
-												</a>
-											</h3>
-											<span
-												class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${statusMeta.className}`}
-											>
+								<article class="axia-split-card min-w-0">
+									<div class="axia-split-bar">
+										<time
+											datetime={event.data.startDate.toISOString()}
+											class="axia-split-date"
+										>
+											<span>{dateParts.day} {dateParts.month} {dateParts.year}</span>
+										</time>
+										<div class="axia-split-type">
+											<span class="truncate">
+												{event.data.eventType || "ACG Event"}{event.data.region ? ` · ${event.data.region}` : ""}
+											</span>
+											<span class="shrink-0 opacity-95">
 												{statusMeta.label}
 											</span>
-											<span
-												data-countdown-start={startYmd}
-												data-countdown-end={endYmd}
-												class="hidden inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60"
-											/>
 										</div>
-
-										<div class="flex flex-wrap items-center gap-2 mt-2">
-											{event.data.eventType && (
-												<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-neutral-200/75 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-													{event.data.eventType}
-												</span>
-											)}
-											<span
-												class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold ${admissionMeta.className}`}
-											>
-												{admissionMeta.label}
-											</span>
-										</div>
-
-										<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-700 dark:text-neutral-300">
-											<span class="inline-flex items-center gap-1">
-												<Icon
-													name="material-symbols:calendar-today-outline-rounded"
-													class="text-base shrink-0"
-													aria-hidden="true"
-												/>
-												<span>
-													{dateRange}
-													{event.data.time ? ` (${event.data.time} ${event.data.timezone})` : ""}
-												</span>
-											</span>
-											<span class="inline-flex items-center gap-1 min-w-0">
-												<Icon
-													name="material-symbols:location-on-outline-rounded"
-													class="text-base shrink-0"
-													aria-hidden="true"
-												/>
-												<span class="truncate">
-													{event.data.venue}, {event.data.city}
-													{event.data.region ? ` (${event.data.region})` : ""}
-												</span>
-											</span>
-										</div>
-
-										{lineup.length > 0 && (
-											<ul
-												role="list"
-												aria-label={`Lineup for ${event.data.title}`}
-												class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
-											>
-												{lineup.map((performer) => (
-													<li>
-														<a
-															href={getPerformerUrl(performer.id)}
-															class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
-														>
-															<Icon
-																name="material-symbols:person-rounded"
-																class="text-sm shrink-0"
-																aria-hidden="true"
-															/>
-															<span>{performer.data.name}</span>
-														</a>
-													</li>
-												))}
-											</ul>
-										)}
 									</div>
 
-									{event.data.ticketUrl && (
-										<div class="sm:self-center shrink-0">
-											<a
-												href={event.data.ticketUrl}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-lg text-sm font-semibold bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-(--primary) dark:text-neutral-950 dark:hover:opacity-90 transition-colors"
-											>
-												<span>Tickets</span>
-												<span class="sr-only"> for {event.data.title}</span>
-												<Icon
-													name="material-symbols:open-in-new-rounded"
-													class="text-base shrink-0"
-													aria-hidden="true"
+									<div class="p-4 flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
+										<div class="flex-1 min-w-0">
+											<div class="flex flex-wrap items-center gap-2">
+												<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+													<a
+														href={getEventUrl(event.id)}
+														class="hover:text-(--primary) transition-colors"
+													>
+														{event.data.title}
+													</a>
+												</h3>
+												<span
+													data-countdown-start={startYmd}
+													data-countdown-end={endYmd}
+													class="hidden inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60"
 												/>
-											</a>
+												<span
+													class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${admissionMeta.className}`}
+												>
+													{admissionMeta.label}
+												</span>
+											</div>
+
+											<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-700 dark:text-neutral-300">
+												<span class="inline-flex items-center gap-1">
+													<Icon
+														name="material-symbols:calendar-today-outline-rounded"
+														class="text-base shrink-0"
+														aria-hidden="true"
+													/>
+													<span>
+														{dateRange}
+														{event.data.time ? ` (${event.data.time} ${event.data.timezone})` : ""}
+													</span>
+												</span>
+												<span class="inline-flex items-center gap-1 min-w-0">
+													<Icon
+														name="material-symbols:location-on-outline-rounded"
+														class="text-base shrink-0"
+														aria-hidden="true"
+													/>
+													<span class="truncate">
+														{event.data.venue}, {event.data.city}
+													</span>
+												</span>
+											</div>
+
+											{lineup.length > 0 && (
+												<ul
+													role="list"
+													aria-label={`Lineup for ${event.data.title}`}
+													class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+												>
+													{lineup.map((performer) => (
+														<li>
+															<a
+																href={getPerformerUrl(performer.id)}
+																class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
+															>
+																<Icon
+																	name="material-symbols:person-rounded"
+																	class="text-sm shrink-0"
+																	aria-hidden="true"
+																/>
+																<span>{performer.data.name}</span>
+															</a>
+														</li>
+													))}
+												</ul>
+											)}
 										</div>
-									)}
+
+										{event.data.ticketUrl && (
+											<div class="sm:self-center shrink-0">
+												<a
+													href={event.data.ticketUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													class="axia-pill-cta axia-pill-cta-primary w-full sm:w-auto"
+												>
+													<span>Tickets</span>
+													<span class="sr-only"> for {event.data.title}</span>
+													<Icon
+														name="material-symbols:open-in-new-rounded"
+														class="text-base shrink-0"
+														aria-hidden="true"
+													/>
+												</a>
+											</div>
+										)}
+									</div>
 								</article>
 							</li>
 						),

@@ -1,0 +1,280 @@
+/* Axia Zone ID - Axia Electric Azure/Charcoal/White Palette + Project SEKAI Motifs */
+
+:root {
+	--axia-slate: #262b3d;
+	--axia-slate-muted: #3f465e;
+	--axia-azure: #0c6fc4;
+	--axia-azure-bright: #1898f2;
+	--axia-cyan-glow: #38bdf8;
+	--axia-ice: #eaf6ff;
+}
+
+/* Project SEKAI inspired iridescent geometric background canvas */
+body {
+	background-color: var(--page-bg);
+	background-image:
+		repeating-linear-gradient(
+			-30deg,
+			rgba(255, 255, 255, 0.24) 0px,
+			rgba(255, 255, 255, 0.24) 24px,
+			transparent 24px,
+			transparent 68px
+		),
+		linear-gradient(125deg, #e5f7ff 0%, #eef2ff 52%, #f6eeff 100%);
+	background-attachment: fixed;
+}
+
+:root.dark body {
+	background-color: #131722;
+	background-image:
+		repeating-linear-gradient(
+			-30deg,
+			rgba(255, 255, 255, 0.022) 0px,
+			rgba(255, 255, 255, 0.022) 24px,
+			transparent 24px,
+			transparent 68px
+		),
+		radial-gradient(
+			ellipse 90% 45% at 50% 0%,
+			rgba(28, 162, 255, 0.14) 0%,
+			transparent 68%
+		),
+		linear-gradient(180deg, #131722 0%, #171c2b 100%);
+	background-attachment: fixed;
+}
+
+/* Smooth banner bottom blend matching pjsekai / colorfulstage key visual fade */
+html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	height: 5.5rem;
+	pointer-events: none;
+	background: linear-gradient(to bottom, transparent 0%, var(--page-bg) 100%);
+}
+
+/* Sleek electric-azure accent underline on floating navbar */
+#navbar > div {
+	position: relative;
+}
+
+#navbar > div::after {
+	content: "";
+	position: absolute;
+	left: 1rem;
+	right: 1rem;
+	bottom: 0;
+	height: 2px;
+	border-radius: 999px;
+	background: linear-gradient(
+		90deg,
+		var(--axia-slate) 0%,
+		var(--axia-azure-bright) 50%,
+		var(--axia-cyan-glow) 100%
+	);
+	opacity: 0.72;
+	pointer-events: none;
+}
+
+:root.dark #navbar > div::after {
+	background: linear-gradient(
+		90deg,
+		transparent 0%,
+		var(--axia-azure-bright) 50%,
+		var(--axia-cyan-glow) 100%
+	);
+	opacity: 0.8;
+}
+
+/* Crisp Project SEKAI card elevation */
+.card-base {
+	box-shadow: 0 10px 24px -10px rgba(38, 43, 61, 0.12);
+}
+
+:root.dark .card-base {
+	box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.42);
+}
+
+/* Dual-layer Section Header (pjsekai NEWS/SCHEDULE watermark motif) */
+.axia-section-header {
+	position: relative;
+	overflow: hidden;
+	padding-top: 0.25rem;
+	padding-bottom: 0.35rem;
+}
+
+.axia-watermark {
+	position: absolute;
+	right: -0.25rem;
+	top: -0.55rem;
+	font-family: var(--font-montserrat, "Montserrat", sans-serif);
+	font-size: clamp(2.4rem, 5vw, 3.6rem);
+	font-weight: 800;
+	letter-spacing: 0.12em;
+	line-height: 1;
+	text-transform: uppercase;
+	color: transparent;
+	-webkit-text-stroke: 1.5px rgba(38, 43, 61, 0.10);
+	pointer-events: none;
+	user-select: none;
+	white-space: nowrap;
+}
+
+:root.dark .axia-watermark {
+	-webkit-text-stroke: 1.5px rgba(56, 189, 248, 0.14);
+}
+
+.axia-heading-title {
+	font-family: var(--font-montserrat, "Montserrat", sans-serif);
+	letter-spacing: -0.01em;
+}
+
+.axia-accent-bar {
+	width: 2.5rem;
+	height: 0.25rem;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--axia-slate) 0%, var(--axia-azure-bright) 100%);
+	margin-top: 0.4rem;
+}
+
+:root.dark .axia-accent-bar {
+	background: linear-gradient(90deg, var(--axia-azure-bright) 0%, var(--axia-cyan-glow) 100%);
+}
+
+/* Colorful Stage Full-Pill CTA Buttons */
+.axia-pill-cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	min-height: 44px;
+	padding: 0.5rem 1.15rem;
+	border-radius: 9999px;
+	font-family: var(--font-montserrat, "Montserrat", sans-serif);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.axia-pill-cta-primary {
+	background-color: var(--axia-slate);
+	color: #ffffff;
+	border: 1px solid var(--axia-slate);
+}
+
+.axia-pill-cta-primary:hover {
+	background-color: var(--axia-azure);
+	border-color: var(--axia-azure);
+	color: #ffffff;
+}
+
+:root.dark .axia-pill-cta-primary {
+	background-color: var(--axia-azure);
+	border-color: var(--axia-azure-bright);
+	color: #ffffff;
+}
+
+:root.dark .axia-pill-cta-primary:hover {
+	background-color: var(--axia-azure-bright);
+	color: #0b1220;
+}
+
+.axia-pill-cta-secondary {
+	background-color: var(--card-bg);
+	color: var(--axia-slate);
+	border: 1.5px solid rgba(38, 43, 61, 0.22);
+}
+
+.axia-pill-cta-secondary:hover {
+	border-color: var(--axia-azure);
+	color: var(--axia-azure);
+}
+
+:root.dark .axia-pill-cta-secondary {
+	background-color: rgba(255, 255, 255, 0.04);
+	color: #e2e8f0;
+	border-color: rgba(255, 255, 255, 0.20);
+}
+
+:root.dark .axia-pill-cta-secondary:hover {
+	border-color: var(--axia-cyan-glow);
+	color: var(--axia-cyan-glow);
+}
+
+/* Signature Project SEKAI Split-Header Card */
+.axia-split-card {
+	border-radius: 0.85rem;
+	border: 1px solid var(--line-divider);
+	background-color: var(--card-bg);
+	overflow: hidden;
+	box-shadow: 0 6px 16px -6px rgba(38, 43, 61, 0.12);
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+:root.dark .axia-split-card {
+	background-color: rgba(255, 255, 255, 0.03);
+	box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.38);
+}
+
+.axia-split-card:hover {
+	border-color: var(--primary);
+	box-shadow: 0 10px 22px -8px rgba(12, 111, 196, 0.18);
+}
+
+.axia-split-bar {
+	display: flex;
+	align-items: stretch;
+	justify-content: space-between;
+	min-height: 2rem;
+	font-family: var(--font-montserrat, "Montserrat", sans-serif);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.axia-split-date {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.4rem 0.9rem;
+	background-color: var(--axia-slate);
+	color: #ffffff;
+	flex-shrink: 0;
+}
+
+.axia-split-type {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0.4rem 0.9rem;
+	background: linear-gradient(90deg, #0c6fc4 0%, #0d7fd4 100%);
+	color: #ffffff;
+	min-width: 0;
+}
+
+@media (forced-colors: active) {
+	.card-base,
+	.axia-split-card,
+	.axia-pill-cta {
+		border: 1px solid CanvasText;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.axia-split-card,
+	.axia-pill-cta {
+		transition-duration: 0.01ms !important;
+	}
+}

@@ -878,7 +878,7 @@
 			const [mode, setMode] = React.useState("draft");
 			const [showChrome, setShowChrome] = React.useState(true);
 			const [frameKey, setFrameKey] = React.useState(0);
-			const activeHue = Number.isFinite(Number(hue)) ? Number(hue) : 165;
+			const activeHue = Number.isFinite(Number(hue)) ? Number(hue) : 244;
 
 			React.useEffect(() => {
 				if (iframeDoc?.documentElement) {
@@ -1807,7 +1807,7 @@
 			const announcement = d.announcement || {};
 			const profile = d.profile || {};
 			const pages = d.pages || {};
-			const hue = site.themeHue ?? 165;
+			const hue = site.themeHue ?? 244;
 			const subtitles = asArray(banner.subtitles);
 
 			return h(

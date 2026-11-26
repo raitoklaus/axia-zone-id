@@ -14,18 +14,20 @@ const serializedEvents = await serializeEventsForBrowser();
 
 <MainGridLayout title={title} description={description}>
 	<section class="page-shell">
-		<header class="card-base page-header">
-			<div class="page-heading">
+		<header class="card-base page-header axia-section-header">
+			<span class="axia-watermark" aria-hidden="true">EVENTS</span>
+			<div class="page-heading relative z-10">
 				<div class="page-icon" aria-hidden="true">
 					<Icon name="material-symbols:calendar-month-rounded" />
 				</div>
 				<div>
-					<h2>{title}</h2>
-					<p>{description}</p>
+					<h2 class="axia-heading-title">{title}</h2>
+					<div class="axia-accent-bar" aria-hidden="true" />
+					<p class="mt-1.5">{description}</p>
 				</div>
 			</div>
 
-			<div class="page-count" aria-label="Total events">
+			<div class="page-count relative z-10" aria-label="Total events">
 				<Icon name="material-symbols:calendar-month-rounded" aria-hidden="true" />
 				<strong>{serializedEvents.length}</strong>
 				<span>Events</span>

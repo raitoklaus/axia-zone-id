@@ -4,7 +4,7 @@
 		"subtitle": "Anime Blog, Event Schedule & Performer Wiki",
 		"description": "Anime and otaku blog, upcoming event schedule, and connected local performer and event wiki.",
 		"keywords": ["Firefly", "Fuwari", "Astro", "ACGN", "Axia Zone ID"],
-		"themeHue": 165,
+		"themeHue": 244,
 		"defaultMode": "system",
 		"pageWidth": 100,
 		"navbarTitle": "Axia Zone ID",
@@ -54,7 +54,7 @@
 	"profile": {
 		"name": "Axia Zone ID",
 		"bio": "Indonesian ACG blog, event calendar, and performer wiki.",
-		"avatar": "assets/images/avatar.avif",
+		"avatar": "assets/images/axia-avatar.jpg",
 		"links": [
 			{
 				"name": "GitHub",

@@ -1,7 +1,7 @@
 /* Axia Zone ID - Firefly-Accurate Live Preview Stylesheet (Light + Dark) */
 
 :root {
-	--hue: 165;
+	--hue: 244;
 	--radius-large: 1rem;
 	--page-bg: oklch(0.95 0.01 var(--hue));
 	--card-bg: #ffffff;

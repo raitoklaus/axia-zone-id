@@ -399,7 +399,12 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         isDark ? darkTheme : lightTheme
       );
 
-      // Load the hue from local storage
+      // Load the hue from local storage (reset once if upgrading from legacy default hue)
+      const HUE_VERSION = "axia-244";
+      if (localStorage.getItem("hueVersion") !== HUE_VERSION) {
+        localStorage.removeItem("hue");
+        localStorage.setItem("hueVersion", HUE_VERSION);
+      }
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
       // 首帧先匹配深浅背景，BrowserChrome 随后同步实际计算后的主题底色。
