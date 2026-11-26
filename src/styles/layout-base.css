@@ -66,16 +66,9 @@
     }
   }
 
-  /* 页脚宽度跨「侧栏 + 内容栏」，故挂在 #content-panel-inner 下、#content-column 之外；
-     width 减 #main-grid 两侧内边距（px-2 → 1rem，md:px-4 → 2rem） */
-  #content-panel-inner > .site-footer {
-    width: calc(100% - 1rem);
-    margin-inline: auto;
-  }
-  @media (min-width: 768px) {
-    #content-panel-inner > .site-footer {
-      width: calc(100% - 2rem);
-    }
+  /* 页脚全宽适配 */
+  #content-panel > .site-footer {
+    width: 100%;
   }
 
   /* --content-top 由 html[data-wallpaper-mode] + body.is-home + 媒体查询解析（解析期生效，无 JS 内联 top） */
@@ -90,8 +83,10 @@
     }
   }
   /* overlay / none / fullscreen 非首页：内容从导航栏下方开始 */
+  html[data-wallpaper-mode="none"] .content-panel {
+    --content-top: 4rem;
+  }
   html[data-wallpaper-mode="overlay"] .content-panel,
-  html[data-wallpaper-mode="none"] .content-panel,
   html[data-wallpaper-mode="fullscreen"] body:not(.is-home) .content-panel {
     --content-top: 5.5rem;
   }
@@ -195,7 +190,7 @@
     left: 0 !important;
     right: 0 !important;
     z-index: 80 !important;
-    height: 4.5rem !important;
+    height: 4rem !important;
   }
 
   body.sticky-navbar #navbar-wrapper {

@@ -1,49 +1,78 @@
-/* Axia Zone ID - Axia Electric Azure/Charcoal/White Palette + Project SEKAI Motifs */
+/* Axia Zone ID - Axia Electric Azure/Charcoal/White Palette + Project SEKAI / Colorful Stage Visual System */
 
 :root {
-	--axia-slate: #262b3d;
-	--axia-slate-muted: #3f465e;
+	color-scheme: light;
+	--axia-slate: #2f3550;
+	--axia-slate-deep: #262b3d;
+	--axia-ink: #2b314a;
+	--axia-ink-muted: #4b526e;
 	--axia-azure: #0c6fc4;
 	--axia-azure-bright: #1898f2;
-	--axia-cyan-glow: #38bdf8;
-	--axia-ice: #eaf6ff;
+	--axia-cyan-cta: #5ce1ff;
+	--axia-cyan-glow: #7ee8ff;
+	--axia-ice: #e8f7ff;
+	--axia-card-shadow: 0 10px 24px -8px rgba(47, 53, 80, 0.14);
 }
 
-/* Project SEKAI inspired iridescent geometric background canvas */
+:root.dark {
+	color-scheme: dark;
+	--axia-slate: #232940;
+	--axia-slate-deep: #181e30;
+	--axia-ink: #f1f5f9;
+	--axia-ink-muted: #cbd5e1;
+	--axia-card-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.48);
+}
+
+/* Native interactive affordance across enabled controls */
+:where(
+		a[href],
+		button:not(:disabled),
+		summary,
+		select:not(:disabled),
+		label[for],
+		[role="button"]:not([aria-disabled="true"]),
+		[role="tab"]
+	) {
+	cursor: pointer;
+}
+
+/* Project SEKAI inspired iridescent azure-pastel canvas with sparse geometric confetti */
 body {
 	background-color: var(--page-bg);
 	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23c22774' stroke-opacity='0.13' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%235ce1ff' fill-opacity='0.18'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%231898f2' fill-opacity='0.16'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%235848c9' stroke-opacity='0.13' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%231898f2' stroke-opacity='0.14' stroke-width='1.8'/%3E%3Ccircle cx='248' cy='312' r='3.5' fill='%23c22774' fill-opacity='0.16'/%3E%3C/svg%3E"),
 		repeating-linear-gradient(
-			-30deg,
-			rgba(255, 255, 255, 0.24) 0px,
-			rgba(255, 255, 255, 0.24) 24px,
-			transparent 24px,
-			transparent 68px
+			-28deg,
+			rgba(255, 255, 255, 0.34) 0px,
+			rgba(255, 255, 255, 0.34) 36px,
+			transparent 36px,
+			transparent 92px
 		),
-		linear-gradient(125deg, #e5f7ff 0%, #eef2ff 52%, #f6eeff 100%);
+		linear-gradient(112deg, #cff7ff 0%, #e6eeff 52%, #f7e8fc 100%);
 	background-attachment: fixed;
 }
 
 :root.dark body {
-	background-color: #131722;
+	background-color: #121726;
 	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Ccircle cx='46' cy='54' r='11' fill='none' stroke='%235ce1ff' stroke-opacity='0.09' stroke-width='2'/%3E%3Cpolygon points='280,38 296,66 264,64' fill='none' stroke='%23e879f9' stroke-opacity='0.08' stroke-width='2'/%3E%3Cpolygon points='115,210 132,202 126,220' fill='%2338bdf8' fill-opacity='0.09'/%3E%3Ccircle cx='310' cy='215' r='4.5' fill='%235ce1ff' fill-opacity='0.10'/%3E%3Ccircle cx='195' cy='125' r='7' fill='none' stroke='%23818cf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3Cpolygon points='62,315 76,330 56,334' fill='none' stroke='%2338bdf8' stroke-opacity='0.09' stroke-width='1.8'/%3E%3C/svg%3E"),
 		repeating-linear-gradient(
-			-30deg,
+			-28deg,
 			rgba(255, 255, 255, 0.022) 0px,
-			rgba(255, 255, 255, 0.022) 24px,
-			transparent 24px,
-			transparent 68px
+			rgba(255, 255, 255, 0.022) 36px,
+			transparent 36px,
+			transparent 92px
 		),
 		radial-gradient(
-			ellipse 90% 45% at 50% 0%,
+			ellipse 90% 42% at 50% 0%,
 			rgba(28, 162, 255, 0.14) 0%,
 			transparent 68%
 		),
-		linear-gradient(180deg, #131722 0%, #171c2b 100%);
+		linear-gradient(125deg, #121726 0%, #171e32 52%, #1d1c33 100%);
 	background-attachment: fixed;
 }
 
-/* Smooth banner bottom blend matching pjsekai / colorfulstage key visual fade */
+/* Smooth banner bottom blend if user switches to banner mode in settings */
 html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	content: "";
 	position: absolute;
@@ -54,7 +83,7 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	background: linear-gradient(to bottom, transparent 0%, var(--page-bg) 100%);
 }
 
-/* Sleek electric-azure accent underline on floating navbar */
+/* Full-width bottom accent hairline on top navbar */
 #navbar > div {
 	position: relative;
 }
@@ -62,105 +91,188 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 #navbar > div::after {
 	content: "";
 	position: absolute;
-	left: 1rem;
-	right: 1rem;
+	left: 0;
+	right: 0;
 	bottom: 0;
 	height: 2px;
-	border-radius: 999px;
 	background: linear-gradient(
 		90deg,
-		var(--axia-slate) 0%,
+		var(--axia-slate-deep) 0%,
 		var(--axia-azure-bright) 50%,
-		var(--axia-cyan-glow) 100%
+		var(--axia-cyan-cta) 100%
 	);
-	opacity: 0.72;
+	opacity: 0.78;
 	pointer-events: none;
-}
-
-:root.dark #navbar > div::after {
-	background: linear-gradient(
-		90deg,
-		transparent 0%,
-		var(--axia-azure-bright) 50%,
-		var(--axia-cyan-glow) 100%
-	);
-	opacity: 0.8;
 }
 
 /* Crisp Project SEKAI card elevation */
 .card-base {
-	box-shadow: 0 10px 24px -10px rgba(38, 43, 61, 0.12);
+	box-shadow: var(--axia-card-shadow);
 }
 
-:root.dark .card-base {
-	box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.42);
+/* Open Canvas Showcase Section (pjsekai NEWS / SCHEDULE rhythm without outer white box) */
+.axia-open-section {
+	position: relative;
+	padding-top: 0.5rem;
 }
 
-/* Dual-layer Section Header (pjsekai NEWS/SCHEDULE watermark motif) */
-.axia-section-header {
+/* Centered Dual-Layer Repeating Outlined Watermark Header */
+.axia-sekai-heading {
 	position: relative;
 	overflow: hidden;
-	padding-top: 0.25rem;
-	padding-bottom: 0.35rem;
+	text-align: center;
+	padding: 2rem 0.5rem 1rem;
+	margin-bottom: 1rem;
 }
 
-.axia-watermark {
+.axia-sekai-watermark {
 	position: absolute;
-	right: -0.25rem;
-	top: -0.55rem;
+	left: 50%;
+	top: 44%;
+	transform: translate(-50%, -68%);
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: clamp(2.4rem, 5vw, 3.6rem);
+	font-size: clamp(2.1rem, 1.35rem + 4.1vw, 4.75rem);
 	font-weight: 800;
-	letter-spacing: 0.12em;
+	letter-spacing: 0.16em;
 	line-height: 1;
 	text-transform: uppercase;
 	color: transparent;
-	-webkit-text-stroke: 1.5px rgba(38, 43, 61, 0.10);
+	-webkit-text-stroke: 1.5px rgba(47, 53, 80, 0.12);
 	pointer-events: none;
 	user-select: none;
 	white-space: nowrap;
 }
 
-:root.dark .axia-watermark {
-	-webkit-text-stroke: 1.5px rgba(56, 189, 248, 0.14);
+:root.dark .axia-sekai-watermark {
+	-webkit-text-stroke: 1.5px rgba(126, 232, 255, 0.13);
 }
 
-.axia-heading-title {
+.axia-sekai-title {
+	position: relative;
+	z-index: 1;
+	margin: 0;
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	letter-spacing: -0.01em;
+	font-size: clamp(1.45rem, 1.15rem + 1.25vw, 2.15rem);
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	line-height: 1.2;
+	color: var(--axia-ink);
 }
 
-.axia-accent-bar {
-	width: 2.5rem;
-	height: 0.25rem;
+.axia-sekai-rule {
+	position: relative;
+	z-index: 1;
+	width: 3.25rem;
+	height: 3px;
+	margin: 0.65rem auto 0;
 	border-radius: 999px;
-	background: linear-gradient(90deg, var(--axia-slate) 0%, var(--axia-azure-bright) 100%);
-	margin-top: 0.4rem;
+	background: linear-gradient(90deg, var(--axia-slate-deep) 0%, var(--axia-azure-bright) 100%);
 }
 
-:root.dark .axia-accent-bar {
-	background: linear-gradient(90deg, var(--axia-azure-bright) 0%, var(--axia-cyan-glow) 100%);
+:root.dark .axia-sekai-rule {
+	background: linear-gradient(90deg, var(--axia-azure-bright) 0%, var(--axia-cyan-cta) 100%);
 }
 
-/* Colorful Stage Full-Pill CTA Buttons */
+.axia-sekai-subtitle {
+	position: relative;
+	z-index: 1;
+	margin: 0.65rem auto 0;
+	max-width: 40rem;
+	font-size: 0.92rem;
+	line-height: 1.5;
+	color: var(--axia-ink-muted);
+}
+
+/* Iconic Colorful Stage Full-Pill CTA Buttons */
+.axia-stage-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	min-height: 46px;
+	padding: 0.65rem 1.75rem;
+	border-radius: 9999px;
+	font-family: var(--font-montserrat, "Montserrat", sans-serif);
+	font-size: 0.84rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		border-color 0.2s ease,
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.axia-stage-btn-cyan {
+	background-color: var(--axia-cyan-cta);
+	color: #182038;
+	border: 2px solid transparent;
+	box-shadow: 0 8px 20px -6px rgba(12, 111, 196, 0.34);
+}
+
+.axia-stage-btn-cyan:hover {
+	background-color: var(--axia-slate-deep);
+	color: var(--axia-cyan-glow);
+	transform: translateY(-2px);
+	box-shadow: 0 12px 24px -8px rgba(38, 43, 61, 0.38);
+}
+
+:root.dark .axia-stage-btn-cyan {
+	background-color: #38bdf8;
+	color: #0b1220;
+}
+
+:root.dark .axia-stage-btn-cyan:hover {
+	background-color: #e0f4ff;
+	color: #0b1220;
+}
+
+.axia-stage-btn-outline {
+	background-color: #ffffff;
+	color: var(--axia-ink);
+	border: 1.5px solid rgba(43, 49, 74, 0.22);
+	box-shadow: 0 4px 12px -4px rgba(47, 53, 80, 0.10);
+}
+
+.axia-stage-btn-outline:hover {
+	border-color: var(--axia-azure);
+	color: var(--axia-azure);
+	transform: translateY(-2px);
+}
+
+:root.dark .axia-stage-btn-outline {
+	background-color: rgba(255, 255, 255, 0.06);
+	color: #e2e8f0;
+	border-color: rgba(255, 255, 255, 0.22);
+}
+
+:root.dark .axia-stage-btn-outline:hover {
+	border-color: #5ce1ff;
+	color: #7ee8ff;
+}
+
+/* Compact Inline Pill CTA (used inside cards/lists) */
 .axia-pill-cta {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	gap: 0.45rem;
 	min-height: 44px;
-	padding: 0.5rem 1.15rem;
+	padding: 0.45rem 1.05rem;
 	border-radius: 9999px;
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
-	font-size: 0.78rem;
+	font-size: 0.75rem;
 	font-weight: 700;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 	transition:
 		background-color 0.2s ease,
 		color 0.2s ease,
-		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		border-color 0.2s ease;
 }
 
 .axia-pill-cta-primary {
@@ -186,48 +298,31 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	color: #0b1220;
 }
 
-.axia-pill-cta-secondary {
-	background-color: var(--card-bg);
-	color: var(--axia-slate);
-	border: 1.5px solid rgba(38, 43, 61, 0.22);
-}
-
-.axia-pill-cta-secondary:hover {
-	border-color: var(--axia-azure);
-	color: var(--axia-azure);
-}
-
-:root.dark .axia-pill-cta-secondary {
-	background-color: rgba(255, 255, 255, 0.04);
-	color: #e2e8f0;
-	border-color: rgba(255, 255, 255, 0.20);
-}
-
-:root.dark .axia-pill-cta-secondary:hover {
-	border-color: var(--axia-cyan-glow);
-	color: var(--axia-cyan-glow);
-}
-
 /* Signature Project SEKAI Split-Header Card */
+.axia-sekai-card,
 .axia-split-card {
-	border-radius: 0.85rem;
-	border: 1px solid var(--line-divider);
-	background-color: var(--card-bg);
+	border-radius: 6px;
+	border: 1px solid rgba(47, 53, 80, 0.10);
+	background-color: #ffffff;
 	overflow: hidden;
-	box-shadow: 0 6px 16px -6px rgba(38, 43, 61, 0.12);
+	box-shadow: var(--axia-card-shadow);
 	transition:
 		border-color 0.2s ease,
+		transform 0.2s ease,
 		box-shadow 0.2s ease;
 }
 
+:root.dark .axia-sekai-card,
 :root.dark .axia-split-card {
-	background-color: rgba(255, 255, 255, 0.03);
-	box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.38);
+	background-color: #1c2236;
+	border-color: rgba(255, 255, 255, 0.10);
 }
 
+.axia-sekai-card:hover,
 .axia-split-card:hover {
-	border-color: var(--primary);
-	box-shadow: 0 10px 22px -8px rgba(12, 111, 196, 0.18);
+	border-color: var(--axia-azure-bright);
+	transform: translateY(-3px);
+	box-shadow: 0 16px 32px -10px rgba(12, 111, 196, 0.22);
 }
 
 .axia-split-bar {
@@ -238,15 +333,15 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	font-family: var(--font-montserrat, "Montserrat", sans-serif);
 	font-size: 0.72rem;
 	font-weight: 700;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.05em;
 	text-transform: uppercase;
 }
 
 .axia-split-date {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.4rem;
-	padding: 0.4rem 0.9rem;
+	gap: 0.35rem;
+	padding: 0.42rem 0.85rem;
 	background-color: var(--axia-slate);
 	color: #ffffff;
 	flex-shrink: 0;
@@ -258,23 +353,146 @@ html[data-wallpaper-mode="banner"] #wallpaper-wrapper::after {
 	align-items: center;
 	justify-content: space-between;
 	gap: 0.5rem;
-	padding: 0.4rem 0.9rem;
-	background: linear-gradient(90deg, #0c6fc4 0%, #0d7fd4 100%);
+	padding: 0.42rem 0.85rem;
+	background-color: #0c6fc4;
 	color: #ffffff;
 	min-width: 0;
 }
 
+.axia-split-type[data-cat-tone="live"],
+.axia-split-type[data-cat-tone="blog"] {
+	background-color: #0c6fc4;
+}
+
+.axia-split-type[data-cat-tone="matsuri"] {
+	background-color: #c22774;
+}
+
+.axia-split-type[data-cat-tone="anikura"] {
+	background-color: #5848c9;
+}
+
+.axia-split-type[data-cat-tone="expo"] {
+	background-color: #026ea8;
+}
+
+.axia-split-type[data-cat-tone="past"] {
+	background-color: #4b526e;
+}
+
+/* Card Stage Thumbnail / Stylized Editorial Banner */
+.axia-event-stage {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+	border-bottom: 1px solid rgba(47, 53, 80, 0.08);
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.38) 0px,
+			rgba(255, 255, 255, 0.38) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #dff5ff 0%, #ebf1ff 55%, #f5ebff 100%);
+}
+
+.axia-event-stage.has-poster {
+	aspect-ratio: 16 / 9;
+}
+
+.axia-event-stage.is-editorial {
+	min-height: 7.5rem;
+}
+
+:root.dark .axia-event-stage {
+	border-bottom-color: rgba(255, 255, 255, 0.08);
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.03) 0px,
+			rgba(255, 255, 255, 0.03) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #1a2642 0%, #202948 55%, #272448 100%);
+}
+
+.axia-event-stage[data-cat-tone="matsuri"] {
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.36) 0px,
+			rgba(255, 255, 255, 0.36) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #ffe7f3 0%, #eff2ff 60%, #e1f6ff 100%);
+}
+
+:root.dark .axia-event-stage[data-cat-tone="matsuri"] {
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.03) 0px,
+			rgba(255, 255, 255, 0.03) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #321b36 0%, #242142 60%, #19263e 100%);
+}
+
+.axia-event-stage[data-cat-tone="anikura"] {
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.36) 0px,
+			rgba(255, 255, 255, 0.36) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #eae6ff 0%, #e1f3ff 65%, #f5eaff 100%);
+}
+
+:root.dark .axia-event-stage[data-cat-tone="anikura"] {
+	background:
+		repeating-linear-gradient(
+			-28deg,
+			rgba(255, 255, 255, 0.03) 0px,
+			rgba(255, 255, 255, 0.03) 22px,
+			transparent 22px,
+			transparent 56px
+		),
+		linear-gradient(125deg, #25204a 0%, #1b2544 65%, #2a1d42 100%);
+}
+
+@media (max-width: 640px) {
+	.axia-sekai-heading {
+		padding: 1.5rem 0.25rem 0.75rem;
+	}
+}
+
 @media (forced-colors: active) {
 	.card-base,
+	.axia-sekai-card,
 	.axia-split-card,
-	.axia-pill-cta {
-		border: 1px solid CanvasText;
+	.axia-stage-btn,
+	.axia-pill-cta,
+	.axia-split-bar,
+	.axia-hero-card {
+		border: 1px solid CanvasText !important;
+	}
+	.axia-sekai-watermark {
+		display: none;
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.axia-sekai-card,
 	.axia-split-card,
+	.axia-stage-btn,
 	.axia-pill-cta {
 		transition-duration: 0.01ms !important;
+		transform: none !important;
 	}
 }

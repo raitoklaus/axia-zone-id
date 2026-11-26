@@ -360,6 +360,17 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         fullscreenLayout,
       }}
     >
+      // Upgrade guard to apply new Axia x Project SEKAI defaults cleanly once
+      const THEME_VERSION = "axia-sekai-v2";
+      if (localStorage.getItem("axiaThemeVersion") !== THEME_VERSION) {
+        localStorage.removeItem("hue");
+        localStorage.removeItem("theme");
+        localStorage.removeItem("wallpaperMode");
+        localStorage.removeItem("postListLayout");
+        localStorage.setItem("hueVersion", "axia-244");
+        localStorage.setItem("axiaThemeVersion", THEME_VERSION);
+      }
+
       // 主题初始化 - 与setting-utils.ts保持一致
       const LIGHT_MODE = "light";
       const DARK_MODE = "dark";
@@ -399,12 +410,6 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         isDark ? darkTheme : lightTheme
       );
 
-      // Load the hue from local storage (reset once if upgrading from legacy default hue)
-      const HUE_VERSION = "axia-244";
-      if (localStorage.getItem("hueVersion") !== HUE_VERSION) {
-        localStorage.removeItem("hue");
-        localStorage.setItem("hueVersion", HUE_VERSION);
-      }
       const hue = localStorage.getItem("hue") || configHue;
       document.documentElement.style.setProperty("--hue", hue);
       // 首帧先匹配深浅背景，BrowserChrome 随后同步实际计算后的主题底色。

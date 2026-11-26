@@ -3,10 +3,10 @@ import type { MusicPlayerConfig } from "../types/musicConfig";
 // 音乐播放器配置
 export const musicPlayerConfig: MusicPlayerConfig = {
 	// 是否在导航栏显示音乐播放器入口
-	showInNavbar: true,
+	showInNavbar: false,
 
 	// 是否在侧边栏显示音乐播放器组件
-	showInSidebar: true,
+	showInSidebar: false,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
 	mode: "local",
@@ -21,7 +21,7 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	showLyrics: false,
 
 	// 是否启用底部悬浮歌词（桌面端为三行歌词，移动端为一行歌词，播放时显示允许手动关闭，重新播放后会再次展示）
-	showFloatingLyrics: true,
+	showFloatingLyrics: false,
 
 	// Meting API 配置
 	meting: {

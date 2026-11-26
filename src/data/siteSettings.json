@@ -5,14 +5,14 @@
 		"description": "Anime and otaku blog, upcoming event schedule, and connected local performer and event wiki.",
 		"keywords": ["Firefly", "Fuwari", "Astro", "ACGN", "Axia Zone ID"],
 		"themeHue": 244,
-		"defaultMode": "system",
-		"pageWidth": 100,
+		"defaultMode": "light",
+		"pageWidth": 75,
 		"navbarTitle": "Axia Zone ID",
 		"siteStartDate": "2025-01-01",
 		"timezone": "Asia/Jakarta",
 		"postsPerPage": 10,
-		"defaultPostLayout": "list",
-		"categoryBar": true,
+		"defaultPostLayout": "grid",
+		"categoryBar": false,
 		"showLastModified": true,
 		"shareButtons": true,
 		"relatedPosts": true
@@ -31,7 +31,7 @@
 		"mal": false
 	},
 	"banner": {
-		"mode": "banner",
+		"mode": "none",
 		"homeTextEnable": true,
 		"title": "Axia Zone ID",
 		"subtitles": [
@@ -39,7 +39,7 @@
 			"Conventions, Mall Matsuri, Anisong Lives & Anikura Nights",
 			"Track Upcoming Lineups & Connect Performers Across Events"
 		],
-		"typewriterEnable": true,
+		"typewriterEnable": false,
 		"dimOpacity": 0.2
 	},
 	"announcement": {

@@ -14,23 +14,16 @@ const serializedEvents = await serializeEventsForBrowser();
 
 <MainGridLayout title={title} description={description}>
 	<section class="page-shell">
-		<header class="card-base page-header axia-section-header">
-			<span class="axia-watermark" aria-hidden="true">EVENTS</span>
-			<div class="page-heading relative z-10">
-				<div class="page-icon" aria-hidden="true">
-					<Icon name="material-symbols:calendar-month-rounded" />
-				</div>
-				<div>
-					<h2 class="axia-heading-title">{title}</h2>
-					<div class="axia-accent-bar" aria-hidden="true" />
-					<p class="mt-1.5">{description}</p>
-				</div>
-			</div>
-
-			<div class="page-count relative z-10" aria-label="Total events">
-				<Icon name="material-symbols:calendar-month-rounded" aria-hidden="true" />
-				<strong>{serializedEvents.length}</strong>
-				<span>Events</span>
+		<header class="axia-sekai-heading">
+			<span class="axia-sekai-watermark" aria-hidden="true">
+				EVENTS &nbsp; EVENTS &nbsp; EVENTS
+			</span>
+			<h2 class="axia-sekai-title">{title}</h2>
+			<div class="axia-sekai-rule" aria-hidden="true"></div>
+			<p class="axia-sekai-subtitle">{description}</p>
+			<div class="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white dark:bg-[#1c2236] border border-black/10 dark:border-white/12 text-xs font-bold text-[#2b314a] dark:text-slate-200 relative z-10 shadow-xs">
+				<Icon name="material-symbols:calendar-month-rounded" class="text-sm text-[#0c6fc4] dark:text-[#5ce1ff]" aria-hidden="true" />
+				<span>{serializedEvents.length} Indexed Events</span>
 			</div>
 		</header>
 

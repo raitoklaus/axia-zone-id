@@ -1,14 +1,14 @@
 /* ===== 基础变量定义 ===== */
 :root
-  --radius-large: 1rem
+  --radius-large: 0.5rem
   --content-delay: 150ms
 
 /* ===== 主题相关变量 ===== */
 :root
   --primary: oklch(0.60 0.17 var(--hue))
-  --page-bg: oklch(0.96 0.01 var(--hue))
-  --card-bg: white
-  --card-bg-transparent: unquote("rgb(255 255 255 / var(--card-transparent-opacity, 0.72))")
+  --page-bg: #eef7ff
+  --card-bg: #ffffff
+  --card-bg-transparent: unquote("rgb(255 255 255 / var(--card-transparent-opacity, 0.82))")
   
   --btn-content: oklch(0.45 0.15 var(--hue))
   --btn-regular-bg: oklch(0.94 0.03 var(--hue))
@@ -25,7 +25,7 @@
   --enter-btn-bg-hover: var(--btn-regular-bg-hover)
   --enter-btn-bg-active: var(--btn-regular-bg-active)
   
-  --deep-text: #262b3d
+  --deep-text: #2b314a
   --title-active: oklch(0.55 0.16 var(--hue))
   
   --line-divider: rgba(0, 0, 0, 0.08)
@@ -90,9 +90,9 @@
 /* 暗色主题变量 */
 :root.dark
   --primary: oklch(0.74 0.16 var(--hue))
-  --page-bg: oklch(0.15 0.018 var(--hue))
-  --card-bg: oklch(0.21 0.02 var(--hue))
-  --card-bg-transparent: unquote("rgb(23 26 36 / var(--card-transparent-opacity, 0.68))")
+  --page-bg: #121726
+  --card-bg: #1c2236
+  --card-bg-transparent: unquote("rgb(24 30 48 / var(--card-transparent-opacity, 0.78))")
 
   /* 导航栏玻璃高光与发丝线（暗色） */
   --navbar-glass-highlight: rgba(255, 255, 255, 0.06)

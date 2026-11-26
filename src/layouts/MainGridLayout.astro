@@ -136,7 +136,7 @@ const {
                 >
                 {/* 为每个页面提供一个隐藏的h1标题，用于SEO和可访问性 */}
                 <h1 class="sr-only">{heading || title}</h1>
-                <div id="content-wrapper" class="onload-animation transition-leaving">
+                <div id="content-wrapper" class:list={["onload-animation transition-leaving", !isHomePageCheck && "pt-6 md:pt-8"]}>
                     <slot></slot>
                 </div>
             </main>
@@ -165,11 +165,10 @@ const {
 
         <SpineModel></SpineModel>
         {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
-
-        {/* 页脚宽度跨「侧栏 + 内容栏」，故在 #content-column 之外；又在 Swup 容器之外，
-            切页不重渲染 */}
-        <Footer />
     </div>
+
+    {/* 全宽页脚：位于 #content-panel-inner 之外以实现 100% 视口宽度，同时在 Swup 容器之外且保留 .site-footer 供沉浸阅读隐藏 */}
+    <Footer />
 </div>
 
 <FloatingControls headings={headings} encrypted={encrypted} />

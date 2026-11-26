@@ -25,16 +25,17 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 <div class:list={["dropdown-container", className]} data-dropdown>
 	{hasChildren ? (
 		<button 
-			class="btn-plain scale-animation rounded-lg h-10 font-bold px-4 pr-8 active:scale-95 dropdown-trigger relative"
+			class="btn-plain scale-animation rounded-md h-10 px-3.5 pr-7 active:scale-95 dropdown-trigger relative font-bold text-[0.8125rem] tracking-[0.06em] uppercase"
+			style="font-family: var(--font-montserrat, inherit)"
 			aria-expanded="false"
 			aria-haspopup="true"
 			data-dropdown-trigger
 		>
 			<div class="flex items-center gap-1.5">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-1.5 navbar-icon" />}
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.05rem] navbar-icon" />}
 				{processedLink.name}
 			</div>
-			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.2rem] transition-transform duration-200 dropdown-arrow absolute right-2.5 top-1/2 -translate-y-1/2" />
+			<Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-[1.15rem] transition-transform duration-200 dropdown-arrow absolute right-2 top-1/2 -translate-y-1/2" />
 		</button>
 		<div class="dropdown-menu" data-dropdown-menu>
 			<DropdownPanel class="dropdown-content">
@@ -45,10 +46,10 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 						isLast={index === (processedLink.children?.length || 0) - 1}
 						class="dropdown-item focus-ring-inset h-10"
 					>
-						{child.icon && <Icon name={child.icon} class="text-[1.25rem] mr-3 navbar-icon" />}
+						{child.icon && <Icon name={child.icon} class="text-[1.2rem] mr-3 navbar-icon" />}
 						<span>{child.name}</span>
 						{child.external && (
-							<Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.75rem] text-black/25 dark:text-white/25 ml-auto" />
+							<Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.75rem] opacity-55 ml-auto" />
 						)}
 					</DropdownItem>
 				))}
@@ -59,12 +60,13 @@ const hasChildren = processedLink.children && processedLink.children.length > 0;
 			aria-label={processedLink.name} 
 			href={processedLink.external ? processedLink.url : url(processedLink.url)} 
 			target={processedLink.external ? "_blank" : null}
-			class="btn-plain scale-animation rounded-lg h-10 font-bold px-4 active:scale-95"
+			class="btn-plain scale-animation rounded-md h-10 px-3.5 active:scale-95 font-bold text-[0.8125rem] tracking-[0.06em] uppercase"
+			style="font-family: var(--font-montserrat, inherit)"
 		>
 			<div class="flex items-center gap-1.5">
-				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.1rem] mr-1.5 navbar-icon" />}
+				{processedLink.icon && <Icon name={processedLink.icon} class="text-[1.05rem] navbar-icon" />}
 				{processedLink.name}
-				{processedLink.external && <Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-px ml-1 text-black/20 dark:text-white/20" />}
+				{processedLink.external && <Icon name="fa7-solid:arrow-up-right-from-square" class="text-[0.85rem] transition -translate-y-px ml-1 opacity-55" />}
 			</div>
 		</a>
 	)}

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
+import { getEventCategoryTone } from "@/utils/event-tone";
 import type { SerializedWikiEvent } from "@/utils/wiki-utils";
 
 export let events: SerializedWikiEvent[] = [];
@@ -370,9 +371,9 @@ function selectDayCell(cell: CalendarCell): void {
 }
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-5">
 	<!-- Search & Filters Card -->
-	<div class="card-base p-5 md:p-6">
+	<div class="axia-sekai-card p-5 md:p-6">
 		<div class="flex flex-col gap-3.5">
 			<div class="relative">
 				<label for="event-search-input" class="sr-only">
@@ -380,14 +381,14 @@ function selectDayCell(cell: CalendarCell): void {
 				</label>
 				<Icon
 					icon="material-symbols:search"
-					class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-lg pointer-events-none"
+					class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4b526e] dark:text-slate-400 text-lg pointer-events-none"
 				/>
 				<input
 					id="event-search-input"
 					type="search"
 					bind:value={searchQuery}
 					placeholder="Search events, venues, cities, EO, highlights, or performers..."
-					class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-colors text-sm"
+					class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-md border border-(--line-divider) bg-transparent text-[#2b314a] dark:text-slate-100 placeholder-[#4b526e] dark:placeholder-slate-400 focus:border-[#0c6fc4] focus:ring-1 focus:ring-[#0c6fc4] transition-colors text-sm"
 				/>
 			</div>
 
@@ -395,14 +396,14 @@ function selectDayCell(cell: CalendarCell): void {
 				<div>
 					<label
 						for="event-region-select"
-						class="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
+						class="block text-xs font-bold uppercase tracking-wider text-[#4b526e] dark:text-slate-300 mb-1"
 					>
 						Region
 					</label>
 					<select
 						id="event-region-select"
 						bind:value={regionFilter}
-						class="w-full min-h-[44px] px-3 py-2 rounded-xl border border-(--line-divider) bg-(--card-bg) text-neutral-900 dark:text-neutral-100 text-sm cursor-pointer focus:border-(--primary)"
+						class="w-full min-h-[44px] px-3 py-2 rounded-md border border-(--line-divider) bg-(--card-bg) text-[#2b314a] dark:text-slate-100 text-sm cursor-pointer focus:border-[#0c6fc4]"
 					>
 						<option value="all">All Regions</option>
 						{#each availableRegions as region}
@@ -414,14 +415,14 @@ function selectDayCell(cell: CalendarCell): void {
 				<div>
 					<label
 						for="event-type-select"
-						class="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1"
+						class="block text-xs font-bold uppercase tracking-wider text-[#4b526e] dark:text-slate-300 mb-1"
 					>
 						Event Type
 					</label>
 					<select
 						id="event-type-select"
 						bind:value={eventTypeFilter}
-						class="w-full min-h-[44px] px-3 py-2 rounded-xl border border-(--line-divider) bg-(--card-bg) text-neutral-900 dark:text-neutral-100 text-sm cursor-pointer focus:border-(--primary)"
+						class="w-full min-h-[44px] px-3 py-2 rounded-md border border-(--line-divider) bg-(--card-bg) text-[#2b314a] dark:text-slate-100 text-sm cursor-pointer focus:border-[#0c6fc4]"
 					>
 						<option value="all">All Event Types</option>
 						{#each availableTypes as type}
@@ -437,7 +438,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (timeFilter = "all")}
 						aria-pressed={timeFilter === "all"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={timeFilter === "all"}
 					>
 						All ({events.length})
@@ -446,7 +447,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (timeFilter = "upcoming")}
 						aria-pressed={timeFilter === "upcoming"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={timeFilter === "upcoming"}
 					>
 						Upcoming ({events.filter((e) => e.isUpcoming).length})
@@ -455,7 +456,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (timeFilter = "past")}
 						aria-pressed={timeFilter === "past"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={timeFilter === "past"}
 					>
 						Past Archive ({events.filter((e) => !e.isUpcoming).length})
@@ -467,7 +468,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (admissionFilter = "all")}
 						aria-pressed={admissionFilter === "all"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={admissionFilter === "all"}
 					>
 						All HTM
@@ -476,7 +477,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (admissionFilter = "free")}
 						aria-pressed={admissionFilter === "free"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={admissionFilter === "free"}
 					>
 						Free Entry
@@ -485,7 +486,7 @@ function selectDayCell(cell: CalendarCell): void {
 						type="button"
 						on:click={() => (admissionFilter = "paid")}
 						aria-pressed={admissionFilter === "paid"}
-						class="filter-pill min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="filter-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						class:active={admissionFilter === "paid"}
 					>
 						Paid HTM
@@ -586,28 +587,29 @@ function selectDayCell(cell: CalendarCell): void {
 			aria-labelledby="events-tab-list"
 			hidden={activeView !== "list"}
 		>
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-8">
 				{#if upcomingGroups.length > 0}
-					<section class="card-base p-5 md:p-6">
-						<h3 class="text-lg md:text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+					<section>
+						<h3 class="text-lg md:text-xl font-extrabold uppercase tracking-wider text-[#2b314a] dark:text-slate-100 mb-4" style="font-family: var(--font-montserrat, sans-serif)">
 							Upcoming Events
 						</h3>
 						<div class="flex flex-col gap-6">
 							{#each upcomingGroups as group}
 								<div>
-									<h4 class="text-sm font-bold uppercase tracking-wider text-(--primary) mb-3">
+									<h4 class="text-xs font-extrabold uppercase tracking-[0.12em] text-[#0c6fc4] dark:text-[#7ee8ff] mb-3" style="font-family: var(--font-montserrat, sans-serif)">
 										{group.monthLabel}
 									</h4>
-									<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
+									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
 										{#each group.items as ev}
 											{@const countdown = getCountdownLabel(ev.startYmd, ev.endYmd, todayYmd)}
-											<li>
-												<article class="axia-split-card min-w-0">
+											{@const tone = getEventCategoryTone(ev.eventType)}
+											<li class="flex">
+												<article class="axia-sekai-card flex flex-col w-full min-w-0">
 													<div class="axia-split-bar">
 														<time datetime={ev.startYmd} class="axia-split-date">
-															<span>{ev.dateParts.day} {ev.dateParts.month} {ev.dateParts.year}</span>
+															<span>{ev.startYmd.replaceAll("-", ".")}</span>
 														</time>
-														<div class="axia-split-type">
+														<div class="axia-split-type" data-cat-tone={tone}>
 															<span class="truncate">
 																{ev.eventType || "ACG Event"}{ev.region ? ` · ${ev.region}` : ""}
 															</span>
@@ -617,44 +619,43 @@ function selectDayCell(cell: CalendarCell): void {
 														</div>
 													</div>
 
-													<div class="p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
-														<div class="flex-1 min-w-0">
-															<div class="flex flex-wrap items-center gap-2">
-																<h5 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
-																	<a href={ev.href} class="hover:text-(--primary) transition-colors">
-																		{ev.title}
-																	</a>
-																</h5>
-																{#if countdown}
-																	<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60">
-																		{countdown}
-																	</span>
-																{/if}
-																<span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${ev.admissionClass}`}>
-																	{ev.admissionLabel}
+													<div class="p-5 flex-1 flex flex-col gap-3 min-w-0">
+														<div class="flex flex-wrap items-center gap-2">
+															<h5 class="text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug">
+																<a href={ev.href} class="hover:text-[#0c6fc4] dark:hover:text-[#7ee8ff] transition-colors">
+																	{ev.title}
+																</a>
+															</h5>
+															{#if countdown}
+																<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60">
+																	{countdown}
 																</span>
-															</div>
+															{/if}
+															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${ev.admissionClass}`}>
+																{ev.admissionLabel}
+															</span>
+														</div>
 
-															<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
-																{ev.dateRange}{ev.time ? ` (${ev.time} ${ev.timezone})` : ""} · {ev.venue}, {ev.city}
+														<p class="text-sm text-[#4b526e] dark:text-slate-300">
+															{ev.dateRange}{ev.time ? ` (${ev.time} ${ev.timezone})` : ""} · {ev.venue}, {ev.city}
 														</p>
 
 														{#if ev.organizer}
-															<p class="text-xs text-neutral-600 dark:text-neutral-300 mt-1">
+															<p class="text-xs text-[#4b526e] dark:text-slate-300">
 																Organizer: {ev.organizer}
 															</p>
 														{/if}
 
 														{#if ev.description}
-															<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-1.5">
+															<p class="text-sm text-[#4b526e] dark:text-slate-300 line-clamp-2">
 																{ev.description}
 															</p>
 														{/if}
 
 														{#if ev.highlights.length > 0}
-															<ul role="list" aria-label={`Highlights for ${ev.title}`} class="flex flex-wrap gap-1.5 mt-2.5 list-none p-0 m-0">
+															<ul role="list" aria-label={`Highlights for ${ev.title}`} class="flex flex-wrap gap-1.5 list-none p-0 m-0">
 																{#each ev.highlights.slice(0, 5) as item}
-																	<li class="px-2 py-0.5 rounded-md text-xs font-medium border border-(--line-divider) text-neutral-700 dark:text-neutral-300">
+																	<li class="px-2 py-0.5 rounded text-xs font-medium border border-(--line-divider) text-[#4b526e] dark:text-slate-300">
 																		{item}
 																	</li>
 																{/each}
@@ -665,13 +666,13 @@ function selectDayCell(cell: CalendarCell): void {
 															<ul
 																role="list"
 																aria-label={`Lineup for ${ev.title}`}
-																class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+																class="flex flex-wrap items-center gap-2 list-none p-0 m-0"
 															>
 																{#each ev.lineup as performer}
 																	<li>
 																		<a
 																			href={performer.href}
-																			class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+																			class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
 																		>
 																			<Icon icon="material-symbols:person-rounded" class="text-sm shrink-0" />
 																			<span>{performer.name}</span>
@@ -680,22 +681,30 @@ function selectDayCell(cell: CalendarCell): void {
 																{/each}
 															</ul>
 														{/if}
-													</div>
 
-													{#if ev.ticketUrl}
-														<div class="sm:self-center shrink-0">
+														<div class="mt-auto pt-3 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
 															<a
-																href={ev.ticketUrl}
-																target="_blank"
-																rel="noopener noreferrer"
-																class="axia-pill-cta axia-pill-cta-primary w-full sm:w-auto"
+																href={ev.href}
+																class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[36px] text-xs font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
+																style="font-family: var(--font-montserrat, sans-serif)"
 															>
-																<span>Tickets</span>
-																<span class="sr-only"> for {ev.title}</span>
-																<Icon icon="material-symbols:open-in-new-rounded" class="text-base shrink-0" />
+																<span>Event Details</span>
+																<Icon icon="material-symbols:chevron-right-rounded" class="text-base" />
 															</a>
+
+															{#if ev.ticketUrl}
+																<a
+																	href={ev.ticketUrl}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="axia-pill-cta axia-pill-cta-primary"
+																>
+																	<span>Tickets</span>
+																	<span class="sr-only"> for {ev.title}</span>
+																	<Icon icon="material-symbols:open-in-new-rounded" class="text-sm shrink-0" />
+																</a>
+															{/if}
 														</div>
-													{/if}
 													</div>
 												</article>
 											</li>
@@ -708,64 +717,52 @@ function selectDayCell(cell: CalendarCell): void {
 				{/if}
 
 				{#if pastGroups.length > 0}
-					<section class="card-base p-5 md:p-6">
-						<h3 class="text-lg md:text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+					<section>
+						<h3 class="text-lg md:text-xl font-extrabold uppercase tracking-wider text-[#2b314a] dark:text-slate-100 mb-4" style="font-family: var(--font-montserrat, sans-serif)">
 							Past Events Archive
 						</h3>
 						<div class="flex flex-col gap-6">
 							{#each pastGroups as group}
 								<div>
-									<h4 class="text-sm font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-300 mb-3">
+									<h4 class="text-xs font-extrabold uppercase tracking-[0.12em] text-[#4b526e] dark:text-slate-300 mb-3" style="font-family: var(--font-montserrat, sans-serif)">
 										{group.monthLabel}
 									</h4>
-									<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
+									<ul role="list" class="grid gap-4 list-none p-0 m-0" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
 										{#each group.items as ev}
-											<li>
-												<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
-													<time
-														datetime={ev.startYmd}
-														class="w-16 shrink-0 rounded-lg bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 px-2 py-2 text-center flex flex-col items-center justify-center"
-													>
-														<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
-															{ev.dateParts.month}
-														</span>
-														<span class="text-xl font-bold leading-tight mt-0.5">
-															{ev.dateParts.day}
-														</span>
-														<span class="text-[0.6875rem] font-medium leading-none opacity-85">
-															{ev.dateParts.year}
-														</span>
-													</time>
-
-													<div class="flex-1 min-w-0">
-														<div class="flex flex-wrap items-center gap-2">
-															<h5 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
-																<a href={ev.href} class="hover:text-(--primary) transition-colors">
-																	{ev.title}
-																</a>
-															</h5>
-															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${ev.statusClass}`}>
+											<li class="flex">
+												<article class="axia-sekai-card flex flex-col w-full min-w-0">
+													<div class="axia-split-bar">
+														<time datetime={ev.startYmd} class="axia-split-date">
+															<span>{ev.startYmd.replaceAll("-", ".")}</span>
+														</time>
+														<div class="axia-split-type" data-cat-tone="past">
+															<span class="truncate">
+																{ev.eventType || "ACG Event"}{ev.region ? ` · ${ev.region}` : ""}
+															</span>
+															<span class="shrink-0 opacity-95">
 																{ev.statusLabel}
 															</span>
 														</div>
+													</div>
 
-														<div class="flex flex-wrap items-center gap-2 mt-2">
-															{#if ev.eventType}
-																<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-neutral-200/75 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-																	{ev.eventType}
-																</span>
-															{/if}
-															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold ${ev.admissionClass}`}>
+													<div class="p-5 flex-1 flex flex-col gap-3 min-w-0">
+														<div class="flex flex-wrap items-center gap-2">
+															<h5 class="text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug">
+																<a href={ev.href} class="hover:text-[#0c6fc4] dark:hover:text-[#7ee8ff] transition-colors">
+																	{ev.title}
+																</a>
+															</h5>
+															<span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${ev.admissionClass}`}>
 																{ev.admissionLabel}
 															</span>
 														</div>
 
-														<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-2">
-															{ev.dateRange} · {ev.venue}, {ev.city}{ev.region ? ` (${ev.region})` : ""}
+														<p class="text-sm text-[#4b526e] dark:text-slate-300">
+															{ev.dateRange} · {ev.venue}, {ev.city}
 														</p>
 
 														{#if ev.description}
-															<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-1.5">
+															<p class="text-sm text-[#4b526e] dark:text-slate-300 line-clamp-2">
 																{ev.description}
 															</p>
 														{/if}
@@ -774,13 +771,13 @@ function selectDayCell(cell: CalendarCell): void {
 															<ul
 																role="list"
 																aria-label={`Lineup for ${ev.title}`}
-																class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+																class="flex flex-wrap items-center gap-2 list-none p-0 m-0"
 															>
 																{#each ev.lineup as performer}
 																	<li>
 																		<a
 																			href={performer.href}
-																			class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+																			class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
 																		>
 																			<Icon icon="material-symbols:person-rounded" class="text-sm shrink-0" />
 																			<span>{performer.name}</span>
@@ -863,7 +860,7 @@ function selectDayCell(cell: CalendarCell): void {
 				<!-- Mon-Sun Grid Header -->
 				<div class="grid grid-cols-7 gap-1 sm:gap-2 text-center">
 					{#each WEEKDAYS as dayName}
-						<div class="py-1.5 text-xs font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-300">
+						<div class="py-2 rounded bg-[#2f3550] text-white text-xs font-bold uppercase tracking-wider" style="font-family: var(--font-montserrat, sans-serif)">
 							{dayName}
 						</div>
 					{/each}
@@ -1005,11 +1002,12 @@ function selectDayCell(cell: CalendarCell): void {
 		background: var(--btn-regular-bg-hover);
 	}
 	.filter-pill.active {
-		background: var(--primary);
+		background: #2f3550;
 		color: #fff;
 	}
 	:global(:root.dark) .filter-pill.active {
-		color: rgb(0 0 0 / 85%);
+		background: #0c6fc4;
+		color: #fff;
 	}
 
 	.view-tab {
@@ -1017,16 +1015,23 @@ function selectDayCell(cell: CalendarCell): void {
 		color: var(--content-meta);
 	}
 	.view-tab:hover {
-		color: var(--primary);
+		color: #0c6fc4;
 	}
 	.view-tab[aria-selected="true"] {
-		color: var(--primary);
+		color: #0c6fc4;
+	}
+	:global(:root.dark) .view-tab:hover,
+	:global(:root.dark) .view-tab[aria-selected="true"] {
+		color: #7ee8ff;
 	}
 	.view-tab[aria-selected="true"]::after {
 		content: "";
 		position: absolute;
 		inset: auto 0 0;
-		border-block-end: 3px solid var(--primary);
+		border-block-end: 3px solid #0c6fc4;
+	}
+	:global(:root.dark) .view-tab[aria-selected="true"]::after {
+		border-block-end-color: #5ce1ff;
 	}
 
 	.calendar-cell {
@@ -1035,20 +1040,24 @@ function selectDayCell(cell: CalendarCell): void {
 		color: inherit;
 	}
 	.calendar-cell:hover {
-		border-color: var(--primary);
+		border-color: #0c6fc4;
 	}
 	.calendar-cell.outside-month {
 		opacity: 0.42;
 	}
 	.calendar-cell.has-events {
-		background: color-mix(in oklch, var(--btn-regular-bg) 55%, transparent);
+		background: color-mix(in oklab, var(--btn-regular-bg) 55%, transparent);
 	}
 	.calendar-cell.is-today {
-		border-color: var(--primary);
+		border-color: #0c6fc4;
 	}
 	.calendar-cell.is-selected {
-		border-color: var(--primary);
-		outline: 2px solid var(--primary);
+		border-color: #0c6fc4;
+		outline: 2px solid #0c6fc4;
 		outline-offset: -2px;
+	}
+	:global(:root.dark) .calendar-cell.is-selected {
+		border-color: #5ce1ff;
+		outline-color: #5ce1ff;
 	}
 </style>

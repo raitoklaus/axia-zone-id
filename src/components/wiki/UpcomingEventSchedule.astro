@@ -6,6 +6,7 @@ import {
 	formatEventDateRange,
 	getAdmissionMeta,
 	getEventCalendarParts,
+	getEventCategoryTone,
 	getEventStatusMeta,
 	getUpcomingEvents,
 	resolveEventLineup,
@@ -22,6 +23,8 @@ const eventsWithMeta = await Promise.all(
 			event,
 			startYmd,
 			endYmd,
+			displayDotDate: startYmd.replaceAll("-", "."),
+			categoryTone: getEventCategoryTone(event.data.eventType),
 			lineup: await resolveEventLineup(event),
 			dateParts: getEventCalendarParts(event.data.startDate),
 			dateRange: formatEventDateRange(event.data.startDate, event.data.endDate),
@@ -42,54 +45,26 @@ const availableRegions = Array.from(
 
 <section
 	aria-labelledby="upcoming-schedule-heading"
-	class="card-base p-5 md:p-6 mb-4 onload-animation"
+	class="axia-open-section mb-12 onload-animation"
 >
 	<home-schedule-filter class="block">
-		<div class="axia-section-header flex flex-wrap items-center justify-between gap-3">
-			<span class="axia-watermark" aria-hidden="true">SCHEDULE</span>
-			<div class="relative z-10 flex items-center gap-2.5 min-w-0">
-				<div
-					class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center shrink-0"
-					aria-hidden="true"
-				>
-					<Icon name="material-symbols:calendar-month-rounded" class="text-xl" />
-				</div>
-				<div>
-					<h2
-						id="upcoming-schedule-heading"
-						class="axia-heading-title text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight"
-					>
-						Upcoming Event Schedule
-					</h2>
-					<div class="axia-accent-bar" aria-hidden="true" />
-					<p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 mt-1.5">
-						Indonesian ACG conventions, mall matsuri, anisong lives, and performer lineups
-					</p>
-				</div>
-			</div>
-
-			<nav aria-label="Event and performer wiki links" class="relative z-10 flex flex-wrap items-center gap-2">
-				<a
-					href={url("/wiki/events/")}
-					class="axia-pill-cta axia-pill-cta-primary"
-				>
-					<Icon name="material-symbols:event-note-rounded" class="text-base" aria-hidden="true" />
-					<span>All Events & Calendar</span>
-				</a>
-				<a
-					href={url("/wiki/performers/")}
-					class="axia-pill-cta axia-pill-cta-secondary"
-				>
-					<Icon name="material-symbols:groups-rounded" class="text-base" aria-hidden="true" />
-					<span>Performer Wiki</span>
-				</a>
-			</nav>
+		<div class="axia-sekai-heading">
+			<span class="axia-sekai-watermark" aria-hidden="true">
+				SCHEDULE &nbsp; SCHEDULE &nbsp; SCHEDULE
+			</span>
+			<h2 id="upcoming-schedule-heading" class="axia-sekai-title">
+				Upcoming Schedule
+			</h2>
+			<div class="axia-sekai-rule" aria-hidden="true"></div>
+			<p class="axia-sekai-subtitle">
+				Indonesian ACG conventions, mall matsuri, anisong lives, and connected performer lineups
+			</p>
 		</div>
 
 		{
 			availableRegions.length > 1 && (
 				<div
-					class="flex flex-wrap items-center gap-2 mt-4"
+					class="flex flex-wrap items-center justify-center gap-2 mb-6"
 					role="group"
 					aria-label="Filter upcoming schedule by region"
 				>
@@ -98,7 +73,7 @@ const availableRegions = Array.from(
 						data-region="all"
 						data-active
 						aria-pressed="true"
-						class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+						class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 					>
 						All Regions ({eventsWithMeta.length})
 					</button>
@@ -107,7 +82,7 @@ const availableRegions = Array.from(
 							type="button"
 							data-region={region}
 							aria-pressed="false"
-							class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+							class="home-region-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
 						>
 							{region}
 						</button>
@@ -118,12 +93,14 @@ const availableRegions = Array.from(
 
 		{
 			eventsWithMeta.length > 0 ? (
-				<ul role="list" class="flex flex-col gap-3.5 mt-4 list-none p-0 m-0">
+				<ul role="list" class="axia-schedule-grid list-none p-0 m-0">
 					{eventsWithMeta.map(
 						({
 							event,
 							startYmd,
 							endYmd,
+							displayDotDate,
+							categoryTone,
 							lineup,
 							dateParts,
 							dateRange,
@@ -131,20 +108,20 @@ const availableRegions = Array.from(
 							admissionMeta,
 						}) => (
 							<li
-								class="home-schedule-item"
+								class="home-schedule-item flex"
 								data-region={event.data.region}
 							>
-								<article class="axia-split-card min-w-0">
+								<article class="axia-sekai-card flex flex-col w-full min-w-0">
 									<div class="axia-split-bar">
 										<time
 											datetime={event.data.startDate.toISOString()}
 											class="axia-split-date"
 										>
-											<span>{dateParts.day} {dateParts.month} {dateParts.year}</span>
+											<span>{displayDotDate}</span>
 										</time>
-										<div class="axia-split-type">
+										<div class="axia-split-type" data-cat-tone={categoryTone}>
 											<span class="truncate">
-												{event.data.eventType || "ACG Event"}{event.data.region ? ` · ${event.data.region}` : ""}
+												{event.data.eventType || "ACG Event"}
 											</span>
 											<span class="shrink-0 opacity-95">
 												{statusMeta.label}
@@ -152,96 +129,153 @@ const availableRegions = Array.from(
 										</div>
 									</div>
 
-									<div class="p-4 flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
-										<div class="flex-1 min-w-0">
-											<div class="flex flex-wrap items-center gap-2">
-												<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
-													<a
-														href={getEventUrl(event.id)}
-														class="hover:text-(--primary) transition-colors"
+									<a
+										href={getEventUrl(event.id)}
+										aria-hidden="true"
+										tabindex="-1"
+										class:list={[
+											"axia-event-stage block group",
+											event.data.image ? "has-poster" : "is-editorial",
+										]}
+										data-cat-tone={categoryTone}
+									>
+										{event.data.image ? (
+											<img
+												src={
+													event.data.image.startsWith("/")
+														? url(event.data.image)
+														: event.data.image
+												}
+												alt=""
+												loading="lazy"
+												decoding="async"
+												class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+											/>
+										) : (
+											<div class="h-full w-full p-4 flex flex-col justify-between gap-3 relative overflow-hidden">
+												<span
+													aria-hidden="true"
+													class="pointer-events-none select-none absolute -right-2 -bottom-3 text-5xl font-extrabold uppercase tracking-wider text-[#2f3550]/[0.06] dark:text-white/[0.06]"
+													style="font-family: var(--font-montserrat, sans-serif)"
+												>
+													{event.data.city}
+												</span>
+
+												<div class="flex items-start justify-between gap-2 relative z-10">
+													<span class="inline-flex items-center px-2.5 py-1 rounded text-[0.7rem] font-bold uppercase tracking-wider bg-[#2f3550] text-white">
+														{event.data.region || event.data.city}
+													</span>
+													<span
+														data-countdown-start={startYmd}
+														data-countdown-end={endYmd}
+														class="hidden items-center px-2.5 py-1 rounded text-[0.7rem] font-bold bg-white/95 text-[#2b314a] border border-black/10 dark:bg-[#14192b] dark:text-[#e2e8f0] dark:border-white/15"
+													/>
+												</div>
+
+												<div class="flex items-end justify-between gap-2 relative z-10">
+													<div class="flex items-baseline gap-1.5 shrink-0 whitespace-nowrap" style="font-family: var(--font-montserrat, sans-serif)">
+														<span class="text-3xl font-extrabold leading-none text-[#2b314a] dark:text-white">
+															{dateParts.day}
+														</span>
+														<span class="text-xs font-extrabold tracking-widest uppercase text-[#0c6fc4] dark:text-[#7ee8ff]">
+															{dateParts.month} {dateParts.year}
+														</span>
+													</div>
+													<span
+														class={`inline-flex items-center px-2.5 py-1 rounded text-[0.68rem] leading-tight text-right font-bold max-w-[58%] ${admissionMeta.className}`}
 													>
-														{event.data.title}
-													</a>
-												</h3>
-												<span
-													data-countdown-start={startYmd}
-													data-countdown-end={endYmd}
-													class="hidden inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-900 border border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60"
+														{admissionMeta.label}
+													</span>
+												</div>
+											</div>
+										)}
+									</a>
+
+									<div class="p-5 flex-1 flex flex-col min-w-0">
+										<h3 class="text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug line-clamp-2">
+											<a
+												href={getEventUrl(event.id)}
+												class="hover:text-[#0c6fc4] dark:hover:text-[#7ee8ff] transition-colors"
+											>
+												{event.data.title}
+											</a>
+										</h3>
+
+										<div class="flex flex-col gap-1 mt-2.5 text-sm text-[#4b526e] dark:text-slate-300">
+											<span class="inline-flex items-center gap-1.5">
+												<Icon
+													name="material-symbols:calendar-today-outline-rounded"
+													class="text-base shrink-0 text-[#0c6fc4] dark:text-[#5ce1ff]"
+													aria-hidden="true"
 												/>
-												<span
-													class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${admissionMeta.className}`}
-												>
-													{admissionMeta.label}
+												<span class="truncate">
+													{dateRange}
+													{event.data.time ? ` (${event.data.time} ${event.data.timezone})` : ""}
 												</span>
-											</div>
-
-											<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-neutral-700 dark:text-neutral-300">
-												<span class="inline-flex items-center gap-1">
-													<Icon
-														name="material-symbols:calendar-today-outline-rounded"
-														class="text-base shrink-0"
-														aria-hidden="true"
-													/>
-													<span>
-														{dateRange}
-														{event.data.time ? ` (${event.data.time} ${event.data.timezone})` : ""}
-													</span>
+											</span>
+											<span class="inline-flex items-center gap-1.5 min-w-0">
+												<Icon
+													name="material-symbols:location-on-outline-rounded"
+													class="text-base shrink-0 text-[#0c6fc4] dark:text-[#5ce1ff]"
+													aria-hidden="true"
+												/>
+												<span class="truncate">
+													{event.data.venue}, {event.data.city}
 												</span>
-												<span class="inline-flex items-center gap-1 min-w-0">
-													<Icon
-														name="material-symbols:location-on-outline-rounded"
-														class="text-base shrink-0"
-														aria-hidden="true"
-													/>
-													<span class="truncate">
-														{event.data.venue}, {event.data.city}
-													</span>
-												</span>
-											</div>
-
-											{lineup.length > 0 && (
-												<ul
-													role="list"
-													aria-label={`Lineup for ${event.data.title}`}
-													class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
-												>
-													{lineup.map((performer) => (
-														<li>
-															<a
-																href={getPerformerUrl(performer.id)}
-																class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
-															>
-																<Icon
-																	name="material-symbols:person-rounded"
-																	class="text-sm shrink-0"
-																	aria-hidden="true"
-																/>
-																<span>{performer.data.name}</span>
-															</a>
-														</li>
-													))}
-												</ul>
-											)}
+											</span>
 										</div>
 
-										{event.data.ticketUrl && (
-											<div class="sm:self-center shrink-0">
+										{lineup.length > 0 && (
+											<ul
+												role="list"
+												aria-label={`Lineup for ${event.data.title}`}
+												class="flex flex-wrap items-center gap-1.5 mt-3 list-none p-0 m-0"
+											>
+												{lineup.map((performer) => (
+													<li>
+														<a
+															href={getPerformerUrl(performer.id)}
+															class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] px-2.5 py-1 rounded-full text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+														>
+															<Icon
+																name="material-symbols:person-rounded"
+																class="text-sm shrink-0"
+																aria-hidden="true"
+															/>
+															<span>{performer.data.name}</span>
+														</a>
+													</li>
+												))}
+											</ul>
+										)}
+
+										<div class="mt-auto pt-4 mt-4 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
+											<a
+												href={getEventUrl(event.id)}
+												class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[36px] text-xs font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
+												style="font-family: var(--font-montserrat, sans-serif)"
+											>
+												<span>Details</span>
+												<Icon name="material-symbols:chevron-right-rounded" class="text-base" aria-hidden="true" />
+											</a>
+
+											{event.data.ticketUrl && (
 												<a
 													href={event.data.ticketUrl}
 													target="_blank"
 													rel="noopener noreferrer"
-													class="axia-pill-cta axia-pill-cta-primary w-full sm:w-auto"
+													class="axia-pill-cta axia-pill-cta-primary"
 												>
 													<span>Tickets</span>
 													<span class="sr-only"> for {event.data.title}</span>
 													<Icon
 														name="material-symbols:open-in-new-rounded"
-														class="text-base shrink-0"
+														class="text-sm shrink-0"
 														aria-hidden="true"
 													/>
 												</a>
-											</div>
-										)}
+											)}
+										</div>
 									</div>
 								</article>
 							</li>
@@ -249,10 +283,10 @@ const availableRegions = Array.from(
 					)}
 				</ul>
 			) : (
-				<div class="mt-4 rounded-xl border border-dashed border-(--line-divider) p-6 text-center">
-					<p class="text-sm text-neutral-700 dark:text-neutral-300">
+				<div class="axia-sekai-card p-8 text-center">
+					<p class="text-sm text-[#4b526e] dark:text-slate-300">
 						No upcoming events are scheduled yet. Browse past appearances in the{" "}
-						<a href={url("/wiki/events/")} class="text-(--primary) font-medium hover:underline">
+						<a href={url("/wiki/events/")} class="text-[#0c6fc4] dark:text-[#7ee8ff] font-semibold hover:underline">
 							event archive
 						</a>
 						.
@@ -261,18 +295,33 @@ const availableRegions = Array.from(
 			)
 		}
 
-		<div class="home-schedule-filtered-empty hidden mt-4 rounded-xl border border-dashed border-(--line-divider) p-6 text-center">
-			<p class="text-sm text-neutral-700 dark:text-neutral-300">
+		<div class="home-schedule-filtered-empty hidden axia-sekai-card p-8 text-center mt-4">
+			<p class="text-sm text-[#4b526e] dark:text-slate-300">
 				No upcoming events match this region right now.
 			</p>
 			<button
 				type="button"
 				data-reset-home-region
-				class="mt-3 min-h-[44px] px-4 py-2 rounded-lg text-sm font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) cursor-pointer transition-colors"
+				class="mt-3 min-h-[44px] px-4 py-2 rounded-full text-sm font-semibold bg-[#2f3550] text-white hover:bg-[#0c6fc4] cursor-pointer transition-colors"
 			>
 				Show all regions
 			</button>
 		</div>
+
+		<nav aria-label="Full schedule and performer wiki" class="mt-8 flex flex-wrap items-center justify-center gap-3">
+			<a
+				href={url("/wiki/events/")}
+				class="axia-stage-btn axia-stage-btn-cyan min-w-[230px]"
+			>
+				<span>All Events &amp; Calendar</span>
+			</a>
+			<a
+				href={url("/wiki/performers/")}
+				class="axia-stage-btn axia-stage-btn-outline"
+			>
+				<span>Performer Wiki</span>
+			</a>
+		</nav>
 	</home-schedule-filter>
 </section>
 
@@ -335,8 +384,11 @@ const availableRegions = Array.from(
 				if (label) {
 					el.textContent = label;
 					el.classList.remove("hidden");
+					el.classList.add("inline-flex");
 				} else {
+					el.textContent = "";
 					el.classList.add("hidden");
+					el.classList.remove("inline-flex");
 				}
 			});
 		}
@@ -403,18 +455,40 @@ const availableRegions = Array.from(
 </script>
 
 <style>
+	.axia-schedule-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+		gap: 1.5rem;
+	}
+
 	.home-region-pill {
-		background: var(--btn-regular-bg);
-		color: var(--btn-content);
+		background: #ffffff;
+		color: #2b314a;
+		border: 1px solid rgba(47, 53, 80, 0.14);
+		box-shadow: 0 3px 10px -4px rgba(47, 53, 80, 0.10);
 	}
 	.home-region-pill:hover {
-		background: var(--btn-regular-bg-hover);
+		border-color: #0c6fc4;
+		color: #0c6fc4;
 	}
 	.home-region-pill[data-active] {
-		background: var(--primary);
-		color: #fff;
+		background: #2f3550;
+		color: #ffffff;
+		border-color: #2f3550;
+	}
+
+	:global(:root.dark) .home-region-pill {
+		background: #1c2236;
+		color: #e2e8f0;
+		border-color: rgba(255, 255, 255, 0.14);
+	}
+	:global(:root.dark) .home-region-pill:hover {
+		border-color: #5ce1ff;
+		color: #7ee8ff;
 	}
 	:global(:root.dark) .home-region-pill[data-active] {
-		color: rgb(0 0 0 / 85%);
+		background: #0c6fc4;
+		color: #ffffff;
+		border-color: #38bdf8;
 	}
 </style>
