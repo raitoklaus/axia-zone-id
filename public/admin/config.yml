@@ -16,6 +16,8 @@ collections:
     label_singular: Post
     icon: article
     folder: src/content/posts
+    extension: mdx
+    format: yaml-frontmatter
     create: true
     slug: "{{slug}}"
     summary: "{{title}} ({{published}})"
@@ -100,7 +102,7 @@ collections:
               "youtube-embed",
               "mermaid-diagram",
             ],
-          hint: "Use the toolbar or + menu for Wiki Links, Callouts, Spoilers, Grids, GitHub Cards, YouTube, and Mermaid, or switch to Raw Markdown anytime.",
+          hint: "Use the toolbar or + menu for Wiki Links, Callouts, Spoilers, Grids, GitHub Cards, YouTube, and Mermaid, or switch to Raw Markdown mode (especially when editing MDX tags like <Badge>, <TabGroup>, <Steps>, or <Timeline>).",
         }
 
   - name: events
