@@ -1,34 +1,119 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Project Overview & Tech Stack
 
-Firefly is an Astro 7 site with Svelte islands and TypeScript configuration. Main source code lives in `src/`: routes in `src/pages`, layouts in `src/layouts`, reusable UI in `src/components`, styles in `src/styles`, content in `src/content`, helpers in `src/utils`, and Markdown/HTML plugins in `src/plugins`. Site configuration is split across `src/config` with matching type definitions in `src/types`; prefer imports from `@/config` when available. Static files served directly belong in `public`, source-managed images in `src/assets`, docs in `docs` and `Firefly-Docs`, and automation in `scripts`.
+This site is an Astro 7 anime/otaku blog, event schedule, and connected performer/event wiki built on the Firefly theme.
 
-## Build, Test, and Development Commands
+- **Framework**: Astro 7 (`astro.config.mjs`) with Swup page transitions and `@astrojs/mdx`
+- **UI & Styling**: Svelte 5 islands, Tailwind CSS 4 (`@tailwindcss/vite`), Stylus (`src/styles/markdown-extend.styl`), and Firefly CSS custom properties (`src/styles/variables.styl`)
+- **Language & Quality**: TypeScript (`--isolatedDeclarations`), Biome formatter/linter (tabs for indentation, double quotes for JS/TS strings), and Pagefind static search (`scripts/run-pagefind.ts`)
+- **Package Manager**: `pnpm` (enforced by `preinstall` in `package.json`)
 
-Use `pnpm`; the `preinstall` script enforces it.
+## Directory Map
 
-- `pnpm dev` or `pnpm start`: run the local Astro dev server.
-- `pnpm check`: run Astro diagnostics.
-- `pnpm type-check`: run TypeScript with `--noEmit`.
-- `pnpm format`: format `src` with Biome.
-- `pnpm lint`: run Biome checks and safe fixes on `src`.
-- `pnpm build`: generate icons, LQIPs, the Astro build, font subsets, and Pagefind search output in `dist`.
-- `pnpm preview`: preview the production build locally.
-- `pnpm new-post`: scaffold a new content post.
+- `src/content.config.ts`: Astro 7 Content Collections definitions (`posts`, `performers`, `events`, `dynamic`, `projects`, `spec`)
+- `src/content/posts/`: Blog posts (`*.md`, `*.mdx`)
+- `src/content/performers/`: Local performer wiki profiles (`*.md`, `*.mdx`)
+- `src/content/events/`: Upcoming and archived event entries (`*.md`, `*.mdx`)
+- `src/pages/[...page].astro`: Paginated blog front page with the `UpcomingEventSchedule` section on page 1
+- `src/pages/wiki/performers/`: Performer directory (`index.astro`) and profile detail pages (`[slug].astro`)
+- `src/pages/wiki/events/`: Event schedule/archive (`index.astro`) and event detail pages (`[slug].astro`)
+- `src/components/wiki/UpcomingEventSchedule.astro`: Homepage upcoming event schedule widget
+- `src/utils/wiki-utils.ts` & `src/utils/url-utils.ts`: Collection queries, date/status helpers, and route builders
+- `src/plugins/remark-wiki-link.js`: Obsidian-style `[[Wiki Links]]` resolver across `posts`, `performers`, and `events`
+- `src/config/`: Split site configuration (`siteConfig.ts`, `navBarConfig.ts`, `coverImageConfig.ts`, etc.) with types in `src/types/`
+- `public/`: Static assets served verbatim; `src/assets/`: source-managed images optimized at build time
 
-## Coding Style & Naming Conventions
+## Content Frontmatter Schemas
 
-Biome is the formatter and linter. It uses tabs for indentation and double quotes for JavaScript/TypeScript strings. Keep Astro and Svelte components in `PascalCase` (`PostCard.astro`, `Search.svelte`), config modules in `camelCase` ending with `Config.ts`, and utilities in descriptive kebab case such as `date-utils.ts`. Keep `src/types` aligned with `src/config`. Avoid unrelated formatting churn.
+All schemas live in `src/content.config.ts`.
 
-## Testing Guidelines
+### `posts` (`src/content/posts/*.{md,mdx}`)
 
-There is no dedicated unit-test framework configured. Before submitting changes, run `pnpm check`, `pnpm type-check`, and `pnpm build` for rendering, content, or generated asset work. For visual or interactive changes, verify with `pnpm dev` or `pnpm preview` and include screenshots in the PR. Name future tests near the feature they cover, using the local file name as the stem.
+| Field | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `title` | `string` | Yes | - | Post headline |
+| `published` | `date` | Yes | - | `YYYY-MM-DD` |
+| `updated` | `date` | No | - | Last edited date |
+| `description` | `string` | No | `""` | Summary shown on cards & meta |
+| `image` | `string` | No | `""` | Local relative path, `/public` path, URL, or `"api"` |
+| `tags` | `string[]` | No | `[]` | Tag list |
+| `category` | `string \| null` | No | `""` | Single category |
+| `draft` | `boolean` | No | `false` | Hidden in production builds when `true` |
+| `lang` | `string` | No | `""` | Optional post language override |
+| `pinned` | `boolean` | No | `false` | Pins post to top of list |
+| `comment` | `boolean` | No | `true` | Enables comment widget |
+| `series` / `seriesOrder` | `string` / `number` | No | `""` / - | Series grouping and order |
+| `password` / `passwordHint` | `string` | No | `""` | Optional encrypted post settings |
 
-## Commit & Pull Request Guidelines
+### `performers` (`src/content/performers/*.{md,mdx}`)
 
-Use Conventional Commits, matching the current history: `feat: ...`, `fix: ...`, and `chore: ...`. Keep commits and PRs focused on one concern. PRs should include a concise summary, linked issues when relevant, validation commands run, and screenshots for UI changes. Discuss major features or design changes in an issue or discussion before implementation.
+| Field | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `name` | `string` | Yes | - | Display name |
+| `role` | `string` | Yes | - | Primary role (e.g. `Anisong Vocalist`, `Anikura DJ`) |
+| `category` | `string` | No | `""` | Directory filter category (e.g. `Music`, `DJ`, `Cosplay`) |
+| `bio` | `string` | No | `""` | Short bio summary |
+| `socials` | `{ label, url, icon? }[]` | No | `[]` | External links (`icon` uses Iconify names like `fa7-brands:youtube`) |
+| `tags` | `string[]` | No | `[]` | Style or scene tags |
+| `avatar` | `string` | No | `""` | Image path/URL; falls back to initials when empty |
+| `draft` | `boolean` | No | `false` | Hidden in production builds when `true` |
 
-## Security & Configuration Tips
+### `events` (`src/content/events/*.{md,mdx}`)
 
-Do not commit secrets, tokens, or service keys in config files. Keep deployment-specific settings in the target platform environment, and review generated files such as `dist`, `src/constants/lqips.json`, and `src/constants/icons.ts` before committing them.
+| Field | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `title` | `string` | Yes | - | Event title |
+| `startDate` | `date` | Yes | - | `YYYY-MM-DD` (coerced to `Date`) |
+| `endDate` | `date` | No | - | Optional end date for multi-day events |
+| `venue` | `string` | Yes | - | Venue name |
+| `city` | `string` | Yes | - | City name |
+| `status` | `enum` | No | `"upcoming"` | `"upcoming" \| "ongoing" \| "completed" \| "cancelled" \| "postponed"` |
+| `ticketUrl` | `string` | No | `""` | External ticket/registration URL |
+| `lineup` | `reference("performers")[]` | No | `[]` | Array of performer entry IDs (filename slugs without `.md`) |
+| `description` | `string` | No | `""` | Short summary |
+| `tags` | `string[]` | No | `[]` | Event tags |
+| `image` | `string` | No | `""` | Optional banner/poster image |
+| `draft` | `boolean` | No | `false` | Hidden in production builds when `true` |
+
+## Cross-Linking Rules
+
+1. **Structured Event Lineups (`reference("performers")`)**:
+   - Always link performers to events using `lineup: ["performer-slug"]` in the event's frontmatter.
+   - `src/pages/wiki/performers/[slug].astro` automatically queries `events` via `getEventsForPerformer()` to render **Upcoming Appearances** and **Past Appearances**.
+   - Events with `status: "completed"` or `"cancelled"`, or dates earlier than the build date, automatically move out of the homepage schedule into past archives.
+2. **Inline & Card `[[Wiki Links]]`**:
+   - Supported across `posts`, `performers`, and `events` via `src/plugins/remark-wiki-link.js`.
+   - Use prefixed paths when possible for clarity: `[[performers/hana-minase]]`, `[[events/axia-winter-live-2026]]`, `[[posts/firefly]]`.
+   - Bare slugs like `[[ren-takahashi]]` also resolve if the filename is unique across collections.
+   - Add `|Custom Label` for custom inline text, or place `[[...]]` alone on its own paragraph to render a rich link card.
+
+## Standard Commands
+
+- `pnpm dev` or `pnpm start`: Start the local Astro dev server
+- `pnpm check`: Run `astro check` diagnostics
+- `pnpm type-check`: Run `tsc --noEmit --isolatedDeclarations` (all exported TS symbols must have explicit types)
+- `pnpm format`: Format `src` and `scripts` with Biome
+- `pnpm lint`: Run Biome checks and safe fixes on `src` and `scripts`
+- `pnpm build`: Run asset generators, `astro build --force`, font subsetting, script minification, and Pagefind indexing into `dist/`
+- `pnpm preview`: Preview the production build locally
+- `pnpm new-post`: Scaffold a new blog post
+
+## Coding & Accessibility Conventions
+
+- Follow Biome formatting (tabs, double quotes). Keep `src/types` aligned with `src/config`.
+- Always route internal links through `url()` / `getPerformerUrl()` / `getEventUrl()` with trailing slashes (`trailingSlash: "always"`).
+- `MainGridLayout.astro` renders the page `<h1 class="sr-only">`; start visible headings inside pages at `<h2>`.
+- Before committing code or content schema changes, run `pnpm check`, `pnpm type-check`, and `pnpm build`.
+
+## Multi-Device Git Hygiene
+
+- Before starting work on any device, sync your branch: `git pull --rebase origin main`
+- Upstream Firefly theme updates are tracked on the `upstream` remote (`CuteLeaf/Firefly`); merge or cherry-pick selectively without pushing to `upstream`.
+- Use Conventional Commits (`feat: ...`, `fix: ...`, `chore: ...`, `docs: ...`).
+- Never commit `.env`, API tokens, personal access tokens, OAuth secrets, or private keys.
+- Review generated files (`dist/`, `src/constants/lqips.json`, `src/constants/icons.ts`) before committing.
+
+## Deployment & Online CMS
+
+- Deployment and online CMS configuration will be documented here after Steps 5 and 6 are finalized.

@@ -16,6 +16,25 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// 主页
 	links.push(LinkPresets.Home);
 
+	// Wiki (Events & Performers)
+	links.push({
+		name: "Wiki",
+		url: "#",
+		icon: "material-symbols:menu-book-rounded",
+		children: [
+			{
+				name: "Events",
+				url: "/wiki/events/",
+				icon: "material-symbols:calendar-month-rounded",
+			},
+			{
+				name: "Performers",
+				url: "/wiki/performers/",
+				icon: "material-symbols:groups-rounded",
+			},
+		],
+	});
+
 	// 文章及其子菜单
 	links.push({
 		name: "文章",

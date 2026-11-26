@@ -39,6 +39,16 @@ export function getPostUrlBySlug(slug: string): string {
 	return url(`/posts/${slugWithoutExt}/`);
 }
 
+export function getPerformerUrl(slug: string): string {
+	const slugWithoutExt = removeFileExtension(slug);
+	return url(`/wiki/performers/${slugWithoutExt}/`);
+}
+
+export function getEventUrl(slug: string): string {
+	const slugWithoutExt = removeFileExtension(slug);
+	return url(`/wiki/events/${slugWithoutExt}/`);
+}
+
 export function getTagUrl(tag: string): string {
 	if (!tag) return url("/archive/");
 	return url(`/archive/?tag=${encodeURIComponent(tag.trim())}`);
@@ -103,6 +113,8 @@ const CONTENT_DETAIL_PATH_PATTERNS = [
 	/\/posts\/.+/,
 	/\/post\/.+/,
 	/\/projects\/.+/,
+	/\/wiki\/performers\/.+/,
+	/\/wiki\/events\/.+/,
 ];
 
 /**

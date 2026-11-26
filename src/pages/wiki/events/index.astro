@@ -1,0 +1,448 @@
+---
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import { getEventUrl, getPerformerUrl } from "@/utils/url-utils";
+import {
+	formatEventDateRange,
+	getEventCalendarParts,
+	getEventStatusMeta,
+	getPastEvents,
+	getUpcomingEvents,
+	resolveEventLineup,
+} from "@/utils/wiki-utils";
+
+const title = "Events & Schedule";
+const description =
+	"Upcoming anime and otaku events schedule and archived past appearances.";
+
+const [upcomingRaw, pastRaw] = await Promise.all([
+	getUpcomingEvents(),
+	getPastEvents(),
+]);
+
+const hydrateEvents = async (
+	events: Awaited<ReturnType<typeof getUpcomingEvents>>,
+	bucket: "upcoming" | "past",
+) =>
+	Promise.all(
+		events.map(async (event) => ({
+			event,
+			bucket,
+			lineup: await resolveEventLineup(event),
+			dateParts: getEventCalendarParts(event.data.startDate),
+			dateRange: formatEventDateRange(event.data.startDate, event.data.endDate),
+			statusMeta: getEventStatusMeta(event.data.status),
+		})),
+	);
+
+const [upcomingEvents, pastEvents] = await Promise.all([
+	hydrateEvents(upcomingRaw, "upcoming"),
+	hydrateEvents(pastRaw, "past"),
+]);
+
+const totalCount = upcomingEvents.length + pastEvents.length;
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="page-shell">
+		<header class="card-base page-header">
+			<div class="page-heading">
+				<div class="page-icon" aria-hidden="true">
+					<Icon name="material-symbols:calendar-month-rounded" />
+				</div>
+				<div>
+					<h2>{title}</h2>
+					<p>{description}</p>
+				</div>
+			</div>
+
+			<div class="page-count" aria-label="Total events">
+				<Icon name="material-symbols:calendar-month-rounded" aria-hidden="true" />
+				<strong>{totalCount}</strong>
+				<span>Events</span>
+			</div>
+
+			<event-filter style="grid-column: 1 / -1">
+				<div class="relative mb-3">
+					<label for="event-search" class="sr-only">
+						Search events by title, venue, city, or performer
+					</label>
+					<Icon
+						name="material-symbols:search"
+						class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-lg pointer-events-none"
+						aria-hidden="true"
+					/>
+					<input
+						id="event-search"
+						type="search"
+						data-search
+						placeholder="Search events by title, venue, city, or performer..."
+						class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-colors text-sm"
+					/>
+				</div>
+
+				<div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter events by time">
+					<button
+						type="button"
+						data-bucket="all"
+						aria-pressed="true"
+						class="category-pill min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer"
+						data-active
+					>
+						All ({totalCount})
+					</button>
+					<button
+						type="button"
+						data-bucket="upcoming"
+						aria-pressed="false"
+						class="category-pill min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer"
+					>
+						Upcoming ({upcomingEvents.length})
+					</button>
+					<button
+						type="button"
+						data-bucket="past"
+						aria-pressed="false"
+						class="category-pill min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer"
+					>
+						Past Archive ({pastEvents.length})
+					</button>
+				</div>
+			</event-filter>
+		</header>
+
+		{
+			totalCount > 0 ? (
+				<div class="flex flex-col gap-4">
+					{upcomingEvents.length > 0 && (
+						<section class="event-group card-base p-5 md:p-6" data-group="upcoming">
+							<h3 class="text-lg md:text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+								Upcoming Events
+							</h3>
+							<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
+								{upcomingEvents.map(
+									({ event, lineup, dateParts, dateRange, statusMeta }) => (
+										<li
+											class="event-card-item"
+											data-bucket="upcoming"
+											data-search-text={`${event.data.title} ${event.data.venue} ${event.data.city} ${event.data.tags.join(" ")} ${lineup.map((p) => p.data.name).join(" ")}`.toLowerCase()}
+										>
+											<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
+												<time
+													datetime={event.data.startDate.toISOString()}
+													class="w-16 shrink-0 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) px-2 py-2 text-center flex flex-col items-center justify-center"
+												>
+													<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
+														{dateParts.month}
+													</span>
+													<span class="text-xl font-bold leading-tight mt-0.5">
+														{dateParts.day}
+													</span>
+													<span class="text-[0.6875rem] font-medium leading-none opacity-85">
+														{dateParts.year}
+													</span>
+												</time>
+
+												<div class="flex-1 min-w-0">
+													<div class="flex flex-wrap items-center gap-2">
+														<h4 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+															<a
+																href={getEventUrl(event.id)}
+																class="hover:text-(--primary) transition-colors"
+															>
+																{event.data.title}
+															</a>
+														</h4>
+														<span
+															class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${statusMeta.className}`}
+														>
+															{statusMeta.label}
+														</span>
+													</div>
+
+													<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+														{dateRange} · {event.data.venue}, {event.data.city}
+													</p>
+
+													{event.data.description && (
+														<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-1.5">
+															{event.data.description}
+														</p>
+													)}
+
+													{lineup.length > 0 && (
+														<ul
+															role="list"
+															aria-label={`Lineup for ${event.data.title}`}
+															class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+														>
+															{lineup.map((performer) => (
+																<li>
+																	<a
+																		href={getPerformerUrl(performer.id)}
+																		class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+																	>
+																		<Icon
+																			name="material-symbols:person-rounded"
+																			class="text-sm shrink-0"
+																			aria-hidden="true"
+																		/>
+																		<span>{performer.data.name}</span>
+																	</a>
+																</li>
+															))}
+														</ul>
+													)}
+												</div>
+
+												{event.data.ticketUrl && (
+													<div class="sm:self-center shrink-0">
+														<a
+															href={event.data.ticketUrl}
+															target="_blank"
+															rel="noopener noreferrer"
+															class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-lg text-sm font-semibold bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-(--primary) dark:text-neutral-950 dark:hover:opacity-90 transition-colors"
+														>
+															<span>Tickets</span>
+															<span class="sr-only"> for {event.data.title}</span>
+															<Icon
+																name="material-symbols:open-in-new-rounded"
+																class="text-base shrink-0"
+																aria-hidden="true"
+															/>
+														</a>
+													</div>
+												)}
+											</article>
+										</li>
+									),
+								)}
+							</ul>
+						</section>
+					)}
+
+					{pastEvents.length > 0 && (
+						<section class="event-group card-base p-5 md:p-6" data-group="past">
+							<h3 class="text-lg md:text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
+								Past Events Archive
+							</h3>
+							<ul role="list" class="flex flex-col gap-3 list-none p-0 m-0">
+								{pastEvents.map(
+									({ event, lineup, dateParts, dateRange, statusMeta }) => (
+										<li
+											class="event-card-item"
+											data-bucket="past"
+											data-search-text={`${event.data.title} ${event.data.venue} ${event.data.city} ${event.data.tags.join(" ")} ${lineup.map((p) => p.data.name).join(" ")}`.toLowerCase()}
+										>
+											<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
+												<time
+													datetime={event.data.startDate.toISOString()}
+													class="w-16 shrink-0 rounded-lg bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 px-2 py-2 text-center flex flex-col items-center justify-center"
+												>
+													<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
+														{dateParts.month}
+													</span>
+													<span class="text-xl font-bold leading-tight mt-0.5">
+														{dateParts.day}
+													</span>
+													<span class="text-[0.6875rem] font-medium leading-none opacity-85">
+														{dateParts.year}
+													</span>
+												</time>
+
+												<div class="flex-1 min-w-0">
+													<div class="flex flex-wrap items-center gap-2">
+														<h4 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+															<a
+																href={getEventUrl(event.id)}
+																class="hover:text-(--primary) transition-colors"
+															>
+																{event.data.title}
+															</a>
+														</h4>
+														<span
+															class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${statusMeta.className}`}
+														>
+															{statusMeta.label}
+														</span>
+													</div>
+
+													<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+														{dateRange} · {event.data.venue}, {event.data.city}
+													</p>
+
+													{event.data.description && (
+														<p class="text-sm text-neutral-700 dark:text-neutral-300 mt-1.5">
+															{event.data.description}
+														</p>
+													)}
+
+													{lineup.length > 0 && (
+														<ul
+															role="list"
+															aria-label={`Lineup for ${event.data.title}`}
+															class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+														>
+															{lineup.map((performer) => (
+																<li>
+																	<a
+																		href={getPerformerUrl(performer.id)}
+																		class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) transition-colors"
+																	>
+																		<Icon
+																			name="material-symbols:person-rounded"
+																			class="text-sm shrink-0"
+																			aria-hidden="true"
+																		/>
+																		<span>{performer.data.name}</span>
+																	</a>
+																</li>
+															))}
+														</ul>
+													)}
+												</div>
+											</article>
+										</li>
+									),
+								)}
+							</ul>
+						</section>
+					)}
+				</div>
+			) : (
+				<div class="card-base flex flex-col items-center justify-center py-14 px-6 text-center">
+					<Icon
+						name="material-symbols:calendar-month-rounded"
+						class="text-5xl mb-3 text-neutral-500 dark:text-neutral-400"
+						aria-hidden="true"
+					/>
+					<p class="text-base font-medium text-neutral-800 dark:text-neutral-200">
+						No events have been added yet.
+					</p>
+					<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+						Add Markdown files under <code>src/content/events/</code> to publish your event schedule.
+					</p>
+				</div>
+			)
+		}
+
+		<div class="events-empty hidden card-base flex-col items-center justify-center py-12 px-6 text-center mt-4">
+			<Icon
+				name="material-symbols:search-off-rounded"
+				class="text-4xl mb-3 text-neutral-500 dark:text-neutral-400"
+				aria-hidden="true"
+			/>
+			<p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+				No events match the current search or filter.
+			</p>
+			<button
+				type="button"
+				data-reset-events
+				class="mt-3 min-h-[44px] px-4 py-2 rounded-lg text-sm font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) cursor-pointer transition-colors"
+			>
+				Reset filters
+			</button>
+		</div>
+	</section>
+
+	<script slot="head" is:inline>
+		if (!customElements.get("event-filter")) {
+			class EventFilter extends HTMLElement {
+				selectedBucket = "all";
+				connectedCallback() {
+					this.addEventListener("click", this.handleClick);
+					this.addEventListener("input", this.handleInput);
+					const container = this.closest(".page-shell");
+					const resetBtn = container?.querySelector("[data-reset-events]");
+					resetBtn?.addEventListener("click", this.handleReset);
+				}
+				disconnectedCallback() {
+					this.removeEventListener("click", this.handleClick);
+					this.removeEventListener("input", this.handleInput);
+					const container = this.closest(".page-shell");
+					const resetBtn = container?.querySelector("[data-reset-events]");
+					resetBtn?.removeEventListener("click", this.handleReset);
+				}
+				handleReset = () => {
+					this.selectedBucket = "all";
+					const input = this.querySelector("[data-search]");
+					if (input) input.value = "";
+					this.querySelectorAll("button[data-bucket]").forEach((btn) => {
+						const isAll = btn.dataset.bucket === "all";
+						btn.toggleAttribute("data-active", isAll);
+						btn.setAttribute("aria-pressed", String(isAll));
+					});
+					this.applyFilters();
+				};
+				handleClick(e) {
+					const button = e.target.closest("button[data-bucket]");
+					if (!button) return;
+					this.selectedBucket = button.dataset.bucket || "all";
+					this.querySelectorAll("button[data-bucket]").forEach((btn) => {
+						const active = btn === button;
+						btn.toggleAttribute("data-active", active);
+						btn.setAttribute("aria-pressed", String(active));
+					});
+					this.applyFilters();
+				}
+				handleInput() {
+					this.applyFilters();
+				}
+				applyFilters() {
+					const container = this.closest(".page-shell");
+					if (!container) return;
+					const input = this.querySelector("[data-search]");
+					const query = (input?.value || "").toLowerCase().trim();
+					const groups = container.querySelectorAll(".event-group");
+					let totalVisible = 0;
+					let totalCards = 0;
+
+					groups.forEach((group) => {
+						const items = group.querySelectorAll(".event-card-item");
+						let groupVisible = 0;
+						items.forEach((item) => {
+							totalCards += 1;
+							const bucketMatch =
+								this.selectedBucket === "all" ||
+								item.dataset.bucket === this.selectedBucket;
+							const text = item.dataset.searchText || "";
+							const searchMatch = !query || text.includes(query);
+							const visible = bucketMatch && searchMatch;
+							item.style.display = visible ? "" : "none";
+							if (visible) {
+								groupVisible += 1;
+								totalVisible += 1;
+							}
+						});
+						group.style.display = groupVisible > 0 ? "" : "none";
+					});
+
+					const empty = container.querySelector(".events-empty");
+					if (empty) {
+						empty.classList.toggle("hidden", totalVisible > 0 || totalCards === 0);
+						empty.classList.toggle("flex", totalVisible === 0 && totalCards > 0);
+					}
+				}
+			}
+			customElements.define("event-filter", EventFilter);
+		}
+	</script>
+
+	<style>
+		.category-pill {
+			background: var(--btn-regular-bg);
+			color: var(--btn-content);
+		}
+		.category-pill:hover {
+			background: var(--btn-regular-bg-hover);
+		}
+		.category-pill[data-active] {
+			background: var(--primary);
+			color: #fff;
+		}
+		:global(:root.dark) .category-pill[data-active] {
+			color: rgb(0 0 0 / 85%);
+		}
+	</style>
+</MainGridLayout>

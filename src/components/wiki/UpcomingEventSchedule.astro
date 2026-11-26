@@ -1,0 +1,187 @@
+---
+import { Icon } from "astro-icon/components";
+import { getEventUrl, getPerformerUrl, url } from "@/utils/url-utils";
+import {
+	formatEventDateRange,
+	getEventCalendarParts,
+	getEventStatusMeta,
+	getUpcomingEvents,
+	resolveEventLineup,
+} from "@/utils/wiki-utils";
+
+const upcomingEvents = await getUpcomingEvents(5);
+const eventsWithLineup = await Promise.all(
+	upcomingEvents.map(async (event) => ({
+		event,
+		lineup: await resolveEventLineup(event),
+		dateParts: getEventCalendarParts(event.data.startDate),
+		dateRange: formatEventDateRange(event.data.startDate, event.data.endDate),
+		statusMeta: getEventStatusMeta(event.data.status),
+	})),
+);
+---
+
+<section
+	aria-labelledby="upcoming-schedule-heading"
+	class="card-base p-5 md:p-6 mb-4 onload-animation"
+>
+	<div class="flex flex-wrap items-center justify-between gap-3">
+		<div class="flex items-center gap-2.5 min-w-0">
+			<div
+				class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center shrink-0"
+				aria-hidden="true"
+			>
+				<Icon name="material-symbols:calendar-month-rounded" class="text-xl" />
+			</div>
+			<div>
+				<h2
+					id="upcoming-schedule-heading"
+					class="text-xl md:text-2xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight"
+				>
+					Upcoming Event Schedule
+				</h2>
+				<p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300">
+					Live shows, DJ nights, and anime conventions with performer wiki links
+				</p>
+			</div>
+		</div>
+
+		<nav aria-label="Event and performer wiki links" class="flex flex-wrap items-center gap-2">
+			<a
+				href={url("/wiki/events/")}
+				class="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
+			>
+				<Icon name="material-symbols:event-note-rounded" class="text-base" aria-hidden="true" />
+				<span>All Events</span>
+			</a>
+			<a
+				href={url("/wiki/performers/")}
+				class="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium border border-(--line-divider) text-neutral-800 dark:text-neutral-200 hover:border-(--primary) hover:text-(--primary) transition-colors"
+			>
+				<Icon name="material-symbols:groups-rounded" class="text-base" aria-hidden="true" />
+				<span>Performer Wiki</span>
+			</a>
+		</nav>
+	</div>
+
+	{
+		eventsWithLineup.length > 0 ? (
+			<ul role="list" class="flex flex-col gap-3 mt-4 list-none p-0 m-0">
+				{eventsWithLineup.map(
+					({ event, lineup, dateParts, dateRange, statusMeta }) => (
+						<li>
+							<article class="rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] p-4 flex flex-col sm:flex-row sm:items-start gap-4 min-w-0">
+								<time
+									datetime={event.data.startDate.toISOString()}
+									class="w-16 shrink-0 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) px-2 py-2 text-center flex flex-col items-center justify-center"
+								>
+									<span class="text-[0.6875rem] font-bold tracking-wider uppercase leading-none">
+										{dateParts.month}
+									</span>
+									<span class="text-xl font-bold leading-tight mt-0.5">
+										{dateParts.day}
+									</span>
+									<span class="text-[0.6875rem] font-medium leading-none opacity-85">
+										{dateParts.year}
+									</span>
+								</time>
+
+								<div class="flex-1 min-w-0">
+									<div class="flex flex-wrap items-center gap-2">
+										<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+											<a
+												href={getEventUrl(event.id)}
+												class="hover:text-(--primary) transition-colors"
+											>
+												{event.data.title}
+											</a>
+										</h3>
+										<span
+											class={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${statusMeta.className}`}
+										>
+											{statusMeta.label}
+										</span>
+									</div>
+
+									<div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-sm text-neutral-600 dark:text-neutral-300">
+										<span class="inline-flex items-center gap-1">
+											<Icon
+												name="material-symbols:calendar-today-outline-rounded"
+												class="text-base shrink-0"
+												aria-hidden="true"
+											/>
+											<span>{dateRange}</span>
+										</span>
+										<span class="inline-flex items-center gap-1 min-w-0">
+											<Icon
+												name="material-symbols:location-on-outline-rounded"
+												class="text-base shrink-0"
+												aria-hidden="true"
+											/>
+											<span class="truncate">
+												{event.data.venue}, {event.data.city}
+											</span>
+										</span>
+									</div>
+
+									{lineup.length > 0 && (
+										<ul
+											role="list"
+											aria-label={`Lineup for ${event.data.title}`}
+											class="flex flex-wrap items-center gap-2 mt-3 list-none p-0 m-0"
+										>
+											{lineup.map((performer) => (
+												<li>
+													<a
+														href={getPerformerUrl(performer.id)}
+														class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) active:bg-(--btn-regular-bg-active) transition-colors"
+													>
+														<Icon
+															name="material-symbols:person-rounded"
+															class="text-sm shrink-0"
+															aria-hidden="true"
+														/>
+														<span>{performer.data.name}</span>
+													</a>
+												</li>
+											))}
+										</ul>
+									)}
+								</div>
+
+								{event.data.ticketUrl && (
+									<div class="sm:self-center shrink-0">
+										<a
+											href={event.data.ticketUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-lg text-sm font-semibold bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-(--primary) dark:text-neutral-950 dark:hover:opacity-90 transition-colors"
+										>
+											<span>Tickets</span>
+											<span class="sr-only"> for {event.data.title}</span>
+											<Icon
+												name="material-symbols:open-in-new-rounded"
+												class="text-base shrink-0"
+												aria-hidden="true"
+											/>
+										</a>
+									</div>
+								)}
+							</article>
+						</li>
+					),
+				)}
+			</ul>
+		) : (
+			<div class="mt-4 rounded-xl border border-dashed border-(--line-divider) p-6 text-center">
+				<p class="text-sm text-neutral-700 dark:text-neutral-300">
+					No upcoming events are scheduled yet. Browse past appearances in the{" "}
+					<a href={url("/wiki/events/")} class="text-(--primary) font-medium hover:underline">
+						event archive
+					</a>
+					.
+				</p>
+			</div>
+		)
+	}
+</section>

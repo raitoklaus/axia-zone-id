@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import type { CollectionConfig } from "astro/content/config";
 import { glob } from "astro/loaders";
 import { type ZodType, z } from "astro/zod";
@@ -52,6 +52,45 @@ type ProjectData = {
 	link: ProjectLink[];
 	status: string;
 	lang: string;
+};
+
+export type PerformerSocial = {
+	label: string;
+	url: string;
+	icon: string;
+};
+
+export type PerformerData = {
+	name: string;
+	role: string;
+	category: string;
+	bio: string;
+	socials: PerformerSocial[];
+	tags: string[];
+	avatar: string;
+	draft: boolean;
+};
+
+export type EventStatus =
+	| "upcoming"
+	| "ongoing"
+	| "completed"
+	| "cancelled"
+	| "postponed";
+
+export type EventData = {
+	title: string;
+	startDate: Date;
+	endDate?: Date;
+	venue: string;
+	city: string;
+	status: EventStatus;
+	ticketUrl: string;
+	lineup: { collection: "performers"; id: string }[];
+	description: string;
+	tags: string[];
+	image: string;
+	draft: boolean;
 };
 
 type ContentCollection<T> = CollectionConfig<
@@ -130,14 +169,67 @@ const projectsCollection: ContentCollection<ProjectData> = defineCollection({
 	}),
 });
 
+const performersCollection: ContentCollection<PerformerData> = defineCollection(
+	{
+		loader: glob({
+			pattern: "**/*.{md,mdx}",
+			base: "./src/content/performers",
+		}),
+		schema: z.object({
+			name: z.string(),
+			role: z.string(),
+			category: z.string().optional().default(""),
+			bio: z.string().optional().default(""),
+			socials: z
+				.array(
+					z.object({
+						label: z.string(),
+						url: z.string(),
+						icon: z.string().optional().default(""),
+					}),
+				)
+				.optional()
+				.default([]),
+			tags: z.array(z.string()).optional().default([]),
+			avatar: z.string().optional().default(""),
+			draft: z.boolean().optional().default(false),
+		}),
+	},
+);
+
+const eventsCollection: ContentCollection<EventData> = defineCollection({
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/events" }),
+	schema: z.object({
+		title: z.string(),
+		startDate: z.coerce.date(),
+		endDate: z.coerce.date().optional(),
+		venue: z.string(),
+		city: z.string(),
+		status: z
+			.enum(["upcoming", "ongoing", "completed", "cancelled", "postponed"])
+			.optional()
+			.default("upcoming"),
+		ticketUrl: z.string().optional().default(""),
+		lineup: z.array(reference("performers")).optional().default([]),
+		description: z.string().optional().default(""),
+		tags: z.array(z.string()).optional().default([]),
+		image: z.string().optional().default(""),
+		draft: z.boolean().optional().default(false),
+	}),
+});
+
 export const collections: {
 	dynamic: typeof dynamicCollection;
 	posts: typeof postsCollection;
 	spec: typeof specCollection;
 	projects: typeof projectsCollection;
+	performers: typeof performersCollection;
+	events: typeof eventsCollection;
 } = {
 	dynamic: dynamicCollection,
 	posts: postsCollection,
 	spec: specCollection,
 	projects: projectsCollection,
+	performers: performersCollection,
+	events: eventsCollection,
 };

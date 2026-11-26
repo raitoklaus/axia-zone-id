@@ -1,0 +1,327 @@
+---
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import { getPerformerUrl, removeFileExtension, url } from "@/utils/url-utils";
+import {
+	getAllPerformers,
+	getEventsForPerformer,
+	getPerformerInitials,
+} from "@/utils/wiki-utils";
+
+const title = "Performer Wiki";
+const description =
+	"Local anime, anisong, DJ, and cosplay performer directory with linked appearances.";
+
+const performers = await getAllPerformers();
+const performerCards = await Promise.all(
+	performers.map(async (entry) => {
+		const appearances = await getEventsForPerformer(entry.id);
+		return {
+			entry,
+			slug: removeFileExtension(entry.id),
+			href: getPerformerUrl(entry.id),
+			initials: getPerformerInitials(entry.data.name),
+			upcomingCount: appearances.upcoming.length,
+			pastCount: appearances.past.length,
+		};
+	}),
+);
+
+const categories = Array.from(
+	new Set(
+		performers
+			.map((p) => p.data.category.trim())
+			.filter((cat) => cat.length > 0),
+	),
+).sort((a, b) => a.localeCompare(b));
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="page-shell">
+		<header class="card-base page-header">
+			<div class="page-heading">
+				<div class="page-icon" aria-hidden="true">
+					<Icon name="material-symbols:groups-rounded" />
+				</div>
+				<div>
+					<h2>{title}</h2>
+					<p>{description}</p>
+				</div>
+			</div>
+
+			<div class="page-count" aria-label="Total performers">
+				<Icon name="material-symbols:groups-rounded" aria-hidden="true" />
+				<strong>{performerCards.length}</strong>
+				<span>Performers</span>
+			</div>
+
+			<performer-filter style="grid-column: 1 / -1">
+				<div class="relative mb-3">
+					<label for="performer-search" class="sr-only">
+						Search performers by name, role, or tag
+					</label>
+					<Icon
+						name="material-symbols:search"
+						class="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400 text-lg pointer-events-none"
+						aria-hidden="true"
+					/>
+					<input
+						id="performer-search"
+						type="search"
+						data-search
+						placeholder="Search performers by name, role, or tag..."
+						class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-xl border border-(--line-divider) bg-transparent text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-colors text-sm"
+					/>
+				</div>
+
+				<div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter performers by category">
+					<button
+						type="button"
+						data-category="all"
+						aria-pressed="true"
+						class="category-pill min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer"
+						data-active
+					>
+						All
+					</button>
+					{categories.map((cat) => (
+						<button
+							type="button"
+							data-category={cat.toLowerCase()}
+							aria-pressed="false"
+							class="category-pill min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium transition-colors duration-200 cursor-pointer"
+						>
+							{cat}
+						</button>
+					))}
+				</div>
+			</performer-filter>
+		</header>
+
+		{
+			performerCards.length > 0 ? (
+				<ul
+					role="list"
+					class="grid gap-4 list-none p-0 m-0"
+					style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));"
+				>
+					{performerCards.map(
+						({ entry, href, initials, upcomingCount, pastCount }) => (
+							<li
+								class="performer-card-item"
+								data-category={entry.data.category.trim().toLowerCase()}
+								data-name={entry.data.name.toLowerCase()}
+								data-role={entry.data.role.toLowerCase()}
+								data-tags={entry.data.tags.join(" ").toLowerCase()}
+							>
+								<article class="card-base p-5 h-full flex flex-col gap-3">
+									<div class="flex items-start gap-3.5 min-w-0">
+										{entry.data.avatar ? (
+											<img
+												src={
+													entry.data.avatar.startsWith("/")
+														? url(entry.data.avatar)
+														: entry.data.avatar
+												}
+												alt={entry.data.name}
+												width="64"
+												height="64"
+												loading="lazy"
+												decoding="async"
+												class="w-16 h-16 rounded-xl object-cover shrink-0 bg-(--btn-regular-bg)"
+											/>
+										) : (
+											<div
+												aria-hidden="true"
+												class="w-16 h-16 rounded-xl bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center text-lg font-bold shrink-0"
+											>
+												{initials}
+											</div>
+										)}
+
+										<div class="min-w-0 flex-1">
+											<h3 class="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+												<a href={href} class="hover:text-(--primary) transition-colors">
+													{entry.data.name}
+												</a>
+											</h3>
+											<p class="text-sm font-medium text-(--primary) mt-0.5">
+												{entry.data.role}
+											</p>
+											{entry.data.category && (
+												<p class="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5">
+													{entry.data.category}
+												</p>
+											)}
+										</div>
+									</div>
+
+									{entry.data.bio && (
+										<p class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed line-clamp-3">
+											{entry.data.bio}
+										</p>
+									)}
+
+									{entry.data.tags.length > 0 && (
+										<ul
+											role="list"
+											aria-label={`Tags for ${entry.data.name}`}
+											class="flex flex-wrap gap-1.5 list-none p-0 m-0"
+										>
+											{entry.data.tags.map((tag) => (
+												<li class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content)">
+													#{tag}
+												</li>
+											))}
+										</ul>
+									)}
+
+									<div class="mt-auto pt-3 border-t border-(--line-divider) flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-600 dark:text-neutral-300">
+										<span>
+											{upcomingCount} upcoming, {pastCount} past
+										</span>
+										<a
+											href={href}
+											class="inline-flex items-center gap-1 font-semibold text-(--primary) hover:underline py-1"
+										>
+											<span>Profile</span>
+											<span class="sr-only"> for {entry.data.name}</span>
+											<Icon
+												name="material-symbols:chevron-right-rounded"
+												class="text-base"
+												aria-hidden="true"
+											/>
+										</a>
+									</div>
+								</article>
+							</li>
+						),
+					)}
+				</ul>
+			) : (
+				<div class="card-base flex flex-col items-center justify-center py-14 px-6 text-center">
+					<Icon
+						name="material-symbols:groups-rounded"
+						class="text-5xl mb-3 text-neutral-500 dark:text-neutral-400"
+						aria-hidden="true"
+					/>
+					<p class="text-base font-medium text-neutral-800 dark:text-neutral-200">
+						No performers have been added to the wiki yet.
+					</p>
+					<p class="text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+						Add Markdown profiles under <code>src/content/performers/</code> to populate this directory.
+					</p>
+				</div>
+			)
+		}
+
+		<div class="performers-empty hidden card-base flex-col items-center justify-center py-12 px-6 text-center mt-4">
+			<Icon
+				name="material-symbols:search-off-rounded"
+				class="text-4xl mb-3 text-neutral-500 dark:text-neutral-400"
+				aria-hidden="true"
+			/>
+			<p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+				No performers match the current search or category filter.
+			</p>
+			<button
+				type="button"
+				data-reset-performers
+				class="mt-3 min-h-[44px] px-4 py-2 rounded-lg text-sm font-medium bg-(--btn-regular-bg) text-(--btn-content) hover:bg-(--btn-regular-bg-hover) cursor-pointer transition-colors"
+			>
+				Reset filters
+			</button>
+		</div>
+	</section>
+
+	<script slot="head" is:inline>
+		if (!customElements.get("performer-filter")) {
+			class PerformerFilter extends HTMLElement {
+				selectedCategory = "all";
+				connectedCallback() {
+					this.addEventListener("click", this.handleClick);
+					this.addEventListener("input", this.handleInput);
+					const container = this.closest(".page-shell");
+					const resetBtn = container?.querySelector("[data-reset-performers]");
+					resetBtn?.addEventListener("click", this.handleReset);
+				}
+				disconnectedCallback() {
+					this.removeEventListener("click", this.handleClick);
+					this.removeEventListener("input", this.handleInput);
+					const container = this.closest(".page-shell");
+					const resetBtn = container?.querySelector("[data-reset-performers]");
+					resetBtn?.removeEventListener("click", this.handleReset);
+				}
+				handleReset = () => {
+					this.selectedCategory = "all";
+					const input = this.querySelector("[data-search]");
+					if (input) input.value = "";
+					this.querySelectorAll("button[data-category]").forEach((btn) => {
+						const isAll = btn.dataset.category === "all";
+						btn.toggleAttribute("data-active", isAll);
+						btn.setAttribute("aria-pressed", String(isAll));
+					});
+					this.applyFilters();
+				};
+				handleClick(e) {
+					const button = e.target.closest("button[data-category]");
+					if (!button) return;
+					this.selectedCategory = button.dataset.category || "all";
+					this.querySelectorAll("button[data-category]").forEach((btn) => {
+						const active = btn === button;
+						btn.toggleAttribute("data-active", active);
+						btn.setAttribute("aria-pressed", String(active));
+					});
+					this.applyFilters();
+				}
+				handleInput() {
+					this.applyFilters();
+				}
+				applyFilters() {
+					const container = this.closest(".page-shell");
+					if (!container) return;
+					const input = this.querySelector("[data-search]");
+					const query = (input?.value || "").toLowerCase().trim();
+					const cards = container.querySelectorAll(".performer-card-item");
+					let visibleCount = 0;
+
+					cards.forEach((card) => {
+						const categoryMatch =
+							this.selectedCategory === "all" ||
+							card.dataset.category === this.selectedCategory;
+						const text = `${card.dataset.name || ""} ${card.dataset.role || ""} ${card.dataset.tags || ""}`;
+						const searchMatch = !query || text.includes(query);
+						const visible = categoryMatch && searchMatch;
+						card.style.display = visible ? "" : "none";
+						if (visible) visibleCount += 1;
+					});
+
+					const empty = container.querySelector(".performers-empty");
+					if (empty) {
+						empty.classList.toggle("hidden", visibleCount > 0 || cards.length === 0);
+						empty.classList.toggle("flex", visibleCount === 0 && cards.length > 0);
+					}
+				}
+			}
+			customElements.define("performer-filter", PerformerFilter);
+		}
+	</script>
+
+	<style>
+		.category-pill {
+			background: var(--btn-regular-bg);
+			color: var(--btn-content);
+		}
+		.category-pill:hover {
+			background: var(--btn-regular-bg-hover);
+		}
+		.category-pill[data-active] {
+			background: var(--primary);
+			color: #fff;
+		}
+		:global(:root.dark) .category-pill[data-active] {
+			color: rgb(0 0 0 / 85%);
+		}
+	</style>
+</MainGridLayout>
