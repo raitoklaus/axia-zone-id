@@ -1,3 +1,4 @@
+import siteSettings from "../data/siteSettings.json";
 import type { FriendLink, FriendsPageConfig } from "../types/friendsConfig";
 
 // 可以在src/content/spec/friends.md中编写友链页面下方的自定义内容
@@ -21,7 +22,7 @@ export const friendsPageConfig: FriendsPageConfig = {
 };
 
 // 友链配置
-export const friendsConfig: FriendLink[] = [];
+export const friendsConfig: FriendLink[] = siteSettings.friends;
 
 // 获取启用的友链并进行排序
 export const getEnabledFriends = (): FriendLink[] => {

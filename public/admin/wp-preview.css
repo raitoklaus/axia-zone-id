@@ -1,0 +1,115 @@
+/* Live Preview Stylesheet for Sveltia CMS (WordPress Editorial + Axia Zone ID Blocks) */
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 15px;
+	line-height: 1.7;
+	color: #1d2327;
+	padding: 20px 24px;
+	max-width: 760px;
+	margin: 0 auto;
+}
+
+h1, h2, h3, h4 {
+	color: #1d2327;
+	font-weight: 700;
+	line-height: 1.3;
+	margin-top: 1.4em;
+	margin-bottom: 0.6em;
+}
+
+h2 {
+	font-size: 1.45rem;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid #dcdcde;
+}
+
+a {
+	color: #2271b1;
+	text-decoration: underline;
+}
+
+blockquote {
+	margin: 1rem 0;
+	padding: 0.6rem 1rem;
+	border-left: 4px solid #2271b1;
+	background: #f6f7f7;
+	color: #3c434a;
+}
+
+pre, code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	background: #f0f0f1;
+	border-radius: 3px;
+}
+
+code {
+	padding: 2px 5px;
+	font-size: 0.9em;
+}
+
+pre {
+	padding: 12px 14px;
+	overflow-x: auto;
+}
+
+.wp-preview-block {
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #2271b1;
+	background: #f6f7f7;
+	border-radius: 4px;
+	padding: 10px 14px;
+	margin: 12px 0;
+	font-size: 14px;
+}
+
+.wp-preview-badge {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: #135e96;
+	background: #e7f2fa;
+	padding: 2px 7px;
+	border-radius: 3px;
+	margin-bottom: 6px;
+}
+
+.wp-preview-callout-warning {
+	border-left-color: #dba617;
+	background: #fcf9e8;
+}
+
+.wp-preview-callout-caution {
+	border-left-color: #d63638;
+	background: #fcf0f1;
+}
+
+.wp-preview-callout-tip {
+	border-left-color: #00a32a;
+	background: #edfaef;
+}
+
+.wp-preview-grid {
+	display: grid;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.wp-preview-grid img {
+	width: 100%;
+	max-height: 180px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #dcdcde;
+}
+
+.wp-preview-spoiler {
+	display: inline-block;
+	padding: 2px 8px;
+	background: #2c3338;
+	color: #f0f0f1;
+	border-radius: 3px;
+	font-size: 0.92em;
+}

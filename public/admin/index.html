@@ -4,10 +4,16 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="robots" content="noindex" />
-		<title>Axia Zone ID CMS</title>
+		<title>Axia Zone ID Admin</title>
+		<link rel="icon" type="image/png" href="/axia-zone-id/favicon/firefly-32.png" />
 		<link href="./config.yml" type="text/yaml" rel="cms-config-url" />
+		<link href="./wp-theme.css" rel="stylesheet" />
 	</head>
 	<body>
-		<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+		<script>
+			window.CMS_MANUAL_INIT = true;
+		</script>
+		<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+		<script src="./wp-editor.js"></script>
 	</body>
 </html>

@@ -10,7 +10,7 @@ content:
     format: yaml-frontmatter
     filename: "{primary}.md"
     view:
-      fields: [title, published, category, draft, pinned]
+      fields: [title, published, category, series, draft, pinned]
       primary: title
       sort: [published, title]
       default:
@@ -25,6 +25,11 @@ content:
         label: Published Date
         type: date
         required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updated
+        label: Updated Date
+        type: date
         options:
           format: yyyy-MM-dd
       - name: description
@@ -45,6 +50,24 @@ content:
       - name: category
         label: Category
         type: string
+      - name: series
+        label: Series Name
+        type: string
+      - name: seriesOrder
+        label: Series Order
+        type: number
+      - name: author
+        label: Author
+        type: string
+      - name: sourceLink
+        label: Source Link
+        type: string
+      - name: licenseName
+        label: License Name
+        type: string
+      - name: licenseUrl
+        label: License URL
+        type: string
       - name: draft
         label: Draft
         type: boolean
@@ -61,6 +84,12 @@ content:
         label: Enable Comments
         type: boolean
         default: true
+      - name: password
+        label: Post Password (optional)
+        type: string
+      - name: passwordHint
+        label: Password Hint
+        type: string
       - name: body
         label: Content (Raw Markdown)
         type: code
@@ -146,11 +175,11 @@ content:
       - name: htm
         label: HTM / Ticket Price Label
         type: string
-        description: Examples: "Free Entry", "Rp 50.000", "Presale Rp 75.000 / OTS Rp 100.000"
+        description: Examples - "Free Entry", "Rp 50.000", "Presale Rp 75.000 / OTS Rp 100.000"
       - name: time
         label: Open Gate / Hours
         type: string
-        description: Example: "10:00 - 21:00"
+        description: Example - "10:00 - 21:00"
       - name: timezone
         label: Timezone
         type: select
@@ -285,3 +314,485 @@ content:
         type: code
         options:
           language: markdown
+
+  - name: about_page
+    label: About Page
+    type: file
+    path: src/content/spec/about.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: Page Title
+        type: string
+      - name: description
+        label: Page Description
+        type: text
+      - name: body
+        label: Page Content (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: guestbook_page
+    label: Guestbook Page
+    type: file
+    path: src/content/spec/guestbook.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: Page Title
+        type: string
+      - name: description
+        label: Page Description
+        type: text
+      - name: body
+        label: Page Content (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: dynamic
+    label: Moments
+    type: collection
+    path: src/content/dynamic
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{hour}{minute}.md"
+    view:
+      fields: [published, location, pinned]
+      primary: location
+      sort: [published]
+      default:
+        sort: published
+        order: desc
+    fields:
+      - name: published
+        label: Published Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: pinned
+        label: Pin Moment
+        type: boolean
+        default: false
+      - name: location
+        label: Location
+        type: string
+      - name: body
+        label: Moment Text (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, status, order, published, draft]
+      primary: title
+      sort: [order, published, title]
+      default:
+        sort: order
+        order: desc
+    fields:
+      - name: title
+        label: Project Title
+        type: string
+        required: true
+      - name: published
+        label: Published Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: order
+        label: Sort Order
+        type: number
+      - name: status
+        label: Project Status
+        type: select
+        default: active
+        options:
+          values:
+            - active
+            - completed
+            - archived
+            - planned
+      - name: description
+        label: Description
+        type: text
+      - name: image
+        label: Cover Image
+        type: image
+      - name: useRandomCover
+        label: Use Random Cover
+        type: boolean
+        default: false
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: lang
+        label: Language
+        type: string
+        default: en
+      - name: link
+        label: Project Links
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+            required: true
+          - name: icon
+            label: Iconify Icon
+            type: string
+          - name: value
+            label: URL
+            type: string
+            required: true
+      - name: body
+        label: Project Details (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: site_settings
+    label: Site Settings
+    type: file
+    path: src/data/siteSettings.json
+    format: json
+    fields:
+      - name: site
+        label: Site Identity & Theme
+        type: object
+        fields:
+          - name: title
+            label: Site Title
+            type: string
+            required: true
+          - name: subtitle
+            label: Site Subtitle
+            type: string
+          - name: description
+            label: Meta Description
+            type: text
+          - name: keywords
+            label: SEO Keywords
+            type: string
+            list: true
+          - name: themeHue
+            label: Theme Hue (0 - 360)
+            type: number
+          - name: defaultMode
+            label: Default Color Mode
+            type: select
+            options:
+              values: [system, light, dark]
+          - name: pageWidth
+            label: Page Width (rem)
+            type: number
+          - name: navbarTitle
+            label: Navbar Title
+            type: string
+          - name: siteStartDate
+            label: Site Start Date (YYYY-MM-DD)
+            type: string
+          - name: timezone
+            label: Site Timezone (IANA)
+            type: string
+          - name: postsPerPage
+            label: Posts Per Page
+            type: number
+          - name: defaultPostLayout
+            label: Default Post List Layout
+            type: select
+            options:
+              values: [list, grid]
+          - name: categoryBar
+            label: Show Category Bar
+            type: boolean
+          - name: showLastModified
+            label: Show Last Modified Card
+            type: boolean
+          - name: shareButtons
+            label: Show Share Buttons
+            type: boolean
+          - name: relatedPosts
+            label: Show Related Posts
+            type: boolean
+      - name: pages
+        label: Page Toggles
+        type: object
+        fields:
+          - name: friends
+            label: Friends Page
+            type: boolean
+          - name: guestbook
+            label: Guestbook Page
+            type: boolean
+          - name: dynamic
+            label: Moments Page
+            type: boolean
+          - name: projects
+            label: Projects Page
+            type: boolean
+          - name: gallery
+            label: Gallery Page
+            type: boolean
+          - name: booknav
+            label: Bookmarks Page
+            type: boolean
+          - name: sponsor
+            label: Sponsor Page
+            type: boolean
+          - name: bilibili
+            label: Bilibili Page
+            type: boolean
+          - name: bangumi
+            label: Bangumi Page
+            type: boolean
+          - name: vndb
+            label: VNDB Page
+            type: boolean
+          - name: mal
+            label: MyAnimeList Page
+            type: boolean
+      - name: banner
+        label: Hero Banner
+        type: object
+        fields:
+          - name: mode
+            label: Wallpaper Mode
+            type: select
+            options:
+              values: [banner, fullscreen, overlay, none]
+          - name: homeTextEnable
+            label: Show Home Banner Text
+            type: boolean
+          - name: title
+            label: Banner Title
+            type: string
+          - name: subtitles
+            label: Banner Subtitles
+            type: string
+            list: true
+          - name: typewriterEnable
+            label: Enable Typewriter Effect
+            type: boolean
+          - name: dimOpacity
+            label: Banner Dim Opacity (0 - 1)
+            type: number
+      - name: announcement
+        label: Announcement Bar
+        type: object
+        fields:
+          - name: title
+            label: Announcement Title
+            type: string
+          - name: content
+            label: Announcement Text
+            type: text
+          - name: closable
+            label: Closable
+            type: boolean
+          - name: linkEnable
+            label: Enable Action Link
+            type: boolean
+          - name: linkText
+            label: Action Link Label
+            type: string
+          - name: linkUrl
+            label: Action Link URL
+            type: string
+          - name: linkExternal
+            label: Open External Tab
+            type: boolean
+      - name: profile
+        label: Author Profile Sidebar
+        type: object
+        fields:
+          - name: name
+            label: Profile Name
+            type: string
+          - name: bio
+            label: Profile Bio
+            type: text
+          - name: avatar
+            label: Avatar Path / URL
+            type: string
+          - name: links
+            label: Profile Social Links
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: Label
+                type: string
+                required: true
+              - name: icon
+                label: Iconify Icon
+                type: string
+                required: true
+              - name: url
+                label: URL
+                type: string
+                required: true
+              - name: showName
+                label: Show Text Label
+                type: boolean
+      - name: friends
+        label: Friends Directory
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: Site Name
+            type: string
+            required: true
+          - name: imgurl
+            label: Avatar Image URL
+            type: string
+            required: true
+          - name: desc
+            label: Description
+            type: string
+            required: true
+          - name: siteurl
+            label: Site URL
+            type: string
+            required: true
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: weight
+            label: Weight
+            type: number
+            required: true
+          - name: enabled
+            label: Enabled
+            type: boolean
+            required: true
+      - name: booknav
+        label: Bookmarks Groups
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: Group ID
+            type: string
+            required: true
+          - name: name
+            label: Group Name
+            type: string
+            required: true
+          - name: icon
+            label: Group Icon
+            type: string
+          - name: desc
+            label: Description
+            type: string
+          - name: weight
+            label: Weight
+            type: number
+          - name: enabled
+            label: Enabled
+            type: boolean
+          - name: items
+            label: Bookmark Items
+            type: object
+            list: true
+            fields:
+              - name: title
+                label: Title
+                type: string
+                required: true
+              - name: url
+                label: URL
+                type: string
+                required: true
+              - name: desc
+                label: Description
+                type: string
+              - name: icon
+                label: Icon
+                type: string
+              - name: weight
+                label: Weight
+                type: number
+              - name: enabled
+                label: Enabled
+                type: boolean
+      - name: gallery
+        label: Gallery Settings
+        type: object
+        fields:
+          - name: columnWidth
+            label: Column Width (px)
+            type: number
+          - name: albums
+            label: Albums
+            type: object
+            list: true
+            fields:
+              - name: id
+                label: Album ID / Folder
+                type: string
+                required: true
+              - name: name
+                label: Album Title
+                type: string
+                required: true
+              - name: description
+                label: Description
+                type: text
+              - name: date
+                label: Date
+                type: string
+              - name: location
+                label: Location
+                type: string
+              - name: tags
+                label: Tags
+                type: string
+                list: true
+              - name: cover
+                label: Cover Image
+                type: string
+              - name: password
+                label: Album Password
+                type: string
+              - name: passwordHint
+                label: Password Hint
+                type: string
+      - name: sponsor
+        label: Sponsor Page
+        type: object
+        fields:
+          - name: title
+            label: Page Title
+            type: string
+          - name: description
+            label: Page Description
+            type: text
+          - name: usage
+            label: Fund Usage Note
+            type: text
+          - name: showSponsorsList
+            label: Show Sponsors List
+            type: boolean
+          - name: showComment
+            label: Show Comments
+            type: boolean
+          - name: showButtonInPost
+            label: Show Support Button in Posts
+            type: boolean

@@ -1,8 +1,23 @@
 import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
+import siteSettings from "../data/siteSettings.json";
+
+const resolveWallpaperMode = (
+	mode: string,
+): BackgroundWallpaperConfig["mode"] => {
+	if (
+		mode === "banner" ||
+		mode === "fullscreen" ||
+		mode === "overlay" ||
+		mode === "none"
+	) {
+		return mode;
+	}
+	return "banner";
+};
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 覆盖透明，"none" 纯色背景无壁纸
-	mode: "banner",
+	mode: resolveWallpaperMode(siteSettings.banner.mode),
 	// 是否启用背景视频播放，配置后将在导航栏显示视频播放按钮
 	playerEnable: true,
 	/**
@@ -65,30 +80,26 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 横幅壁纸和全屏壁纸共享配置
 	common: {
 		// 壁纸遮罩暗度，让横幅文字显示更清晰，0-1之间，值越大越暗
-		dimOpacity: 0.2,
+		dimOpacity: siteSettings.banner.dimOpacity,
 		// 多视频播放模式："order" 顺序循环，"random" 随机切换（仅当 playerUrl 为数组时生效）
 		playerMode: "random",
 		// 主页横幅文字
 		homeText: {
 			// 是否启用主页横幅文字
-			enable: true,
+			enable: siteSettings.banner.homeTextEnable,
 			// 主页横幅主标题
-			title: "Axia Zone ID",
+			title: siteSettings.banner.title,
 			// 主页横幅主标题字体大小
 			titleSize: "4.5rem",
 			// 主页横幅副标题
-			subtitle: [
-				"Indonesian ACG Blog, Event Calendar & Performer Wiki",
-				"Conventions, Mall Matsuri, Anisong Lives & Anikura Nights",
-				"Track Upcoming Lineups & Connect Performers Across Events",
-			],
+			subtitle: siteSettings.banner.subtitles,
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.5rem",
 			typewriter: {
 				// 是否启用打字机效果
 				// 打字机开启 → 循环显示所有副标题
 				// 打字机关闭 → 每次刷新随机显示一条副标题
-				enable: true,
+				enable: siteSettings.banner.typewriterEnable,
 				// 打字速度（毫秒）
 				speed: 100,
 				// 删除速度（毫秒）

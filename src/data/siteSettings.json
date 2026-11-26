@@ -1,0 +1,142 @@
+{
+	"site": {
+		"title": "Axia Zone ID",
+		"subtitle": "Anime Blog, Event Schedule & Performer Wiki",
+		"description": "Anime and otaku blog, upcoming event schedule, and connected local performer and event wiki.",
+		"keywords": ["Firefly", "Fuwari", "Astro", "ACGN", "Axia Zone ID"],
+		"themeHue": 165,
+		"defaultMode": "system",
+		"pageWidth": 100,
+		"navbarTitle": "Axia Zone ID",
+		"siteStartDate": "2025-01-01",
+		"timezone": "Asia/Jakarta",
+		"postsPerPage": 10,
+		"defaultPostLayout": "list",
+		"categoryBar": true,
+		"showLastModified": true,
+		"shareButtons": true,
+		"relatedPosts": true
+	},
+	"pages": {
+		"friends": true,
+		"guestbook": true,
+		"dynamic": true,
+		"projects": true,
+		"gallery": true,
+		"booknav": true,
+		"sponsor": false,
+		"bilibili": false,
+		"bangumi": false,
+		"vndb": false,
+		"mal": false
+	},
+	"banner": {
+		"mode": "banner",
+		"homeTextEnable": true,
+		"title": "Axia Zone ID",
+		"subtitles": [
+			"Indonesian ACG Blog, Event Calendar & Performer Wiki",
+			"Conventions, Mall Matsuri, Anisong Lives & Anikura Nights",
+			"Track Upcoming Lineups & Connect Performers Across Events"
+		],
+		"typewriterEnable": true,
+		"dimOpacity": 0.2
+	},
+	"announcement": {
+		"title": "",
+		"content": "Welcome to Axia Zone ID. Explore the Indonesian ACG Event Schedule and Performer Wiki.",
+		"closable": true,
+		"linkEnable": true,
+		"linkText": "Open Event Calendar",
+		"linkUrl": "/wiki/events/",
+		"linkExternal": false
+	},
+	"profile": {
+		"name": "Axia Zone ID",
+		"bio": "Indonesian ACG blog, event calendar, and performer wiki.",
+		"avatar": "assets/images/avatar.avif",
+		"links": [
+			{
+				"name": "GitHub",
+				"icon": "fa7-brands:github",
+				"url": "https://github.com/raitoklaus/axia-zone-id",
+				"showName": false
+			},
+			{
+				"name": "Events",
+				"icon": "material-symbols:calendar-month-rounded",
+				"url": "/wiki/events/",
+				"showName": false
+			},
+			{
+				"name": "RSS",
+				"icon": "fa7-solid:rss",
+				"url": "/rss/",
+				"showName": false
+			},
+			{
+				"name": "Atom",
+				"icon": "fa7-solid:atom",
+				"url": "/atom/",
+				"showName": false
+			}
+		]
+	},
+	"friends": [],
+	"booknav": [
+		{
+			"id": "publishing",
+			"name": "Site & Publishing Tools",
+			"icon": "material-symbols:edit-document-rounded",
+			"desc": "Tools used to manage Axia Zone ID posts, events, and performer wiki entries.",
+			"weight": 100,
+			"enabled": true,
+			"items": [
+				{
+					"title": "GitHub Repository",
+					"url": "https://github.com/raitoklaus/axia-zone-id",
+					"desc": "Source code, content collections, and GitHub Actions deployments.",
+					"icon": "fa7-brands:github",
+					"weight": 10,
+					"enabled": true
+				},
+				{
+					"title": "Pages CMS",
+					"url": "https://app.pagescms.org",
+					"desc": "Zero-config mobile and desktop Git CMS powered by .pages.yml.",
+					"icon": "",
+					"weight": 9,
+					"enabled": true
+				},
+				{
+					"title": "Sveltia CMS",
+					"url": "https://raitoklaus.github.io/axia-zone-id/admin/",
+					"desc": "In-site admin editor with searchable performer relation dropdowns.",
+					"icon": "",
+					"weight": 8,
+					"enabled": true
+				},
+				{
+					"title": "Astro Docs",
+					"url": "https://docs.astro.build",
+					"desc": "Official documentation for Astro 7 and Content Collections.",
+					"icon": "",
+					"weight": 7,
+					"enabled": true
+				}
+			]
+		}
+	],
+	"gallery": {
+		"columnWidth": 240,
+		"albums": []
+	},
+	"sponsor": {
+		"title": "",
+		"description": "",
+		"usage": "Support goes toward domain, tooling, and community event coverage.",
+		"showSponsorsList": false,
+		"showComment": false,
+		"showButtonInPost": false
+	}
+}

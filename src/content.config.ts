@@ -170,12 +170,23 @@ type ContentCollection<T> = CollectionConfig<
 	ReturnType<typeof glob>
 >;
 
+const optionalDate = z.preprocess(
+	(val) => (val === "" || val === null || val === undefined ? undefined : val),
+	z.coerce.date().optional(),
+);
+
+const optionalNumber = z.preprocess(
+	(val) =>
+		val === "" || val === null || val === undefined ? undefined : Number(val),
+	z.number().optional(),
+);
+
 const postsCollection: ContentCollection<PostData> = defineCollection({
 	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/posts" }),
 	schema: z.object({
 		title: z.string(),
-		published: z.date(),
-		updated: z.date().optional(),
+		published: z.coerce.date(),
+		updated: optionalDate,
 		draft: z.boolean().optional().default(false),
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
@@ -192,7 +203,7 @@ const postsCollection: ContentCollection<PostData> = defineCollection({
 		password: z.string().optional().default(""),
 		passwordHint: z.string().optional().default(""),
 		series: z.string().optional().default(""),
-		seriesOrder: z.number().optional(),
+		seriesOrder: optionalNumber,
 
 		/* For internal use */
 		prevTitle: z.string().default(""),
@@ -202,16 +213,26 @@ const postsCollection: ContentCollection<PostData> = defineCollection({
 	}),
 });
 
-const specCollection: ContentCollection<Record<string, never>> =
-	defineCollection({
-		loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/spec" }),
-		schema: z.object({}),
-	});
+type SpecData = {
+	title?: string;
+	description?: string;
+	[key: string]: unknown;
+};
+
+const specCollection: ContentCollection<SpecData> = defineCollection({
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/spec" }),
+	schema: z
+		.object({
+			title: z.string().optional(),
+			description: z.string().optional(),
+		})
+		.passthrough(),
+});
 
 const dynamicCollection: ContentCollection<DynamicData> = defineCollection({
 	loader: glob({ pattern: "**/*.md", base: "./src/content/dynamic" }),
 	schema: z.object({
-		published: z.date(),
+		published: z.coerce.date(),
 		pinned: z.boolean().optional().default(false),
 		location: z.string().optional().default(""),
 	}),
@@ -221,9 +242,9 @@ const projectsCollection: ContentCollection<ProjectData> = defineCollection({
 	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
 	schema: z.object({
 		title: z.string(),
-		published: z.date(),
+		published: z.coerce.date(),
 		draft: z.boolean().optional().default(false),
-		order: z.number().optional(),
+		order: optionalNumber,
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
 		useRandomCover: z.boolean().optional().default(false),
@@ -287,7 +308,7 @@ const eventsCollection: ContentCollection<EventData> = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		startDate: z.coerce.date(),
-		endDate: z.coerce.date().optional(),
+		endDate: optionalDate,
 		venue: z.string(),
 		city: z.string(),
 		region: z.enum(EVENT_REGIONS).or(z.literal("")).optional().default(""),

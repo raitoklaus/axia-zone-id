@@ -1,6 +1,7 @@
-import type { GalleryConfig } from "@/types/galleryConfig";
+import type { GalleryAlbum, GalleryConfig } from "@/types/galleryConfig";
+import siteSettings from "../data/siteSettings.json";
 
 export const galleryConfig: GalleryConfig = {
-	albums: [],
-	columnWidth: 240,
+	albums: siteSettings.gallery.albums as GalleryAlbum[],
+	columnWidth: siteSettings.gallery.columnWidth,
 };

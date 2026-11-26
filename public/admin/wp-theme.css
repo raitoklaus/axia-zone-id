@@ -1,0 +1,226 @@
+/* WordPress-inspired Admin & Block Editor theme for Sveltia CMS */
+
+:root,
+:host {
+	--sui-base-hue: 207;
+	--sui-font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	--sui-control-font-family: var(--sui-font-family-default);
+	--sui-textbox-font-family: var(--sui-font-family-default);
+	--sui-button-medium-border-radius: 3px;
+	--sui-button-small-border-radius: 3px;
+	--sui-control-medium-border-radius: 4px;
+	--sui-control-small-border-radius: 3px;
+	--sui-textbox-border-radius: 4px;
+	--sui-focus-ring-width: 2px;
+	--sui-focus-ring-offset: 1px;
+	--wp-admin-dark: #1d2327;
+	--wp-admin-dark-hover: #2c3338;
+	--wp-blue: #2271b1;
+	--wp-blue-hover: #135e96;
+	--wp-blue-tint: #72aee6;
+	--wp-canvas-light: #f0f0f1;
+	--wp-border-light: #c3c4c7;
+	--wp-border-subtle: #dcdcde;
+}
+
+:root[data-theme="light"],
+:host[data-theme="light"] {
+	color-scheme: light;
+	--sui-primary-accent-color: #2271b1;
+	--sui-primary-accent-color-light: #3582c4;
+	--sui-primary-accent-color-dark: #135e96;
+	--sui-primary-accent-color-text: #135e96;
+	--sui-primary-accent-color-inverted: #ffffff;
+	--sui-content-background-color: #ffffff;
+	--sui-primary-background-color: #ffffff;
+	--sui-secondary-background-color: #f0f0f1;
+	--sui-tertiary-background-color: #f6f7f7;
+	--sui-primary-foreground-color: #1d2327;
+	--sui-highlight-foreground-color: #1d2327;
+	--sui-secondary-foreground-color: #3c434a;
+	--sui-tertiary-foreground-color: #50575e;
+	--sui-primary-border-color: #8c8f94;
+	--sui-secondary-border-color: #c3c4c7;
+	--sui-textbox-background-color: #ffffff;
+	--sui-textbox-border-color: #8c8f94;
+	--sui-textbox-foreground-color: #1d2327;
+	--sui-button-primary-background-color: #2271b1;
+	--sui-button-primary-background-color-active: #135e96;
+	--sui-button-primary-background-color-focus: #135e96;
+	--sui-button-primary-foreground-color: #ffffff;
+	--sui-button-secondary-background-color: #f6f7f7;
+	--sui-button-secondary-border-color: #2271b1;
+	--sui-button-secondary-foreground-color: #2271b1;
+	--sui-focus-ring-color: #2271b1;
+}
+
+:root[data-theme="dark"],
+:host[data-theme="dark"] {
+	color-scheme: dark;
+	--sui-primary-accent-color: #3582c4;
+	--sui-primary-accent-color-light: #72aee6;
+	--sui-primary-accent-color-dark: #2271b1;
+	--sui-primary-accent-color-text: #72aee6;
+	--sui-primary-accent-color-inverted: #ffffff;
+	--sui-content-background-color: #1d2327;
+	--sui-primary-background-color: #23282d;
+	--sui-secondary-background-color: #191e23;
+	--sui-tertiary-background-color: #2c3338;
+	--sui-primary-foreground-color: #f0f0f1;
+	--sui-highlight-foreground-color: #ffffff;
+	--sui-secondary-foreground-color: #dcdcde;
+	--sui-tertiary-foreground-color: #a7aaad;
+	--sui-primary-border-color: #50575e;
+	--sui-secondary-border-color: #3c434a;
+	--sui-textbox-background-color: #1d2327;
+	--sui-textbox-border-color: #646970;
+	--sui-textbox-foreground-color: #f0f0f1;
+	--sui-button-primary-background-color: #2271b1;
+	--sui-button-primary-background-color-active: #135e96;
+	--sui-button-primary-background-color-focus: #3582c4;
+	--sui-button-primary-foreground-color: #ffffff;
+	--sui-focus-ring-color: #72aee6;
+}
+
+/* Iconic dark WordPress Admin left sidebar (#wpadminmenu) */
+.primary-sidebar {
+	background-color: var(--wp-admin-dark);
+	color: #f0f0f1;
+	border-inline-end: 1px solid #2c3338;
+	min-width: 210px;
+}
+
+.primary-sidebar :where(button, a) {
+	color: #f0f0f1;
+	border-radius: 0;
+}
+
+.primary-sidebar :where(button, a):hover {
+	background-color: var(--wp-admin-dark-hover);
+	color: var(--wp-blue-tint);
+}
+
+.primary-sidebar :where([aria-current="page"], [aria-selected="true"], .selected) {
+	background-color: var(--wp-blue);
+	color: #ffffff;
+	box-shadow: inset 4px 0 0 var(--wp-blue-tint);
+	font-weight: 600;
+}
+
+/* Top Admin Bar (#wpadminbar) in list & dashboard views */
+.sui.app-shell > .toolbar-wrapper > .sui.toolbar,
+main > .toolbar-wrapper > .sui.toolbar {
+	background-color: var(--wp-admin-dark);
+	color: #f0f0f1;
+	border-bottom: 1px solid #2c3338;
+	min-height: 44px;
+}
+
+main > .toolbar-wrapper > .sui.toolbar :where(button, a) {
+	color: #f0f0f1;
+}
+
+main > .toolbar-wrapper > .sui.toolbar :where(button, a):hover {
+	color: var(--wp-blue-tint);
+}
+
+/* WordPress Post/Page Editor Workspace & Metaboxes */
+.wrapper.content-editor {
+	background-color: var(--sui-secondary-background-color);
+}
+
+.wrapper.content-editor > .toolbar-wrapper > .sui.toolbar {
+	background-color: var(--sui-primary-background-color);
+	color: var(--sui-primary-foreground-color);
+	border-bottom: 1px solid var(--sui-secondary-border-color);
+	min-height: 56px;
+	padding-inline: 16px;
+}
+
+.content-editor [data-key-path] {
+	background-color: var(--sui-primary-background-color);
+	border: 1px solid var(--sui-secondary-border-color);
+	border-radius: 3px;
+	padding: 14px 16px;
+	margin-bottom: 12px;
+}
+
+/* WordPress-style Editor Formatting Toolbar */
+.sui.text-editor {
+	border: 1px solid var(--sui-secondary-border-color);
+	border-radius: 4px;
+	overflow: visible;
+	background-color: var(--sui-content-background-color);
+}
+
+.sui.text-editor [role="toolbar"] {
+	background-color: var(--sui-tertiary-background-color);
+	border: 0;
+	border-bottom: 1px solid var(--sui-secondary-border-color);
+	padding: 6px 8px;
+	gap: 4px;
+}
+
+.sui.text-editor [role="toolbar"] button {
+	border-radius: 3px;
+	border: 1px solid transparent;
+	min-height: 32px;
+	cursor: pointer;
+}
+
+.sui.text-editor [role="toolbar"] button:hover {
+	background-color: var(--sui-secondary-background-color);
+	border-color: var(--sui-primary-border-color);
+}
+
+.sui.text-editor [role="toolbar"] button[aria-pressed="true"] {
+	background-color: #e7f2fa;
+	border-color: var(--wp-blue);
+	color: var(--wp-blue-hover);
+	font-weight: 600;
+}
+
+:root[data-theme="dark"] .sui.text-editor [role="toolbar"] button[aria-pressed="true"] {
+	background-color: #135e96;
+	border-color: #72aee6;
+	color: #ffffff;
+}
+
+/* Accessible focus outlines across custom styles */
+:where(button, a, input, select, textarea, [role="button"], [tabindex]):focus-visible {
+	outline: 2px solid var(--sui-focus-ring-color);
+	outline-offset: 1px;
+}
+
+/* Touch targets on narrow mobile screens / coarse pointers */
+@media (max-width: 767px), (pointer: coarse) {
+	.primary-sidebar :where(button, a),
+	.sui.text-editor [role="toolbar"] button {
+		min-height: 44px;
+		min-width: 44px;
+	}
+}
+
+/* High contrast / Forced Colors fallback */
+@media (forced-colors: active) {
+	.primary-sidebar :where([aria-current="page"], [aria-selected="true"], .selected) {
+		outline: 2px solid Highlight;
+	}
+	.content-editor [data-key-path],
+	.sui.text-editor {
+		border: 1px solid CanvasText;
+	}
+	.sui.text-editor [role="toolbar"] button[aria-pressed="true"] {
+		outline: 2px solid Highlight;
+	}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

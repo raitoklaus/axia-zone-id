@@ -2,19 +2,19 @@ backend:
   name: github
   repo: raitoklaus/axia-zone-id
   branch: main
-  # On GitHub Pages you can sign in immediately with a GitHub Personal Access Token (PAT).
-  # To enable 1-click browser OAuth login later, deploy a Sveltia/Decap OAuth proxy (Cloudflare Worker / Vercel)
-  # and set:
-  # base_url: https://your-oauth-proxy.example.com
+  # Sign in with a GitHub Personal Access Token (PAT), or add an OAuth proxy base_url later.
 
 site_url: https://raitoklaus.github.io/axia-zone-id/
+display_url: https://raitoklaus.github.io/axia-zone-id/
+logo_url: /axia-zone-id/favicon/firefly-192.png
 media_folder: public/uploads
 public_folder: /uploads
 
 collections:
   - name: posts
-    label: Blog Posts
-    label_singular: Blog Post
+    label: Posts
+    label_singular: Post
+    icon: article
     folder: src/content/posts
     create: true
     slug: "{{slug}}"
@@ -30,9 +30,19 @@ collections:
           time_format: false,
           required: true,
         }
-      - { label: "Description", name: "description", widget: "text", required: false }
       - {
-          label: "Cover Image",
+          label: "Updated Date",
+          name: "updated",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          default: "",
+          required: false,
+        }
+      - { label: "Excerpt / Description", name: "description", widget: "text", required: false }
+      - {
+          label: "Featured Cover Image",
           name: "image",
           widget: "image",
           required: false,
@@ -45,23 +55,58 @@ collections:
           default: false,
           required: false,
         }
-      - { label: "Tags", name: "tags", widget: "list", required: false }
       - { label: "Category", name: "category", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Series", name: "series", widget: "string", required: false }
+      - { label: "Series Order", name: "seriesOrder", widget: "number", value_type: "int", required: false }
+      - { label: "Author", name: "author", widget: "string", required: false }
+      - { label: "Source URL", name: "sourceLink", widget: "string", required: false }
+      - { label: "License Name", name: "licenseName", widget: "string", required: false }
+      - { label: "License URL", name: "licenseUrl", widget: "string", required: false }
       - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
       - { label: "Language", name: "lang", widget: "string", default: "en", required: false }
-      - { label: "Pin to Top", name: "pinned", widget: "boolean", default: false, required: false }
-      - { label: "Enable Comments", name: "comment", widget: "boolean", default: true, required: false }
+      - { label: "Sticky (Pin to Top)", name: "pinned", widget: "boolean", default: false, required: false }
+      - { label: "Allow Comments", name: "comment", widget: "boolean", default: true, required: false }
+      - { label: "Post Password", name: "password", widget: "string", required: false }
+      - { label: "Password Hint", name: "passwordHint", widget: "string", required: false }
       - {
-          label: "Body",
+          label: "Content",
           name: "body",
           widget: "markdown",
-          modes: ["raw", "rich_text"],
-          hint: "Keep raw mode active when writing [[Wiki Links]] or :::note / :::tip admonitions so brackets are never escaped.",
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "heading-two",
+              "heading-three",
+              "heading-four",
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "code-block",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+              "image-grid",
+              "github-card",
+              "youtube-embed",
+              "mermaid-diagram",
+            ],
+          hint: "Use the toolbar or + menu for Wiki Links, Callouts, Spoilers, Grids, GitHub Cards, YouTube, and Mermaid, or switch to Raw Markdown anytime.",
         }
 
   - name: events
-    label: Events & Schedule
+    label: Events
     label_singular: Event
+    icon: event
     folder: src/content/events
     create: true
     slug: "{{slug}}"
@@ -84,6 +129,7 @@ collections:
           format: "YYYY-MM-DD",
           date_format: "YYYY-MM-DD",
           time_format: false,
+          default: "",
           required: false,
         }
       - { label: "Venue", name: "venue", widget: "string", required: true }
@@ -195,20 +241,47 @@ collections:
           multiple: true,
           required: false,
         }
-      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Summary", name: "description", widget: "text", required: false }
       - { label: "Tags", name: "tags", widget: "list", required: false }
       - { label: "Event Banner Image", name: "image", widget: "image", required: false }
       - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
       - {
-          label: "Body",
+          label: "Event Notes",
           name: "body",
           widget: "markdown",
-          modes: ["raw", "rich_text"],
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "heading-two",
+              "heading-three",
+              "heading-four",
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "code-block",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+              "image-grid",
+              "github-card",
+              "youtube-embed",
+              "mermaid-diagram",
+            ],
         }
 
   - name: performers
     label: Performer Wiki
     label_singular: Performer
+    icon: groups
     folder: src/content/performers
     create: true
     slug: "{{slug}}"
@@ -234,8 +307,393 @@ collections:
         }
       - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
       - {
-          label: "Body",
+          label: "Wiki Content",
           name: "body",
           widget: "markdown",
-          modes: ["raw", "rich_text"],
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "heading-two",
+              "heading-three",
+              "heading-four",
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "code-block",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+              "image-grid",
+              "github-card",
+              "youtube-embed",
+              "mermaid-diagram",
+            ],
         }
+
+  - name: pages
+    label: Pages
+    icon: description
+    files:
+      - name: about
+        label: About Page
+        file: src/content/spec/about.md
+        fields:
+          - { label: "Page Title", name: "title", widget: "string", required: false }
+          - { label: "Page Description", name: "description", widget: "text", required: false }
+          - {
+              label: "Content",
+              name: "body",
+              widget: "markdown",
+              modes: ["rich_text", "raw"],
+              buttons:
+                [
+                  "heading-two",
+                  "heading-three",
+                  "heading-four",
+                  "bold",
+                  "italic",
+                  "strikethrough",
+                  "code",
+                  "link",
+                  "bulleted-list",
+                  "numbered-list",
+                  "quote",
+                ],
+              editor_components:
+                [
+                  "image",
+                  "code-block",
+                  "wiki-link-card",
+                  "callout",
+                  "spoiler",
+                  "image-grid",
+                  "github-card",
+                  "youtube-embed",
+                  "mermaid-diagram",
+                ],
+            }
+      - name: guestbook
+        label: Guestbook Page
+        file: src/content/spec/guestbook.md
+        fields:
+          - { label: "Page Title", name: "title", widget: "string", required: false }
+          - { label: "Page Description", name: "description", widget: "text", required: false }
+          - {
+              label: "Content",
+              name: "body",
+              widget: "markdown",
+              modes: ["rich_text", "raw"],
+              buttons:
+                [
+                  "heading-two",
+                  "heading-three",
+                  "heading-four",
+                  "bold",
+                  "italic",
+                  "strikethrough",
+                  "code",
+                  "link",
+                  "bulleted-list",
+                  "numbered-list",
+                  "quote",
+                ],
+              editor_components:
+                [
+                  "image",
+                  "code-block",
+                  "wiki-link-card",
+                  "callout",
+                  "spoiler",
+                  "image-grid",
+                  "github-card",
+                  "youtube-embed",
+                  "mermaid-diagram",
+                ],
+            }
+
+  - name: dynamic
+    label: Moments
+    label_singular: Moment
+    icon: forum
+    folder: src/content/dynamic
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}"
+    summary: "{{published}} - {{location}}"
+    fields:
+      - {
+          label: "Published Date",
+          name: "published",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: true,
+        }
+      - { label: "Pinned", name: "pinned", widget: "boolean", default: false, required: false }
+      - { label: "Location", name: "location", widget: "string", required: false }
+      - {
+          label: "Moment Text",
+          name: "body",
+          widget: "markdown",
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+            ],
+        }
+
+  - name: projects
+    label: Projects
+    label_singular: Project
+    icon: rocket_launch
+    folder: src/content/projects
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} ({{status}})"
+    fields:
+      - { label: "Project Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Published Date",
+          name: "published",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: true,
+        }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Sort Order", name: "order", widget: "number", value_type: "int", required: false }
+      - {
+          label: "Status",
+          name: "status",
+          widget: "select",
+          options: ["active", "completed", "archived", "planned"],
+          default: "active",
+          required: false,
+        }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Cover Image", name: "image", widget: "image", required: false }
+      - { label: "Use Random Cover", name: "useRandomCover", widget: "boolean", default: false, required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Language", name: "lang", widget: "string", default: "en", required: false }
+      - {
+          label: "Project Links",
+          name: "link",
+          widget: "list",
+          required: false,
+          fields:
+            [
+              { label: "Label", name: "label", widget: "string", required: true },
+              { label: "Iconify Icon", name: "icon", widget: "string", required: false },
+              { label: "URL", name: "value", widget: "string", required: true },
+            ],
+        }
+      - {
+          label: "Details",
+          name: "body",
+          widget: "markdown",
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "heading-two",
+              "heading-three",
+              "heading-four",
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "code-block",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+              "image-grid",
+              "github-card",
+              "youtube-embed",
+              "mermaid-diagram",
+            ],
+        }
+
+  - name: settings
+    label: Settings
+    icon: tune
+    files:
+      - name: site_settings
+        label: Site Settings
+        file: src/data/siteSettings.json
+        format: json
+        fields:
+          - label: "Site Identity & Theme"
+            name: "site"
+            widget: "object"
+            collapsed: false
+            fields:
+              - { label: "Site Title", name: "title", widget: "string", required: true }
+              - { label: "Site Subtitle", name: "subtitle", widget: "string", required: false }
+              - { label: "Meta Description", name: "description", widget: "text", required: false }
+              - { label: "SEO Keywords", name: "keywords", widget: "list", required: false }
+              - { label: "Theme Hue (0 - 360)", name: "themeHue", widget: "number", value_type: "int", min: 0, max: 360 }
+              - { label: "Default Color Mode", name: "defaultMode", widget: "select", options: ["system", "light", "dark"] }
+              - { label: "Page Width (rem)", name: "pageWidth", widget: "number", value_type: "int" }
+              - { label: "Navbar Title", name: "navbarTitle", widget: "string" }
+              - { label: "Site Start Date (YYYY-MM-DD)", name: "siteStartDate", widget: "string" }
+              - { label: "Site Timezone (IANA)", name: "timezone", widget: "string" }
+              - { label: "Posts Per Page", name: "postsPerPage", widget: "number", value_type: "int", min: 1 }
+              - { label: "Default Post List Layout", name: "defaultPostLayout", widget: "select", options: ["list", "grid"] }
+              - { label: "Show Category Bar", name: "categoryBar", widget: "boolean" }
+              - { label: "Show Last Modified Card", name: "showLastModified", widget: "boolean" }
+              - { label: "Show Share Buttons", name: "shareButtons", widget: "boolean" }
+              - { label: "Show Related Posts", name: "relatedPosts", widget: "boolean" }
+          - label: "Page Toggles"
+            name: "pages"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Friends Page", name: "friends", widget: "boolean" }
+              - { label: "Guestbook Page", name: "guestbook", widget: "boolean" }
+              - { label: "Moments Page", name: "dynamic", widget: "boolean" }
+              - { label: "Projects Page", name: "projects", widget: "boolean" }
+              - { label: "Gallery Page", name: "gallery", widget: "boolean" }
+              - { label: "Bookmarks Page", name: "booknav", widget: "boolean" }
+              - { label: "Sponsor Page", name: "sponsor", widget: "boolean" }
+              - { label: "Bilibili Page", name: "bilibili", widget: "boolean" }
+              - { label: "Bangumi Page", name: "bangumi", widget: "boolean" }
+              - { label: "VNDB Page", name: "vndb", widget: "boolean" }
+              - { label: "MyAnimeList Page", name: "mal", widget: "boolean" }
+          - label: "Hero Banner"
+            name: "banner"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Wallpaper Mode", name: "mode", widget: "select", options: ["banner", "fullscreen", "overlay", "none"] }
+              - { label: "Show Home Banner Text", name: "homeTextEnable", widget: "boolean" }
+              - { label: "Banner Title", name: "title", widget: "string" }
+              - { label: "Banner Subtitles", name: "subtitles", widget: "list" }
+              - { label: "Enable Typewriter Effect", name: "typewriterEnable", widget: "boolean" }
+              - { label: "Banner Dim Opacity (0 - 1)", name: "dimOpacity", widget: "number", value_type: "float", min: 0, max: 1, step: 0.05 }
+          - label: "Announcement Bar"
+            name: "announcement"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Announcement Title", name: "title", widget: "string", required: false }
+              - { label: "Announcement Text", name: "content", widget: "text", required: false }
+              - { label: "Closable", name: "closable", widget: "boolean" }
+              - { label: "Enable Action Link", name: "linkEnable", widget: "boolean" }
+              - { label: "Action Link Label", name: "linkText", widget: "string", required: false }
+              - { label: "Action Link URL", name: "linkUrl", widget: "string", required: false }
+              - { label: "Open in New Tab", name: "linkExternal", widget: "boolean" }
+          - label: "Author Profile Sidebar"
+            name: "profile"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Profile Name", name: "name", widget: "string" }
+              - { label: "Profile Bio", name: "bio", widget: "text", required: false }
+              - { label: "Avatar Path or URL", name: "avatar", widget: "string", required: false }
+              - label: "Profile Links"
+                name: "links"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Label", name: "name", widget: "string", required: true }
+                  - { label: "Iconify Icon", name: "icon", widget: "string", required: true }
+                  - { label: "URL", name: "url", widget: "string", required: true }
+                  - { label: "Show Text Label", name: "showName", widget: "boolean", default: false }
+          - label: "Friends Directory"
+            name: "friends"
+            widget: "list"
+            collapsed: true
+            required: false
+            fields:
+              - { label: "Site Name", name: "title", widget: "string", required: true }
+              - { label: "Avatar Image URL", name: "imgurl", widget: "string", required: true }
+              - { label: "Description", name: "desc", widget: "string", required: true }
+              - { label: "Site URL", name: "siteurl", widget: "string", required: true }
+              - { label: "Tags", name: "tags", widget: "list", required: false }
+              - { label: "Weight", name: "weight", widget: "number", value_type: "int", default: 10 }
+              - { label: "Enabled", name: "enabled", widget: "boolean", default: true }
+          - label: "Bookmarks Groups"
+            name: "booknav"
+            widget: "list"
+            collapsed: true
+            required: false
+            fields:
+              - { label: "Group ID", name: "id", widget: "string", required: true }
+              - { label: "Group Name", name: "name", widget: "string", required: true }
+              - { label: "Group Icon", name: "icon", widget: "string", required: false }
+              - { label: "Description", name: "desc", widget: "string", required: false }
+              - { label: "Weight", name: "weight", widget: "number", value_type: "int", default: 10 }
+              - { label: "Enabled", name: "enabled", widget: "boolean", default: true }
+              - label: "Bookmark Items"
+                name: "items"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Title", name: "title", widget: "string", required: true }
+                  - { label: "URL", name: "url", widget: "string", required: true }
+                  - { label: "Description", name: "desc", widget: "string", required: false }
+                  - { label: "Icon", name: "icon", widget: "string", required: false }
+                  - { label: "Weight", name: "weight", widget: "number", value_type: "int", default: 10 }
+                  - { label: "Enabled", name: "enabled", widget: "boolean", default: true }
+          - label: "Gallery Settings"
+            name: "gallery"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Column Width (px)", name: "columnWidth", widget: "number", value_type: "int", default: 240 }
+              - label: "Albums"
+                name: "albums"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Album ID / Folder", name: "id", widget: "string", required: true }
+                  - { label: "Album Title", name: "name", widget: "string", required: true }
+                  - { label: "Description", name: "description", widget: "text", required: false }
+                  - { label: "Date", name: "date", widget: "string", required: false }
+                  - { label: "Location", name: "location", widget: "string", required: false }
+                  - { label: "Tags", name: "tags", widget: "list", required: false }
+                  - { label: "Cover Image", name: "cover", widget: "string", required: false }
+                  - { label: "Album Password", name: "password", widget: "string", required: false }
+                  - { label: "Password Hint", name: "passwordHint", widget: "string", required: false }
+          - label: "Sponsor Page"
+            name: "sponsor"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Page Title", name: "title", widget: "string", required: false }
+              - { label: "Page Description", name: "description", widget: "text", required: false }
+              - { label: "Fund Usage Note", name: "usage", widget: "text", required: false }
+              - { label: "Show Sponsors List", name: "showSponsorsList", widget: "boolean" }
+              - { label: "Show Comments", name: "showComment", widget: "boolean" }
+              - { label: "Show Support Button in Posts", name: "showButtonInPost", widget: "boolean" }

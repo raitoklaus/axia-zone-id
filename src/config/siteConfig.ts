@@ -1,6 +1,18 @@
-import type { SiteConfig } from "@/types/siteConfig";
+import type { LIGHT_DARK_MODE, SiteConfig } from "@/types/siteConfig";
+import siteSettings from "../data/siteSettings.json";
 import { resolvePageToggles } from "../utils/page-toggle-utils";
 import { resolveSiteLang } from "../utils/site-config-utils";
+
+const resolveThemeMode = (mode: string): LIGHT_DARK_MODE => {
+	if (mode === "light" || mode === "dark" || mode === "system") {
+		return mode;
+	}
+	return "system";
+};
+
+const resolvePostLayoutMode = (mode: string): "list" | "grid" => {
+	return mode === "grid" ? "grid" : "list";
+};
 
 // 定义站点语言
 // 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko', 'es'。
@@ -8,75 +20,47 @@ const SITE_LANG = resolveSiteLang("en");
 
 // 页面开关配置 - 控制特定页面的访问权限，设为false会返回404并自动隐藏对应的导航栏菜单项
 const pages = resolvePageToggles({
-	// ── 社交 (Social) ──────────────────────────────────
-
-	// 友链页面开关
-	friends: true,
-	// 留言板页面开关，需要配置评论系统
-	guestbook: true,
-
-	// ── 我的 (My) ──────────────────────────────────
-
-	// 动态页面开关
-	dynamic: true,
-	// 项目展示页开关
-	projects: true,
-	// 相册页面开关
-	gallery: true,
-	// 书签导航页面开关
-	booknav: true,
-	// 哔哩哔哩追番页面开关
-	bilibili: false,
-	// 番组计划页面开关
-	bangumi: false,
-	// VNDB页面开关
-	vndb: false,
-	// MyAnimeList页面开关
-	mal: false,
-
-	// ── 关于 (About) ──────────────────────────────────
-
-	// 打赏页面开关
-	sponsor: false,
+	friends: siteSettings.pages.friends,
+	guestbook: siteSettings.pages.guestbook,
+	dynamic: siteSettings.pages.dynamic,
+	projects: siteSettings.pages.projects,
+	gallery: siteSettings.pages.gallery,
+	booknav: siteSettings.pages.booknav,
+	bilibili: siteSettings.pages.bilibili,
+	bangumi: siteSettings.pages.bangumi,
+	vndb: siteSettings.pages.vndb,
+	mal: siteSettings.pages.mal,
+	sponsor: siteSettings.pages.sponsor,
 });
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Axia Zone ID",
+	title: siteSettings.site.title,
 
 	// 站点副标题
-	subtitle: "Anime Blog, Event Schedule & Performer Wiki",
+	subtitle: siteSettings.site.subtitle,
 
 	// 站点 URL
 	site_url: "https://raitoklaus.github.io",
 
 	// 站点描述
-	description:
-		"Anime and otaku blog, upcoming event schedule, and connected local performer and event wiki.",
+	description: siteSettings.site.description,
 
 	// 站点关键词
-	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
-		"博客",
-		"技术博客",
-		"静态博客",
-	],
+	keywords: siteSettings.site.keywords,
 
 	// 主题色
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
-		hue: 165,
+		hue: siteSettings.site.themeHue,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
-		defaultMode: "system",
+		defaultMode: resolveThemeMode(siteSettings.site.defaultMode),
 	},
 
 	// 页面整体宽度（单位：rem）
 	// 数值越大可以让页面内容区域更宽
 	// 在使用单侧栏边栏时，建议调低一些宽度以获得更好的视觉效果。
-	pageWidth: 100,
+	pageWidth: siteSettings.site.pageWidth,
 
 	// 网站Card样式配置
 	card: {
@@ -117,7 +101,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Axia Zone ID",
+		title: siteSettings.site.navbarTitle,
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
@@ -132,16 +116,16 @@ export const siteConfig: SiteConfig = {
 	},
 
 	// 站点开始日期，用于统计运行天数
-	siteStartDate: "2025-01-01",
+	siteStartDate: siteSettings.site.siteStartDate,
 
 	// 站点时区（IANA 时区字符串），用于格式化bangumi、rss里的构建日期时间等等..
 	// 示例："Asia/Shanghai", "UTC", 如果为空，则按照构建服务器的时区进行时区转换
-	timezone: "Asia/Shanghai",
+	timezone: siteSettings.site.timezone,
 
 	// 页面开关配置 - 控制特定页面的访问权限，设为false会返回404并自动隐藏对应的导航栏菜单项
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
-	categoryBar: true,
+	categoryBar: siteSettings.site.categoryBar,
 
 	// 分类导航栏按钮样式
 	// "pill"：胶囊，主题色浅底圆角
@@ -160,7 +144,7 @@ export const siteConfig: SiteConfig = {
 	// ── 文章列表布局配置 ──────────────────────────────────
 	postListLayout: {
 		// 默认布局模式："list" 列表模式（单列布局），"grid" 网格模式（多列布局）
-		defaultMode: "list",
+		defaultMode: resolvePostLayoutMode(siteSettings.site.defaultPostLayout),
 		// 移动端默认布局模式，不设置则跟随 defaultMode
 		mobileDefaultMode: "grid",
 		// 列表模式下封面图显示在哪一侧："right" 右侧，"left" 左侧
@@ -219,7 +203,7 @@ export const siteConfig: SiteConfig = {
 	// 分页配置
 	pagination: {
 		// 每页显示的文章数量
-		postsPerPage: 10,
+		postsPerPage: siteSettings.site.postsPerPage,
 	},
 
 	// ── 文章内容页配置 ──────────────────────────────────
@@ -233,15 +217,15 @@ export const siteConfig: SiteConfig = {
 			enablePythonMarkdownAdmonitions: false,
 		},
 		// 文章页底部的"上次编辑时间"卡片开关
-		showLastModified: true,
+		showLastModified: siteSettings.site.showLastModified,
 		// 文章过期阈值（天数），超过此天数才显示"上次编辑"卡片
 		outdatedThreshold: 30,
 		// 是否显示文章页的分享按钮
-		share: true,
+		share: siteSettings.site.shareButtons,
 		// 是否显示上一篇/下一篇文章导航
 		postNavigation: true,
 		// 是否显示相关文章推荐
-		relatedPosts: true,
+		relatedPosts: siteSettings.site.relatedPosts,
 		// 是否显示随机文章推荐
 		randomPosts: true,
 		// OpenGraph图片功能，注意开启后要渲染很长时间，不建议本地调试的时候开启

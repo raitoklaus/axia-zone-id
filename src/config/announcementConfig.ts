@@ -1,14 +1,14 @@
+import siteSettings from "../data/siteSettings.json";
 import type { AnnouncementConfig } from "../types/announcementConfig";
 
 export const announcementConfig: AnnouncementConfig = {
-	title: "",
-	content:
-		"Welcome to Axia Zone ID. Explore the Indonesian ACG Event Schedule and Performer Wiki.",
-	closable: true,
+	title: siteSettings.announcement.title,
+	content: siteSettings.announcement.content,
+	closable: siteSettings.announcement.closable,
 	link: {
-		enable: true,
-		text: "Open Event Calendar",
-		url: "/wiki/events/",
-		external: false,
+		enable: siteSettings.announcement.linkEnable,
+		text: siteSettings.announcement.linkText,
+		url: siteSettings.announcement.linkUrl,
+		external: siteSettings.announcement.linkExternal,
 	},
 };
