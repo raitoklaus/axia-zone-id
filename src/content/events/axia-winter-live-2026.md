@@ -26,7 +26,7 @@ lineup:
   - "ren-takahashi"
 description: "Sample upcoming two-day anisong and anikura showcase in Jakarta."
 tags: ["Live", "Anisong", "Jakarta"]
-image: ""
+image: "/gallery/axia-wallpapers/01-desktop-stage-shards.webp"
 draft: false
 ---
 

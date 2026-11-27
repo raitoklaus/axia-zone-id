@@ -55,22 +55,29 @@
 		"typewriterEnable": true,
 		"dimOpacity": 0.24,
 		"desktopImages": [
-			"assets/images/DesktopWallpaper/d1.avif",
-			"assets/images/DesktopWallpaper/d2.avif",
-			"assets/images/DesktopWallpaper/d3.avif",
-			"assets/images/DesktopWallpaper/d4.avif",
-			"assets/images/DesktopWallpaper/d5.avif",
-			"assets/images/DesktopWallpaper/d6.avif"
+			"assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
+			"assets/images/DesktopWallpaper/axia-d02-stage-shards.webp",
+			"assets/images/DesktopWallpaper/axia-d03-twilight-rooftop.webp",
+			"assets/images/DesktopWallpaper/axia-d04-cerulean-sky.webp",
+			"assets/images/DesktopWallpaper/axia-d05-ocean-boardwalk.webp",
+			"assets/images/DesktopWallpaper/axia-d06-sakura-sky.webp",
+			"assets/images/DesktopWallpaper/axia-d07-daisy-meadow.webp",
+			"assets/images/DesktopWallpaper/axia-d08-pastel-sofa.webp",
+			"assets/images/DesktopWallpaper/axia-d09-twilight-dock.webp",
+			"assets/images/DesktopWallpaper/axia-d10-cloud-balcony.webp",
+			"assets/images/DesktopWallpaper/axia-d11-aquarium-jellyfish.webp",
+			"assets/images/DesktopWallpaper/axia-d12-lantern-festival.webp"
 		],
 		"mobileImages": [
-			"assets/images/MobileWallpaper/m1.avif",
-			"assets/images/MobileWallpaper/m2.avif",
-			"assets/images/MobileWallpaper/m3.avif",
-			"assets/images/MobileWallpaper/m4.avif",
-			"assets/images/MobileWallpaper/m5.avif",
-			"assets/images/MobileWallpaper/m6.avif"
+			"assets/images/MobileWallpaper/axia-m01-blue-sky.webp",
+			"assets/images/MobileWallpaper/axia-m02-prism-peace.webp",
+			"assets/images/MobileWallpaper/axia-m03-prism-sparkle.webp",
+			"assets/images/MobileWallpaper/axia-m04-starry-night.webp",
+			"assets/images/MobileWallpaper/axia-m05-dusk-dock.webp",
+			"assets/images/MobileWallpaper/axia-m06-rainy-window.webp",
+			"assets/images/MobileWallpaper/axia-m07-concert-night.webp"
 		],
-		"position": "0% 20%",
+		"position": "50% 20%",
 		"wavesEnable": true,
 		"carouselEnable": false,
 		"carouselInterval": 5000,
@@ -113,7 +120,7 @@
 	"profile": {
 		"name": "Raitoklaus",
 		"bio": "Zona kecil penikmat ACG Bandung & Indonesia sekaligus situs base Axia. Bagian dari @wibu_baleendah & @hayu_utaodo.",
-		"avatar": "assets/images/axia-avatar.jpg",
+		"avatar": "assets/images/axia-avatar.webp",
 		"links": [
 			{
 				"name": "GitHub",
@@ -236,11 +243,19 @@
 		"albums": [
 			{
 				"id": "axia-showcase",
-				"name": "Axia Zone & Wallpaper Showcase",
-				"description": "Koleksi visual utama karakter Axia dan wallpaper latar situs Axia Zone ID sebelum dokumentasi foto event komunitas ditambahkan.",
+				"name": "Axia Character & Artwork Showcase",
+				"description": "Koleksi ilustrasi karakter, key visual, dan chibi resmi Axia Zone ID.",
 				"date": "2026-11-27",
 				"location": "Kota Bandung",
 				"tags": ["Axia", "Showcase", "Artwork"]
+			},
+			{
+				"id": "axia-wallpapers",
+				"name": "Axia Wallpaper Collection",
+				"description": "Koleksi wallpaper desktop (16:9) dan mobile (9:16) bertema Axia untuk latar situs maupun koleksi pribadi.",
+				"date": "2026-11-27",
+				"location": "Kota Bandung",
+				"tags": ["Axia", "Wallpaper", "Desktop", "Mobile"]
 			}
 		]
 	},

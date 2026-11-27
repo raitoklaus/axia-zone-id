@@ -21,7 +21,7 @@ links:
     url: "https://www.instagram.com/hayu_utaodo/"
     icon: "fa7-brands:instagram"
 tags: ["Axia", "Lore", "Bandung", "Community"]
-image: "assets/images/axia-avatar.jpg"
+image: "assets/images/axia-lore-keyvisual.webp"
 updated: 2026-11-27
 featured: true
 draft: false

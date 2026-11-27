@@ -2,21 +2,21 @@ import type { BackgroundWallpaperConfig } from "@/types/backgroundWallpaper";
 import siteSettings from "../data/siteSettings.json";
 
 const DEFAULT_DESKTOP_WALLPAPERS: string[] = [
-	"assets/images/DesktopWallpaper/d1.avif",
-	"assets/images/DesktopWallpaper/d2.avif",
-	"assets/images/DesktopWallpaper/d3.avif",
-	"assets/images/DesktopWallpaper/d4.avif",
-	"assets/images/DesktopWallpaper/d5.avif",
-	"assets/images/DesktopWallpaper/d6.avif",
+	"assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
+	"assets/images/DesktopWallpaper/axia-d02-stage-shards.webp",
+	"assets/images/DesktopWallpaper/axia-d03-twilight-rooftop.webp",
+	"assets/images/DesktopWallpaper/axia-d04-cerulean-sky.webp",
+	"assets/images/DesktopWallpaper/axia-d05-ocean-boardwalk.webp",
+	"assets/images/DesktopWallpaper/axia-d06-sakura-sky.webp",
 ];
 
 const DEFAULT_MOBILE_WALLPAPERS: string[] = [
-	"assets/images/MobileWallpaper/m1.avif",
-	"assets/images/MobileWallpaper/m2.avif",
-	"assets/images/MobileWallpaper/m3.avif",
-	"assets/images/MobileWallpaper/m4.avif",
-	"assets/images/MobileWallpaper/m5.avif",
-	"assets/images/MobileWallpaper/m6.avif",
+	"assets/images/MobileWallpaper/axia-m01-blue-sky.webp",
+	"assets/images/MobileWallpaper/axia-m02-prism-peace.webp",
+	"assets/images/MobileWallpaper/axia-m03-prism-sparkle.webp",
+	"assets/images/MobileWallpaper/axia-m04-starry-night.webp",
+	"assets/images/MobileWallpaper/axia-m05-dusk-dock.webp",
+	"assets/images/MobileWallpaper/axia-m06-rainy-window.webp",
 ];
 
 const resolveWallpaperMode = (

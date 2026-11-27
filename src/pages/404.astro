@@ -1,5 +1,7 @@
 ---
+import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import axia404Img from "@/assets/images/axia-404.webp";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -16,7 +18,13 @@ import { url } from "@/utils/url-utils";
             
             <!-- 404 图标 -->
             <div class="mb-6">
-                <Icon name="material-symbols:error-outline" class="text-6xl text-(--primary)" />
+                <Image
+                    src={axia404Img}
+                    alt="Axia terlihat bingung memegang peta"
+                    width={208}
+                    height={208}
+                    class="w-44 h-44 md:w-52 md:h-52 object-contain rounded-2xl bg-white/95 p-2 shadow-sm border border-(--line-divider)"
+                />
             </div>
             
             <!-- 标题 -->
