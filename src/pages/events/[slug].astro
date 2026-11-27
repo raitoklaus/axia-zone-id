@@ -173,7 +173,7 @@ const icsContent = buildIcsContent(entry, absoluteEventUrl);
 		is:inline
 		type="application/ld+json"
 		slot="head"
-		set:html={JSON.stringify(eventJsonLd)}
+		set:html={JSON.stringify(eventJsonLd).replace(/</g, "\\u003c")}
 	/>
 	<div class="flex flex-col gap-4 w-full">
 		<article data-pagefind-body class="card-base overflow-hidden relative w-full">

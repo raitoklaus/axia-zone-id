@@ -114,18 +114,20 @@ export function renderBadgeInnerHTML(item: TocItem): string {
  */
 export function renderTocItemHTML(item: TocItem): string {
 	const escaped = escapeHtmlAttr(item.text);
+	const escapedHref = escapeHtmlAttr(item.href);
+	const escapedHeadingId = escapeHtmlAttr(item.headingId);
 	return `
         <a
-          href="${item.href}"
+          href="${escapedHref}"
 		  class="toc-item toc-level-${item.depthLevel}"
-          data-heading-id="${item.headingId}"
+          data-heading-id="${escapedHeadingId}"
 		  aria-label="${escaped}"
 		  title="${escaped}"
         >
 			  <div class="toc-badge ${item.badgeKind === "index" ? "toc-badge-index" : ""}">
             ${renderBadgeInnerHTML(item)}
           </div>
-			  <div class="toc-label ${item.labelPrimary ? "toc-label-primary" : "toc-label-secondary"}">${item.text}</div>
+			  <div class="toc-label ${item.labelPrimary ? "toc-label-primary" : "toc-label-secondary"}">${escaped}</div>
         </a>
       `;
 }
