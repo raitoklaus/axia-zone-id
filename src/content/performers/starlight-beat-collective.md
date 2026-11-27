@@ -1,18 +1,18 @@
 ---
-name: "Starlight Beat Collective"
-role: "Anikura DJ Collective"
+name: "Magna Aliqua Collective"
+role: "Lorem DJ Collective"
 category: "Collective Group"
-bio: "Sample DJ collective curating anikura club nights, rhythm-game floors, and guest DJ lineups across Bandung."
-aliases: ["Starlight Beat", "SBC"]
+bio: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores."
+aliases: ["Magna Collective"]
 city: "Kota Bandung"
 activeYears: "2023 - Present"
-affiliation: "Bandung Anikura Scene"
+affiliation: "Lorem Scene"
 status: "Active"
 infobox:
   - label: "Format"
-    value: "DJ & VJ Collective"
-  - label: "Roster Members"
-    value: "Ren Takahashi & Guest DJs"
+    value: "Lorem & Ipsum Collective"
+  - label: "Members"
+    value: "Consectetur Elit"
 socials:
   - label: "SoundCloud"
     url: "https://soundcloud.com"
@@ -22,9 +22,9 @@ avatar: ""
 draft: false
 ---
 
-**Starlight Beat Collective** showcases the **Collective Group** category for DJ collectives, VJ crews, and stage production teams.
+**Magna Aliqua Collective** quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.
 
-## Roster & Events
+## Quis Nostrum
 
-- Home collective of [[performers/ren-takahashi]].
-- Featured in [[events/bandung-anikura-spark-2027]] and [[wiki/anikura-and-utaodo-scene-guide]].
+- Lorem ipsum dolor [[performers/ren-takahashi]].
+- Consectetur adipiscing [[events/bandung-anikura-spark-2027]] and [[wiki/anikura-and-utaodo-scene-guide]].

@@ -1,29 +1,29 @@
 ---
-name: "Sekai Step Project"
-role: "Fandom Idol & Dance Cover Unit"
+name: "Tempor Step Project"
+role: "Lorem Dance Cover Unit"
 category: "Fandom Idol"
-bio: "Sample Fandom Idol and odottemita group focusing on Project SEKAI, Love Live!, and collaborative stage medleys."
-aliases: ["SekaiStep"]
+bio: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+aliases: ["TemporStep"]
 city: "Kota Bandung"
 activeYears: "2024 - Present"
-affiliation: "Hayu UtaOdo"
+affiliation: "Lorem UtaOdo"
 status: "Active"
 infobox:
   - label: "Repertoire"
-    value: "Project SEKAI & Idol Dance Cover"
+    value: "Lorem Ipsum & Dolor Cover"
   - label: "Community"
-    value: "Hayu UtaOdo"
+    value: "Lorem UtaOdo"
 socials:
   - label: "Instagram"
     url: "https://instagram.com"
     icon: "fa7-brands:instagram"
-tags: ["Fandom Idol", "Odottemita", "Project SEKAI", "Bandung"]
+tags: ["Fandom Idol", "Odottemita", "Bandung"]
 avatar: ""
 draft: false
 ---
 
-**Sekai Step Project** represents the **Fandom Idol** category in the Performer Wiki, bridging idol choreography and fan stage communities.
+**Tempor Step Project** sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
 
-## Collaborations
+## Nemo Enim Ipsam
 
-- Part of the stage circle linked with [[wiki/hayu-utaodo]] and [[wiki/anikura-and-utaodo-scene-guide]].
+- Voluptatem quia voluptas [[wiki/hayu-utaodo]] and [[wiki/anikura-and-utaodo-scene-guide]].

@@ -1,16 +1,16 @@
-## Tentang Axia Zone ID
+## Lorem Ipsum Dolor Sit Amet
 
-**Axia Zone ID** adalah zona kecil bagi penikmat skena Jejepangan serta Anime, Comic, dan Game (**ACG**) di **Bandung** dan **Indonesia**, sekaligus situs base resmi bagi **Axia** (baik komunitas grup Axia maupun karakter Axia sendiri). Situs ini dikelola oleh **Raitoklaus** menggunakan Astro 7 dengan tema [Firefly](https://github.com/CuteLeaf/Firefly).
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. [Firefly](https://github.com/CuteLeaf/Firefly).
 
-## Apa yang Ada di Sini
+## Consectetur Adipiscing Elit
 
-- **Jadwal & Wiki Event**: Informasi jadwal event pilihan di **Kota Bandung** dan **big event Jabodetabek** di halaman utama, lengkap dengan kalender bulanan interaktif dan arsip event lintas wilayah Indonesia (`Jawa Barat`, `Jabodetabek`, `Jawa Timur`, dan lainnya).
-- **Wiki Performer**: Direktori performer skena Jejepangan dan ACG (vokalis anisong, DJ anikura, cosplayer, hingga kreator) yang terhubung langsung ke jadwal tampil mendatang dan riwayat acara sebelumnya.
-- **Artikel, Review & Pembahasan Skena**: Catatan acara, ulasan, opini, dan topik pembahasan seputar perkembangan skena Jejepangan & ACG lokal.
+- **Lorem Ipsum**: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+- **Dolor Sit Amet**: Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- **Tempor Incididunt**: Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
 
-## Bagian dari Komunitas
+## Sed Do Eiusmod Tempor
 
-- **Wibu_Baleendah**: Instagram [@wibu_baleendah](https://www.instagram.com/wibu_baleendah/)
-- **Hayu UtaOdo**: Instagram [@hayu_utaodo](https://www.instagram.com/hayu_utaodo/)
+- **Wibu_Baleendah**: [@wibu_baleendah](https://www.instagram.com/wibu_baleendah/)
+- **Hayu UtaOdo**: [@hayu_utaodo](https://www.instagram.com/hayu_utaodo/)
 
 ::github{repo="raitoklaus/axia-zone-id"}

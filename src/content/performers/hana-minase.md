@@ -1,17 +1,17 @@
 ---
-name: "Hana Minase"
-role: "Anisong Vocalist"
+name: "Lorem Minase"
+role: "Lorem Vocalist"
 category: "Anisong Vocalist"
-bio: "Sample anisong vocalist profile for previewing live sets, wiki infoboxes, and connected Bandung/Jabodetabek appearances."
-aliases: ["Minase Hana"]
+bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+aliases: ["Ipsum Minase"]
 city: "Kota Bandung"
 activeYears: "2023 - Present"
-affiliation: "Hayu UtaOdo"
+affiliation: "Lorem UtaOdo"
 status: "Active"
 infobox:
-  - label: "Specialty"
-    value: "Acoustic & Full-Band Anisong"
-  - label: "Home Scene"
+  - label: "Lorem"
+    value: "Ipsum Dolor Sit Amet"
+  - label: "Consectetur"
     value: "Kota Bandung"
 socials:
   - label: "YouTube"
@@ -25,10 +25,10 @@ avatar: ""
 draft: false
 ---
 
-Hana Minase is a sample performer entry demonstrating how vocalist profiles connect across event schedules, wiki articles, and blog posts.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Highlights
+## Tempor Incididunt
 
-- Featured vocalist for [[events/axia-winter-live-2026]].
-- Performed at [[events/bandung-mall-matsuri-2026]] and [[events/jakarta-anifest-summer-2026]].
-- Active in the local stage network of [[wiki/hayu-utaodo]] and collaborates with [[performers/ren-takahashi]].
+- Duis aute irure dolor in [[events/axia-winter-live-2026]].
+- Ut enim ad minim veniam in [[events/bandung-mall-matsuri-2026]] and [[events/jakarta-anifest-summer-2026]].
+- Excepteur sint occaecat in [[wiki/hayu-utaodo]] alongside [[performers/ren-takahashi]].

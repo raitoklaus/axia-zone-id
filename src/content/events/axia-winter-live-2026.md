@@ -1,40 +1,40 @@
 ---
-title: "Axia Winter Live 2026"
+title: "Lorem Ipsum Live 2026"
 startDate: 2026-12-19
 endDate: 2026-12-20
-venue: "Balai Sarbini"
+venue: "Lorem Arena"
 city: "Jakarta"
 region: "Jabodetabek"
 eventType: "Idol / Anisong Live"
 entryType: "paid"
-htm: "Presale Rp 120.000 / OTS Rp 150.000"
+htm: "Rp 120.000 / Rp 150.000"
 time: "13:00 - 21:00"
 timezone: "WIB"
-organizer: "Axia Project ID"
-instagram: "@axiazone.id"
-officialUrl: "https://example.com/axia-winter-live-2026"
-mapsUrl: "https://maps.google.com/?q=Balai+Sarbini+Jakarta"
+organizer: "Lorem Project"
+instagram: ""
+officialUrl: ""
+mapsUrl: ""
 highlights:
-  - "Live Anisong Stage"
-  - "Anikura / DJ Session"
-  - "Merchandise Booth"
+  - "Lorem Ipsum"
+  - "Dolor Sit Amet"
+  - "Consectetur Elit"
 status: "upcoming"
 majorEvent: true
-ticketUrl: "https://example.com/tickets/axia-winter-live-2026"
+ticketUrl: ""
 lineup:
   - "hana-minase"
   - "ren-takahashi"
-description: "Sample upcoming two-day anisong and anikura showcase in Jakarta."
+description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 tags: ["Live", "Anisong", "Jakarta"]
 image: "/gallery/axia-wallpapers/01-desktop-stage-shards.webp"
 draft: false
 ---
 
-This is a sample upcoming event entry showing how `lineup` references link directly to performer wiki pages and surface on the homepage schedule and interactive calendar.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
 
-## Stage Notes
+## Lorem Ipsum
 
-Day 1 opens with an anikura DJ set from [[performers/ren-takahashi]], followed by a live acoustic and band showcase headlined by [[performers/hana-minase]].
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur with [[performers/ren-takahashi]] and [[performers/hana-minase]].
 
 > [!TIP]
-> Replace this sample event with real event details or add new files under `src/content/events/`.
+> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

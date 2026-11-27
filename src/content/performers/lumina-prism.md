@@ -1,18 +1,18 @@
 ---
-name: "Lumina Prism"
-role: "Chika Idol Unit"
+name: "Ipsum Dolor Unit"
+role: "Lorem Idol Unit"
 category: "Chika Idol"
-bio: "Sample underground/independent Chika Idol unit performing original and energetic idol setlists around Bandung and Jabodetabek."
-aliases: ["LumiPri"]
+bio: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+aliases: ["LoremDolor"]
 city: "Kota Bandung"
 activeYears: "2025 - Present"
-affiliation: "Independent Idol Unit"
+affiliation: "Consectetur Unit"
 status: "Active"
 infobox:
-  - label: "Format"
-    value: "4-Member Idol Unit"
+  - label: "Lorem"
+    value: "Adipiscing Elit Unit"
   - label: "Focus"
-    value: "Chika Idol Stage & Cheki"
+    value: "Sed Do Eiusmod Tempor"
 socials:
   - label: "Instagram"
     url: "https://instagram.com"
@@ -22,8 +22,8 @@ avatar: ""
 draft: false
 ---
 
-**Lumina Prism** showcases the **Chika Idol** performer category inside Axia Zone ID's Performer Wiki.
+**Ipsum Dolor Unit** consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Scene Context
+## Sed Do Eiusmod
 
-Read more about the local Chika Idol stage format in [[wiki/anikura-and-utaodo-scene-guide]] and major multi-stage showcases like [[events/axia-winter-live-2026]].
+Duis aute irure dolor in reprehenderit in [[wiki/anikura-and-utaodo-scene-guide]] and [[events/axia-winter-live-2026]].

@@ -1,16 +1,16 @@
 ---
-title: "Axia (Character & Community Base)"
+title: "Axia Lorem Ipsum Base"
 category: "Axia Lore & Community"
-summary: "Profil karakter Axia sekaligus base komunitas Axia Zone ID yang menghubungkan penikmat Jejepangan dan ACG di Bandung serta Indonesia."
-aliases: ["Axia Zone", "Axia Project ID"]
+summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+aliases: ["Lorem Base", "Ipsum Project"]
 city: "Kota Bandung"
 status: "Active"
 founded: "2025"
 infobox:
-  - label: "Curator / Author"
+  - label: "Curator"
     value: "Raitoklaus"
-  - label: "Focus Area"
-    value: "Bandung & Indonesia ACG Scene"
+  - label: "Lorem Area"
+    value: "Consectetur Adipiscing"
   - label: "Community Base"
     value: "Wibu_Baleendah & Hayu UtaOdo"
 links:
@@ -27,16 +27,14 @@ featured: true
 draft: false
 ---
 
-**Axia** menjadi figur sentral sekaligus identitas utama dari **Axia Zone ID**, rumah kecil bagi penikmat budaya Jejepangan dan Anime, Comic, Game (ACG) yang berpusat di Kota Bandung dan aktif mengikuti perkembangan skena nasional.
+**Axia** lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Identitas Karakter & Visual
+## Duis Aute Irure
 
-Axia hadir dengan palet warna ciri khas *electric azure*, *deep slate*, dan putih, mencerminkan nuansa panggung digital modern yang dinamis. Karakter ini merepresentasikan semangat pengamat skena sekaligus arsiparis jadwal dan performer lokal.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
-## Peran sebagai Situs Base Komunitas
+## Excepteur Sint Occaecat
 
-Selain menjadi profil karakter utama, halaman ini menjadi titik temu bagi beberapa inisiatif komunitas:
-
-- Terhubung langsung dengan [[wiki/wibu-baleendah]] di wilayah Bandung Selatan / Baleendah.
-- Berkolaborasi erat bersama [[wiki/hayu-utaodo]] di skena panggung utaite, dance cover, dan anisong.
-- Mengarsipkan jadwal showcase utama seperti [[events/axia-winter-live-2026]].
+- Sed ut perspiciatis unde omnis iste natus [[wiki/wibu-baleendah]].
+- Error sit voluptatem accusantium doloremque [[wiki/hayu-utaodo]].
+- Laudantium totam rem aperiam [[events/axia-winter-live-2026]].

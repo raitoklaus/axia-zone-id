@@ -1,8 +1,8 @@
 ---
-title: "Axia Zone ID Feature & Formatting Showcase"
+title: "Lorem Ipsum Dolor Sit Amet"
 published: 2026-11-26
 updated: 2026-11-26
-description: "All-in-one showcase of frontmatter options, Obsidian Wiki Links, Indonesian ACG event cards, MDX components, Expressive Code blocks, admonitions, Mermaid diagrams, and KaTeX math."
+description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 image: "/gallery/axia-wallpapers/cover.webp"
 useRandomCover: false
 tags: ["Showcase", "Wiki", "Events", "Markdown", "MDX"]
@@ -24,34 +24,34 @@ import {
 	TimelineItem,
 } from "@components/firefly-mdx";
 
-This single post demonstrates the full feature set available across **Axia Zone ID**: Firefly's Markdown/MDX publishing features alongside the connected **Indonesian ACG Event Schedule** and **Performer Wiki**.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-## 1. Frontmatter & Inline Badges
+## 1. Lorem Ipsum Dolor & Sit Amet
 
-Every post supports rich metadata in YAML frontmatter (editable locally or via Pages CMS and Sveltia CMS):
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur:
 
-| Frontmatter Key | Current Value | Purpose |
+| Lorem Key | Ipsum Value | Consectetur |
 | :--- | :--- | :--- |
-| `useRandomCover` | `true` | Falls back to Firefly's random cover API when `image` is blank |
-| `pinned` | `true` | Pins the post to the top of the blog feed |
-| `series` / `seriesOrder` | `"Getting Started"` / `1` | Adds an automatic series navigation box |
-| `draft` | `false` | Hides unfinished posts from production builds when `true` |
-| `password` | `""` | Optionally encrypts a post's body with client-side decryption |
+| `useRandomCover` | `true` | Lorem ipsum dolor sit amet consectetur adipiscing elit |
+| `pinned` | `true` | Ut enim ad minim veniam quis nostrud exercitation |
+| `series` / `seriesOrder` | `"Getting Started"` / `1` | Duis aute irure dolor in reprehenderit in voluptate |
+| `draft` | `false` | Excepteur sint occaecat cupidatat non proident |
+| `password` | `""` | Sunt in culpa qui officia deserunt mollit anim id est laborum |
 
-Inline MDX badges: <Badge>Default</Badge> <Badge type="tip">Tip</Badge> <Badge type="note">Note</Badge> <Badge type="important">Important</Badge> <Badge type="warning">Warning</Badge> <Badge type="caution">Caution</Badge>
+Lorem ipsum dolor: <Badge>Default</Badge> <Badge type="tip">Tip</Badge> <Badge type="note">Note</Badge> <Badge type="important">Important</Badge> <Badge type="warning">Warning</Badge> <Badge type="caution">Caution</Badge>
 
 ---
 
-## 2. Connected Wiki & Obsidian `[[Wiki Links]]`
+## 2. Consectetur Adipiscing `[[Wiki Links]]`
 
-Use Obsidian-style `[[Wiki Links]]` anywhere in blog posts, performer profiles, or event pages:
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium:
 
-- Prefixed performer link: [[performers/hana-minase]]
-- Bare-slug performer link: [[ren-takahashi]]
-- Aliased event link: [[events/axia-winter-live-2026|Axia Winter Live 2026]]
-- Past event archive link: [[events/jakarta-anifest-summer-2026]]
+- Lorem ipsum link: [[performers/hana-minase]]
+- Dolor sit amet link: [[ren-takahashi]]
+- Consectetur event link: [[events/axia-winter-live-2026|Lorem Ipsum Live 2026]]
+- Eiusmod archive link: [[events/jakarta-anifest-summer-2026]]
 
-Place a `[[Wiki Link]]` alone on its own paragraph to render a rich summary card:
+Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit:
 
 [[events/axia-winter-live-2026]]
 
@@ -61,35 +61,35 @@ Place a `[[Wiki Link]]` alone on its own paragraph to render a rich summary card
 
 ---
 
-## 3. Admonitions (GitHub Callouts) & Spoiler Text
+## 3. Tempor Incididunt & Spoiler Text
 
 > [!NOTE]
-> Use `> [!NOTE]` callouts for background context, schedule changes, or venue rules.
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 > [!TIP]
-> Events tagged with `entryType: "free"` automatically highlight **Free Entry** badges on the homepage and calendar.
+> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 > [!IMPORTANT]
-> Always link performers in `lineup: ["performer-slug"]` so their Upcoming and Past Appearances update automatically.
+> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
 
 > [!WARNING]
-> Check `WIB`, `WITA`, or `WIT` timezone labels when adding events outside Java.
+> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 > [!CAUTION]
-> Never commit `.env` files, personal access tokens, or OAuth secrets to the repository.
+> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
 
-Spoiler preview (hover to reveal): :spoiler[Secret encore acoustic collab between Hana Minase and Ren Takahashi at Balai Sarbini.]
+Lorem spoiler: :spoiler[Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam.]
 
 ---
 
-## 4. Interactive MDX Components
+## 4. Magni Dolores Components
 
-### Tabs (`TabGroup`)
+### Eiusmod (`TabGroup`)
 
-<TabGroup labels={["Pages CMS (.pages.yml)", "Sveltia CMS (/admin/)"]} client:load>
+<TabGroup labels={["Lorem Tab A", "Ipsum Tab B"]} client:load>
 	```yaml
-	# Edit on desktop or mobile via https://app.pagescms.org
-	title: "Bandung Mall Matsuri 2026"
+	# Lorem ipsum dolor sit amet
+	title: "Consectetur Adipiscing Elit"
 	startDate: 2026-12-05
 	region: "Jawa Barat"
 	eventType: "Matsuri / Bunkasai"
@@ -100,100 +100,99 @@ Spoiler preview (hover to reveal): :spoiler[Secret encore acoustic collab betwee
 	```
 
 	```yaml
-	# Edit via https://axia.zone.id/admin/
-	# Searchable relation dropdown automatically picks performer slugs
-	title: "Axia Winter Live 2026"
+	# Ut enim ad minim veniam
+	title: "Sed Do Eiusmod Tempor"
 	startDate: 2026-12-19
 	region: "Jabodetabek"
 	eventType: "Idol / Anisong Live"
 	entryType: "paid"
-	htm: "Presale Rp 120.000 / OTS Rp 150.000"
+	htm: "Rp 120.000 / Rp 150.000"
 	```
 </TabGroup>
 
-### Publishing Workflow (`Steps`)
+### Ratione Voluptatem (`Steps`)
 
 <Steps>
-	<StepItem title="Create Performer Profiles" icon="edit">
-		Add Markdown entries under `src/content/performers/` with role, bio, tags, and social links.
+	<StepItem title="Lorem Ipsum Dolor" icon="edit">
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
 	</StepItem>
-	<StepItem title="Publish Event Schedule" type="tip" icon="calendar">
-		Create an event under `src/content/events/` (or via online CMS) with region, HTM, hours, and `lineup`.
+	<StepItem title="Ut Enim Ad Minim" type="tip" icon="calendar">
+		Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
 	</StepItem>
-	<StepItem title="Cross-Link in Blog Posts" type="note" icon="rocket">
-		Reference performers and events inline or as cards with `[[Wiki Links]]`, then push or let the CMS deploy automatically.
+	<StepItem title="Duis Aute Irure" type="note" icon="rocket">
+		Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.
 	</StepItem>
 </Steps>
 
-### Event Season Timeline (`Timeline`)
+### Neque Porro Quisquam (`Timeline`)
 
 <Timeline>
-	<TimelineItem date="2026-08-15" title="Jakarta AniFest Summer 2026" type="note" icon="tag">
-		Archived summer convention at ICE BSD Hall 3, Tangerang (`Jabodetabek`).
+	<TimelineItem date="2026-08-15" title="Lorem Ipsum Archive" type="note" icon="tag">
+		Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.
 	</TimelineItem>
-	<TimelineItem date="2026-11-26" title="Axia Zone ID Launch" type="tip" icon="rocket">
-		Launched Astro 7 blog, Indonesian ACG event calendar, performer wiki, and dual Git-based CMS.
+	<TimelineItem date="2026-11-26" title="Dolor Sit Amet" type="tip" icon="rocket">
+		Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
 	</TimelineItem>
-	<TimelineItem date="2026-12-19" title="Axia Winter Live 2026" icon="star">
-		Upcoming two-day live showcase in Jakarta featuring [[performers/hana-minase]] and [[performers/ren-takahashi]].
+	<TimelineItem date="2026-12-19" title="Consectetur Elit" icon="star">
+		Quis autem vel eum iure reprehenderit featuring [[performers/hana-minase]] and [[performers/ren-takahashi]].
 	</TimelineItem>
 </Timeline>
 
 ---
 
-## 5. Expressive Code & Terminal Frames
+## 5. Quia Dolor Sit Amet
 
-```yaml title="src/content/events/sample-event.md"
-title: "Surabaya Anikura Night 2027"
+```yaml title="lorem-ipsum-sample.md"
+title: "Lorem Ipsum Dolor"
 startDate: 2027-01-16
-venue: "Tunjungan Club Hall"
+venue: "Lorem Hall"
 city: "Surabaya"
 region: "Jawa Timur"
 eventType: "Anikura / DJ Night"
 entryType: "paid"
-htm: "Rp 65.000 (incl. FDC)"
+htm: "Rp 65.000"
 time: "18:00 - 23:30"
 timezone: "WIB"
 ```
 
-```bash title="Local Verification"
+```bash title="Lorem Terminal"
 pnpm dev
 pnpm check && pnpm type-check && pnpm build
 ```
 
 ---
 
-## 6. Architecture Diagram (Mermaid)
+## 6. Consequuntur Magni (Mermaid)
 
 ```mermaid
 flowchart LR
-    CMS["Pages CMS / Sveltia CMS"] --> Repo["GitHub Repository (main)"]
-    Repo --> Actions["GitHub Actions + Daily 00:00 WIB Cron"]
-    Actions --> Site["Axia Zone ID (GitHub Pages)"]
-    Events["Events Collection"] -->|lineup reference| Performers["Performer Wiki"]
-    Posts["Blog Posts"] -->|Wiki Links| Events
-    Posts -->|Wiki Links| Performers
+    Lorem["Lorem Ipsum"] --> Dolor["Dolor Sit Amet"]
+    Dolor --> Consectetur["Consectetur Elit"]
+    Consectetur --> Adipiscing["Adipiscing Sed"]
+    Eiusmod["Eiusmod Tempor"] -->|lineup| Incididunt["Incididunt Labore"]
+    Dolore["Dolore Magna"] -->|link| Eiusmod
+    Dolore -->|link| Incididunt
 ```
 
 ---
 
-## 7. Math Formatting (KaTeX)
+## 7. Labore et Dolore (KaTeX)
 
-Inline math: total weekend pass cost $T = P + F$, where $P$ is presale ticket price and $F$ is admin fee.
+Lorem ipsum math: $T = P + F$, ut enim ad minim veniam $P$ quis nostrud $F$ exercitation.
 
 $$
-\text{Schedule Rollover} = \begin{cases}
-\text{Upcoming}, & \text{if } \text{endDate} \ge \text{Today (WIB)} \text{ and } \text{status} \notin \{\text{completed}, \text{cancelled}\} \\
-\text{Past Archive}, & \text{otherwise}
+\text{Lorem Ipsum} = \begin{cases}
+\text{Dolor Sit}, & \text{if } A \ge B \\
+\text{Amet Elit}, & \text{otherwise}
 \end{cases}
 $$
 
 ---
 
-## 8. Next Steps & Repository
+## 8. Quis Nostrum Exercitationem
 
-- [x] Remove default Firefly demo posts and demo config links
-- [x] Verify Indonesian ACG Event Schedule, Calendar Grid, and Performer Wiki
-- [ ] Add your own articles, performer profiles, and upcoming events via Git or the online CMS
+- [x] Lorem ipsum dolor sit amet, consectetur adipiscing elit
+- [x] Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+- [ ] Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
 
 ::github{repo="raitoklaus/axia-zone-id"}

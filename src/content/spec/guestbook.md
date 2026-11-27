@@ -1,7 +1,7 @@
 ---
 title: "Guestbook"
-description: "Titip info event Bandung & Jabodetabek, update profil performer, atau ngobrol santai seputar skena ACG."
+description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."
 ---
 
-- Jaga diskusi tetap ramah, santai, dan saling menghargai di komunitas.
-- Bebas titip info jadwal event Jejepangan/ACG (terutama area Kota Bandung & big event Jabodetabek), koreksi data venue/HTM, atau usulan profil performer untuk masuk ke wiki.
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

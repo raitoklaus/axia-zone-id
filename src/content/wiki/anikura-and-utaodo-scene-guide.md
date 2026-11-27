@@ -1,33 +1,33 @@
 ---
-title: "Panduan Skena Anikura, Idol Lokal & UtaOdo"
+title: "Lorem Ipsum Consectetur Guide"
 category: "ACG & Jejepangan Scene"
-summary: "Pengenalan istilah populer dalam skena Jejepangan Bandung dan Indonesia: Anikura / DJ Night, Chika Idol, Fandom Idol, Band Anisong, dan UtaOdo."
-aliases: ["Scene Glossary", "Panduan Skena ACG"]
+summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+aliases: ["Lorem Glossary", "Dolor Guide"]
 city: "Indonesia"
 status: "Active"
-founded: "Scene Reference"
+founded: "Lorem Reference"
 infobox:
-  - label: "Topics Covered"
-    value: "Anikura, Chika Idol, Fandom Idol, UtaOdo"
-  - label: "Primary Region"
+  - label: "Lorem"
+    value: "Ipsum, Dolor, Consectetur"
+  - label: "Region"
     value: "Bandung & Jabodetabek"
 links:
   - label: "Performer Wiki"
     url: "/wiki/performers/"
     icon: "material-symbols:groups-rounded"
-tags: ["Guide", "Anikura", "Idol", "UtaOdo", "Glossary"]
+tags: ["Guide", "Anikura", "Idol", "Glossary"]
 image: ""
 updated: 2026-11-27
 featured: true
 draft: false
 ---
 
-Skena Jejepangan modern di Kota Bandung dan Jabodetabek berkembang pesat dengan format panggung dan komunitas yang beragam. Berikut ringkasan singkat istilah yang sering muncul di jadwal event dan direktori performer.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Format Panggung & Performer
+## Ut Enim Ad Minim
 
-- **Anikura (Anime Club) / DJ Night**: Acara musik malam berisi remix lagu anime, Vocaloid, dan gim ritme yang dipandu DJ maupun [[performers/starlight-beat-collective]] seperti [[performers/ren-takahashi]], misalnya di [[events/bandung-anikura-spark-2027]].
-- **Chika Idol**: Unit idol independen yang aktif tampil di panggung komunitas dan showcase tiket langsung, seperti [[performers/lumina-prism]].
-- **Fandom Idol**: Grup tari dan *performance* yang membawakan koreografi serta lagu dari waralaba idol tertentu (seperti Love Live!, Project SEKAI, atau Idolmaster), misalnya [[performers/sekai-step-project]].
-- **UtaOdo (Utattemita & Odottemita)**: Kultur membawakan ulang lagu anisong dan tarian panggung, didorong aktif oleh komunitas seperti [[wiki/hayu-utaodo]].
-- **Anisong Band**: Grup musik band penuh yang membawakan aransemen rock maupun akustik anisong, seperti [[performers/sorairo-echo]].
+- **Lorem A**: Quis nostrud exercitation [[performers/starlight-beat-collective]] and [[performers/ren-takahashi]] in [[events/bandung-anikura-spark-2027]].
+- **Lorem B**: Ullamco laboris nisi ut aliquip ex ea commodo consequat [[performers/lumina-prism]].
+- **Lorem C**: Duis aute irure dolor in reprehenderit in voluptate [[performers/sekai-step-project]].
+- **Lorem D**: Velit esse cillum dolore eu fugiat nulla pariatur [[wiki/hayu-utaodo]].
+- **Lorem E**: Excepteur sint occaecat cupidatat non proident [[performers/sorairo-echo]].

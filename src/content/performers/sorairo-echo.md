@@ -1,18 +1,18 @@
 ---
-name: "Sorairo Echo"
-role: "Anisong Cover Band"
+name: "Eiusmod Echo"
+role: "Lorem Cover Band"
 category: "Band"
-bio: "Sample Kota Bandung full-band anisong project covering J-Rock anime openings and festival stage medleys."
-aliases: ["Sorairo"]
+bio: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam."
+aliases: ["Eiusmod"]
 city: "Kota Bandung"
 activeYears: "2024 - Present"
-affiliation: "Independent Bandung"
+affiliation: "Lorem Bandung"
 status: "Active"
 infobox:
   - label: "Formation"
-    value: "5-Piece Live Band"
+    value: "Lorem Ipsum Band"
   - label: "Genre"
-    value: "J-Rock, Anisong Medley"
+    value: "Dolor Sit, Consectetur"
 socials:
   - label: "YouTube"
     url: "https://youtube.com"
@@ -22,8 +22,8 @@ avatar: ""
 draft: false
 ---
 
-**Sorairo Echo** is a sample **Band** category performer showcasing how full-band units integrate into the Bandung ACG Performer Wiki.
+**Eiusmod Echo** eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
 
-## Stage Notes
+## Voluptate Velit
 
-Regularly highlighted in [[wiki/bandung-matsuri-series]] discussions and weekend matsuri lineups such as [[events/bandung-mall-matsuri-2026]].
+Neque porro quisquam est in [[wiki/bandung-matsuri-series]] and [[events/bandung-mall-matsuri-2026]].

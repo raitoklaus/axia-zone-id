@@ -1,11 +1,11 @@
 ---
 title: "Wibu_Baleendah"
 category: "Communities & Circles"
-summary: "Komunitas jejepangan dan penikmat ACG wilayah Baleendah dan Bandung Raya yang menjadi bagian dari jaringan Axia Zone ID."
+summary: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 aliases: ["@wibu_baleendah"]
 city: "Bandung Raya"
 status: "Active"
-founded: "Community Collective"
+founded: "Lorem Collective"
 infobox:
   - label: "Instagram"
     value: "@wibu_baleendah"
@@ -24,10 +24,10 @@ featured: true
 draft: false
 ---
 
-**Wibu_Baleendah** adalah komunitas penikmat budaya Jejepangan, anime, gim, dan event ACG lokal di area Baleendah dan Bandung Raya.
+**Wibu_Baleendah** lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Aktivitas & Kolaborasi
+## Sed Ut Perspiciatis
 
-- Mengumpulkan informasi jadwal event Jejepangan di Kota Bandung dan sekitarnya seperti [[events/bandung-mall-matsuri-2026]].
-- Berjejaring bersama [[wiki/axia-base-and-lore]] dan komunitas panggung [[wiki/hayu-utaodo]].
-- Mengajak teman-teman lokal hadir bareng ke matsuri, anikura, dan gathering komunitas.
+- Unde omnis iste natus error sit voluptatem [[events/bandung-mall-matsuri-2026]].
+- Accusantium doloremque laudantium [[wiki/axia-base-and-lore]] and [[wiki/hayu-utaodo]].
+- Totam rem aperiam eaque ipsa quae ab illo inventore veritatis.

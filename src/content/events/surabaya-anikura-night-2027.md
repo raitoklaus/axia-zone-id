@@ -1,34 +1,34 @@
 ---
-title: "Surabaya Anikura Night 2027"
+title: "Eiusmod Night 2027"
 startDate: 2027-01-16
-venue: "Tunjungan Club Hall"
+venue: "Voluptate Club Hall"
 city: "Surabaya"
 region: "Jawa Timur"
 eventType: "Anikura / DJ Night"
 entryType: "paid"
-htm: "Rp 65.000 (incl. FDC)"
+htm: "Rp 65.000"
 time: "18:00 - 23:30"
 timezone: "WIB"
-organizer: "Suroboyo Anikura Collective"
-instagram: "@sbyanikura.sample"
-officialUrl: "https://example.com/surabaya-anikura-night-2027"
-mapsUrl: "https://maps.google.com/?q=Tunjungan+Surabaya"
+organizer: "Tempor Collective"
+instagram: ""
+officialUrl: ""
+mapsUrl: ""
 highlights:
-  - "Anikura / DJ"
-  - "Wotagei Area"
-  - "Cosplay Welcome"
+  - "Lorem Ipsum"
+  - "Dolor Sit"
+  - "Amet Elit"
 status: "upcoming"
-ticketUrl: "https://example.com/tickets/surabaya-anikura-night-2027"
+ticketUrl: ""
 lineup:
   - "ren-takahashi"
-description: "Sample evening anisong club and DJ night in Surabaya featuring anikura remixes and wotagei floor."
+description: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores."
 tags: ["Anikura", "DJ", "Surabaya"]
 image: ""
 draft: false
 ---
 
-This sample entry demonstrates a single-night **Anikura / DJ Night** in `Jawa Timur` for previewing cross-month calendar navigation and regional filtering.
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
 
-## Floor Info
+## Labore Et Dolore
 
-[[performers/ren-takahashi]] headlines the peak-hour anisong remix set starting at 21:00 WIB.
+[[performers/ren-takahashi]] sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.

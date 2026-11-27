@@ -1,7 +1,7 @@
 ---
-title: "Bandung Anikura Spark 2027"
+title: "Dolor Sit Night 2027"
 startDate: 2027-01-10
-venue: "Braga Creative Space"
+venue: "Ipsum Space"
 city: "Kota Bandung"
 region: "Jawa Barat"
 eventType: "Anikura / DJ Night"
@@ -9,27 +9,27 @@ entryType: "paid"
 htm: "Rp 55.000"
 time: "17:00 - 22:30"
 timezone: "WIB"
-organizer: "Bandung Anikura Collective"
-instagram: "@bdganikura.sample"
-officialUrl: "https://example.com/bandung-anikura-spark-2027"
-mapsUrl: "https://maps.google.com/?q=Braga+Bandung"
+organizer: "Dolor Collective"
+instagram: ""
+officialUrl: ""
+mapsUrl: ""
 highlights:
-  - "Anikura / DJ"
-  - "Anisong Remix"
-  - "Community Floor"
+  - "Lorem Ipsum"
+  - "Consectetur Elit"
+  - "Eiusmod Tempor"
 status: "upcoming"
 majorEvent: false
-ticketUrl: "https://example.com/tickets/bandung-anikura-spark-2027"
+ticketUrl: ""
 lineup:
   - "ren-takahashi"
-description: "Sample Kota Bandung evening anisong club and remix showcase featuring local anikura DJs."
+description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 tags: ["Anikura", "DJ", "Bandung"]
 image: ""
 draft: false
 ---
 
-This sample entry showcases a **Kota Bandung** evening **Anikura / DJ Night** spotlighted directly on the homepage upcoming schedule.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Stage Info
+## Consectetur Elit
 
-[[performers/ren-takahashi]] opens the peak-hour anisong remix set at 20:00 WIB.
+[[performers/ren-takahashi]] quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
