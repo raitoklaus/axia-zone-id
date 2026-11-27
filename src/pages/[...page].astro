@@ -5,6 +5,7 @@ import PostPage from "@/components/layout/PostPage.astro";
 import UpcomingEventSchedule from "@/components/wiki/UpcomingEventSchedule.astro";
 import WikiSpotlightSection from "@/components/wiki/WikiSpotlightSection.astro";
 import { siteConfig } from "@/config";
+import siteSettings from "@/data/siteSettings.json";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
@@ -21,6 +22,7 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+const showHomeWikiSpotlight = siteSettings.site.showHomeWikiSpotlight === true;
 
 // 列表页隐藏的 h1：首屏用站点标题，后续页用「首页 · 页码」，避免空 h1
 const heading =
@@ -31,7 +33,7 @@ const heading =
 
 <MainGridLayout heading={heading}>
   {page.currentPage === 1 && <UpcomingEventSchedule />}
-  {page.currentPage === 1 && <WikiSpotlightSection />}
+  {page.currentPage === 1 && showHomeWikiSpotlight && <WikiSpotlightSection />}
   <PostPage page={page} />
   {
     page.total > page.size && (

@@ -25,7 +25,8 @@
 		"categoryBar": true,
 		"showLastModified": true,
 		"shareButtons": true,
-		"relatedPosts": true
+		"relatedPosts": true,
+		"showHomeWikiSpotlight": false
 	},
 	"pages": {
 		"friends": true,

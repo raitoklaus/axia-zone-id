@@ -672,6 +672,10 @@ content:
           - name: relatedPosts
             label: Show Related Posts
             type: boolean
+          - name: showHomeWikiSpotlight
+            label: Show Homepage Wiki Spotlight
+            type: boolean
+            default: false
       - name: pages
         label: Page Toggles
         type: object
