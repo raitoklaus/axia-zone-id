@@ -346,15 +346,15 @@
 		}
 
 		.axia-fill-rect {
-			animation: axia-hair-rise 2.13s cubic-bezier(0.333, 0, 0.667, 1) infinite;
+			animation: axia-hair-rise 1.35s cubic-bezier(0.333, 0, 0.667, 1) 1 both;
 		}
 
 		.axia-eyes-open {
-			animation: axia-blink-open 2.13s steps(1, end) infinite;
+			animation: axia-blink-open 1.35s steps(1, end) 1 both;
 		}
 
 		.axia-eyes-closed {
-			animation: axia-blink-closed 2.13s steps(1, end) infinite;
+			animation: axia-blink-closed 1.35s steps(1, end) 1 both;
 		}
 
 		.axia-dot {
@@ -385,9 +385,6 @@
 		0% {
 			transform: translate3d(0, 100%, 0);
 		}
-		78% {
-			transform: translate3d(0, 0%, 0);
-		}
 		100% {
 			transform: translate3d(0, 0%, 0);
 		}
@@ -395,10 +392,10 @@
 
 	@keyframes axia-blink-open {
 		0%,
-		54% {
+		67% {
 			opacity: 0;
 		}
-		55%,
+		68%,
 		100% {
 			opacity: 1;
 		}
@@ -406,10 +403,10 @@
 
 	@keyframes axia-blink-closed {
 		0%,
-		54% {
+		67% {
 			opacity: 1;
 		}
-		55%,
+		68%,
 		100% {
 			opacity: 0;
 		}
@@ -454,7 +451,7 @@
 		var reducedMotion =
 			window.matchMedia &&
 			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-		var minDisplayMs = reducedMotion ? 80 : 650;
+		var minDisplayMs = reducedMotion ? 80 : 1200;
 		var maxDisplayMs = 2400;
 		var dismissed = false;
 
