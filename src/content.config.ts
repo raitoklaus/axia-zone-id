@@ -62,6 +62,68 @@ export type PerformerSocial = {
 	icon: string;
 };
 
+export const PERFORMER_CATEGORIES: readonly [
+	"Anisong Vocalist",
+	"Band",
+	"Chika Idol",
+	"Fandom Idol",
+	"Anikura DJ",
+	"Collective Group",
+	"Cosplayer",
+	"Creator / Other",
+] = [
+	"Anisong Vocalist",
+	"Band",
+	"Chika Idol",
+	"Fandom Idol",
+	"Anikura DJ",
+	"Collective Group",
+	"Cosplayer",
+	"Creator / Other",
+] as const;
+
+export const WIKI_CATEGORIES: readonly [
+	"Event Series & Organizers",
+	"Axia Lore & Community",
+	"ACG & Jejepangan Scene",
+	"Communities & Circles",
+] = [
+	"Event Series & Organizers",
+	"Axia Lore & Community",
+	"ACG & Jejepangan Scene",
+	"Communities & Circles",
+] as const;
+
+export type WikiCategory = (typeof WIKI_CATEGORIES)[number];
+
+export type WikiInfoboxItem = {
+	label: string;
+	value: string;
+};
+
+export type WikiLinkItem = {
+	label: string;
+	url: string;
+	icon: string;
+};
+
+export type WikiData = {
+	title: string;
+	category: WikiCategory;
+	summary: string;
+	aliases: string[];
+	city: string;
+	status: string;
+	founded: string;
+	infobox: WikiInfoboxItem[];
+	links: WikiLinkItem[];
+	tags: string[];
+	image: string;
+	updated?: Date;
+	featured: boolean;
+	draft: boolean;
+};
+
 export type PerformerData = {
 	name: string;
 	role: string;
@@ -70,6 +132,12 @@ export type PerformerData = {
 	socials: PerformerSocial[];
 	tags: string[];
 	avatar: string;
+	aliases: string[];
+	city: string;
+	activeYears: string;
+	affiliation: string;
+	status: string;
+	infobox: WikiInfoboxItem[];
 	draft: boolean;
 };
 
@@ -288,10 +356,67 @@ const performersCollection: ContentCollection<PerformerData> = defineCollection(
 				.default([]),
 			tags: z.array(z.string()).optional().default([]),
 			avatar: z.string().optional().default(""),
+			aliases: z.array(z.string()).optional().default([]),
+			city: z.string().optional().default(""),
+			activeYears: z.string().optional().default(""),
+			affiliation: z.string().optional().default(""),
+			status: z.string().optional().default("Active"),
+			infobox: z
+				.array(
+					z.object({
+						label: z.string(),
+						value: z.string(),
+					}),
+				)
+				.optional()
+				.default([]),
 			draft: z.boolean().optional().default(false),
 		}),
 	},
 );
+
+const wikiCollection: ContentCollection<WikiData> = defineCollection({
+	loader: glob({
+		pattern: "**/*.{md,mdx}",
+		base: "./src/content/wiki",
+	}),
+	schema: z.object({
+		title: z.string(),
+		category: z
+			.enum(WIKI_CATEGORIES)
+			.optional()
+			.default("ACG & Jejepangan Scene"),
+		summary: z.string().optional().default(""),
+		aliases: z.array(z.string()).optional().default([]),
+		city: z.string().optional().default(""),
+		status: z.string().optional().default("Active"),
+		founded: z.string().optional().default(""),
+		infobox: z
+			.array(
+				z.object({
+					label: z.string(),
+					value: z.string(),
+				}),
+			)
+			.optional()
+			.default([]),
+		links: z
+			.array(
+				z.object({
+					label: z.string(),
+					url: z.string(),
+					icon: z.string().optional().default(""),
+				}),
+			)
+			.optional()
+			.default([]),
+		tags: z.array(z.string()).optional().default([]),
+		image: z.string().optional().default(""),
+		updated: optionalDate,
+		featured: z.boolean().optional().default(false),
+		draft: z.boolean().optional().default(false),
+	}),
+});
 
 const performerRef = z.preprocess(
 	(val) =>
@@ -343,6 +468,7 @@ export const collections: {
 	spec: typeof specCollection;
 	projects: typeof projectsCollection;
 	performers: typeof performersCollection;
+	wiki: typeof wikiCollection;
 	events: typeof eventsCollection;
 } = {
 	dynamic: dynamicCollection,
@@ -350,5 +476,6 @@ export const collections: {
 	spec: specCollection,
 	projects: projectsCollection,
 	performers: performersCollection,
+	wiki: wikiCollection,
 	events: eventsCollection,
 };

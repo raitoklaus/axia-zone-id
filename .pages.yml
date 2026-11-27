@@ -265,7 +265,7 @@ content:
     format: yaml-frontmatter
     filename: "{primary}.md"
     view:
-      fields: [name, role, category, draft]
+      fields: [name, role, category, city, draft]
       primary: name
       sort: [name]
       default:
@@ -282,13 +282,53 @@ content:
         required: true
       - name: category
         label: Category
+        type: select
+        options:
+          values:
+            - Anisong Vocalist
+            - Band
+            - Chika Idol
+            - Fandom Idol
+            - Anikura DJ
+            - Collective Group
+            - Cosplayer
+            - Creator / Other
+      - name: aliases
+        label: Aliases / Stage Names
         type: string
+        list: true
+      - name: city
+        label: Base City
+        type: string
+      - name: activeYears
+        label: Active Years
+        type: string
+      - name: affiliation
+        label: Group / Collective / Community Affiliation
+        type: string
+      - name: status
+        label: Status
+        type: string
+        default: Active
       - name: bio
         label: Short Bio
         type: text
       - name: avatar
         label: Avatar Image
         type: image
+      - name: infobox
+        label: Extra Infobox Rows
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+            required: true
+          - name: value
+            label: Value
+            type: string
+            required: true
       - name: tags
         label: Tags
         type: string
@@ -315,6 +355,105 @@ content:
         default: false
       - name: body
         label: Bio & Notes (Raw Markdown)
+        type: code
+        options:
+          language: markdown
+
+  - name: wiki
+    label: Wiki Hub Articles
+    type: collection
+    path: src/content/wiki
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, category, featured, draft]
+      primary: title
+      sort: [title]
+      default:
+        sort: title
+        order: asc
+    fields:
+      - name: title
+        label: Article Title
+        type: string
+        required: true
+      - name: category
+        label: Wiki Category
+        type: select
+        required: true
+        default: ACG & Jejepangan Scene
+        options:
+          values:
+            - Event Series & Organizers
+            - Axia Lore & Community
+            - ACG & Jejepangan Scene
+            - Communities & Circles
+      - name: summary
+        label: Summary
+        type: text
+      - name: aliases
+        label: Aliases / Alternate Names
+        type: string
+        list: true
+      - name: city
+        label: City / Scope
+        type: string
+      - name: status
+        label: Status
+        type: string
+        default: Active
+      - name: founded
+        label: Founded / Era
+        type: string
+      - name: updated
+        label: Last Updated
+        type: date
+      - name: featured
+        label: Feature on Wiki Hub
+        type: boolean
+        default: false
+      - name: image
+        label: Emblem / Cover Image
+        type: image
+      - name: infobox
+        label: Infobox Rows
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+            required: true
+          - name: value
+            label: Value
+            type: string
+            required: true
+      - name: links
+        label: External Links
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+            required: true
+          - name: url
+            label: URL
+            type: string
+            required: true
+          - name: icon
+            label: Iconify Icon
+            type: string
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: body
+        label: Wiki Content (Raw Markdown)
         type: code
         options:
           language: markdown

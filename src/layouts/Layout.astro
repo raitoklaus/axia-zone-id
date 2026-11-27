@@ -51,6 +51,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
+	ogImagePath?: string;
 	postCoverImage?: string;
 	ogImageWidth?: number;
 	ogImageHeight?: number;
@@ -64,6 +65,7 @@ let {
 	lang,
 	setOGTypeArticle,
 	postSlug,
+	ogImagePath,
 	postCoverImage,
 	ogImageWidth: propsOgImageWidth,
 	ogImageHeight: propsOgImageHeight,
@@ -137,8 +139,13 @@ const canonicalUrl = getCanonicalUrl(Astro.url);
 let ogImageUrl: string | undefined;
 let ogImageWidth: number | undefined;
 let ogImageHeight: number | undefined;
-const isGeneratedOg = siteConfig.post.generateOgImages && postSlug;
-if (isGeneratedOg) {
+const isGeneratedOg =
+	siteConfig.post.generateOgImages && (ogImagePath || postSlug);
+if (isGeneratedOg && ogImagePath) {
+	ogImageUrl = new URL(url(ogImagePath), Astro.site).toString();
+	ogImageWidth = 1200;
+	ogImageHeight = 630;
+} else if (isGeneratedOg && postSlug) {
 	ogImageUrl = new URL(`/og/${postSlug}.png`, Astro.site).toString();
 	ogImageWidth = 1200;
 	ogImageHeight = 630;

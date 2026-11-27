@@ -1,0 +1,43 @@
+---
+import { Icon } from "astro-icon/components";
+import EventCalendarBrowser from "@/components/wiki/EventCalendarBrowser.svelte";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import { serializeEventsForBrowser } from "@/utils/wiki-utils";
+
+const title = "Events & Schedule";
+const description =
+	"Jadwal dan arsip event Jejepangan & ACG di Bandung, Jabodetabek, dan seluruh Indonesia: matsuri, konvensi, live anisong, hingga anikura.";
+
+const serializedEvents = await serializeEventsForBrowser();
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="page-shell flex flex-col gap-4">
+		<header class="card-base axia-panel-header p-5 md:p-6 relative overflow-hidden">
+			<span class="axia-panel-watermark" aria-hidden="true">EVENTS</span>
+			<div class="relative z-10 flex flex-wrap items-start justify-between gap-3">
+				<div class="min-w-0">
+					<div class="flex items-center gap-2.5">
+						<span class="axia-prism-bar" aria-hidden="true"></span>
+						<h2
+							class="text-xl md:text-2xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+							style="font-family: var(--font-montserrat, sans-serif)"
+						>
+							{title}
+						</h2>
+					</div>
+					<p class="text-sm text-[#4a5170] dark:text-slate-300 mt-1.5 max-w-2xl">
+						{description}
+					</p>
+				</div>
+				<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-(--btn-regular-bg) text-(--btn-content) text-xs font-bold shrink-0">
+					<Icon name="material-symbols:calendar-month-rounded" class="text-sm" aria-hidden="true" />
+					<span>{serializedEvents.length} Indexed</span>
+				</div>
+			</div>
+		</header>
+
+		<EventCalendarBrowser client:load events={serializedEvents} />
+	</section>
+</MainGridLayout>

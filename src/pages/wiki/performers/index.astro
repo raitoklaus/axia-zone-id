@@ -7,11 +7,12 @@ import {
 	getAllPerformers,
 	getEventsForPerformer,
 	getPerformerInitials,
+	PERFORMER_CATEGORIES,
 } from "@/utils/wiki-utils";
 
 const title = "Performer Wiki";
 const description =
-	"Local anime, anisong, DJ, and cosplay performer directory with linked appearances.";
+	"Direktori dan wiki performer skena Jejepangan & ACG (Anisong Vocalist, Band, Chika Idol, Fandom Idol, Anikura DJ, Collective Group, Cosplay) beserta jadwal tampilnya.";
 
 const performers = await getAllPerformers();
 const performerCards = await Promise.all(
@@ -28,13 +29,18 @@ const performerCards = await Promise.all(
 	}),
 );
 
-const categories = Array.from(
-	new Set(
-		performers
-			.map((p) => p.data.category.trim())
-			.filter((cat) => cat.length > 0),
+const presentCategorySet = new Set(
+	performers.map((p) => p.data.category.trim()).filter((cat) => cat.length > 0),
+);
+const categories = [
+	...PERFORMER_CATEGORIES.filter((cat) => presentCategorySet.has(cat)),
+	...Array.from(presentCategorySet).filter(
+		(cat) =>
+			!PERFORMER_CATEGORIES.includes(
+				cat as (typeof PERFORMER_CATEGORIES)[number],
+			),
 	),
-).sort((a, b) => a.localeCompare(b));
+];
 ---
 
 <MainGridLayout title={title} description={description}>
@@ -43,6 +49,11 @@ const categories = Array.from(
 			<span class="axia-panel-watermark" aria-hidden="true">PERFORMERS</span>
 			<div class="relative z-10 flex flex-wrap items-start justify-between gap-3">
 				<div class="min-w-0">
+					<nav aria-label="Wiki breadcrumb" class="flex items-center gap-2 text-xs font-semibold mb-2">
+						<a href={url("/wiki/")} class="text-(--primary) hover:underline">Wiki Hub</a>
+						<span aria-hidden="true" class="text-neutral-400">/</span>
+						<span class="text-[#4a5170] dark:text-slate-300">Performers</span>
+					</nav>
 					<div class="flex items-center gap-2.5">
 						<span class="axia-prism-bar" aria-hidden="true"></span>
 						<h2
@@ -67,7 +78,7 @@ const categories = Array.from(
 			<performer-filter class="block">
 				<div class="relative mb-3">
 					<label for="performer-search" class="sr-only">
-						Search performers by name, role, or tag
+						Search performers by name, role, city, affiliation, or tag
 					</label>
 					<Icon
 						name="material-symbols:search"
@@ -78,7 +89,7 @@ const categories = Array.from(
 						id="performer-search"
 						type="search"
 						data-search
-						placeholder="Search performers by name, role, or tag..."
+						placeholder="Search performers by name, role, category, city, or tag..."
 						class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-md border border-(--line-divider) bg-transparent text-[#2b314a] dark:text-slate-100 placeholder-[#4b526e] dark:placeholder-slate-400 focus:border-[#0c6fc4] focus:ring-1 focus:ring-[#0c6fc4] transition-colors text-sm"
 					/>
 				</div>
@@ -88,17 +99,17 @@ const categories = Array.from(
 						type="button"
 						data-category="all"
 						aria-pressed="true"
-						class="performer-cat-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer"
+						class="performer-cat-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer"
 						data-active
 					>
-						All
+						All ({performerCards.length})
 					</button>
 					{categories.map((cat) => (
 						<button
 							type="button"
 							data-category={cat.toLowerCase()}
 							aria-pressed="false"
-							class="performer-cat-pill min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer"
+							class="performer-cat-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer"
 						>
 							{cat}
 						</button>
@@ -120,7 +131,7 @@ const categories = Array.from(
 								class="performer-card-item flex"
 								data-category={entry.data.category.trim().toLowerCase()}
 								data-name={entry.data.name.toLowerCase()}
-								data-role={entry.data.role.toLowerCase()}
+								data-role={`${entry.data.role} ${entry.data.city} ${entry.data.affiliation}`.toLowerCase()}
 								data-tags={entry.data.tags.join(" ").toLowerCase()}
 							>
 								<article class="axia-sekai-card w-full h-full flex flex-col">
@@ -129,11 +140,11 @@ const categories = Array.from(
 											{entry.data.category || "Performer"}
 										</span>
 										<span class="axia-split-type" data-cat-tone="blog">
-											<span class="truncate">{entry.data.role}</span>
+											<span class="truncate">{entry.data.city || entry.data.role}</span>
 										</span>
 									</div>
 
-									<div class="p-5 flex-1 flex flex-col gap-3">
+									<div class="p-4 sm:p-5 flex-1 flex flex-col gap-3">
 										<div class="flex items-start gap-3.5 min-w-0">
 											{entry.data.avatar ? (
 												<img
@@ -168,6 +179,11 @@ const categories = Array.from(
 												<p class="text-sm font-semibold text-[#0c6fc4] dark:text-[#5ce1ff] mt-0.5">
 													{entry.data.role}
 												</p>
+												{entry.data.affiliation && (
+													<p class="text-xs text-[#4b526e] dark:text-slate-300 mt-0.5 truncate">
+														{entry.data.affiliation}
+													</p>
+												)}
 											</div>
 										</div>
 
@@ -197,7 +213,7 @@ const categories = Array.from(
 											</span>
 											<a
 												href={href}
-												class="inline-flex items-center gap-1 font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline py-1"
+												class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline py-1"
 												style="font-family: var(--font-montserrat, sans-serif)"
 											>
 												<span>Profile</span>

@@ -31,6 +31,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
+	ogImagePath?: string;
 	postCoverImage?: string;
 	ogImageWidth?: number;
 	ogImageHeight?: number;
@@ -57,6 +58,7 @@ const {
 	lang,
 	setOGTypeArticle,
 	postSlug,
+	ogImagePath,
 	postCoverImage,
 	ogImageWidth,
 	ogImageHeight,
@@ -93,7 +95,7 @@ const {
 } = sidebar;
 ---
 
-<Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper}>
+<Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} ogImagePath={ogImagePath} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper}>
 
 <slot slot="head" name="head" />
 <HeaderTopRow navbarMode={navbarMode} navbarWidthFull={navbarWidthFull} />

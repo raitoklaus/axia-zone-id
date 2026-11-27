@@ -27,8 +27,14 @@ const COLLECTIONS = [
 	{
 		key: "events",
 		dir: fileURLToPath(new URL("../content/events/", import.meta.url)),
-		urlPrefix: "/wiki/events/",
-		prefixes: ["wiki/events", "events"],
+		urlPrefix: "/events/",
+		prefixes: ["events", "wiki/events"],
+	},
+	{
+		key: "wiki",
+		dir: fileURLToPath(new URL("../content/wiki/", import.meta.url)),
+		urlPrefix: "/wiki/",
+		prefixes: ["wiki"],
 	},
 ];
 
@@ -470,6 +476,9 @@ function getEntryDescription(meta) {
 	) {
 		return meta.data.description.trim();
 	}
+	if (typeof meta.data.summary === "string" && meta.data.summary.trim()) {
+		return meta.data.summary.trim();
+	}
 	if (typeof meta.data.bio === "string" && meta.data.bio.trim()) {
 		return meta.data.bio.trim();
 	}
@@ -501,7 +510,7 @@ function createWikiLinkCard(parsed, context) {
 		typeof meta.data.password === "string" && meta.data.password.length > 0;
 	const description = getEntryDescription(meta);
 	const published = formatPublishedDate(
-		meta.data.published ?? meta.data.startDate,
+		meta.data.published ?? meta.data.startDate ?? meta.data.updated,
 	);
 	const category =
 		(typeof meta.data.category === "string" && meta.data.category.trim()) ||

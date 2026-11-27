@@ -1,0 +1,164 @@
+---
+import { render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+import { Icon } from "astro-icon/components";
+import WikiBacklinks from "@/components/wiki/WikiBacklinks.astro";
+import WikiInfobox, {
+	type InfoboxRow,
+} from "@/components/wiki/WikiInfobox.astro";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { removeFileExtension, url } from "@/utils/url-utils";
+import {
+	getAllWikiEntries,
+	getBacklinksForTarget,
+	getWikiCategorySlug,
+	getWikiCategoryTone,
+} from "@/utils/wiki-utils";
+
+export async function getStaticPaths() {
+	const entries = await getAllWikiEntries();
+	return entries.map((entry) => ({
+		params: { slug: removeFileExtension(entry.id) },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const {
+	title,
+	category,
+	summary,
+	aliases,
+	city,
+	status,
+	founded,
+	infobox,
+	links,
+	tags,
+	image,
+	updated,
+} = entry.data;
+
+const slug = removeFileExtension(entry.id);
+const categorySlug = getWikiCategorySlug(category);
+const categoryTone = getWikiCategoryTone(category);
+const backlinks = await getBacklinksForTarget("wiki", entry.id);
+
+const infoboxRows: InfoboxRow[] = [
+	{ label: "Category", value: category },
+	...(aliases.length > 0
+		? [{ label: "Aliases", value: aliases.join(", ") }]
+		: []),
+	...(city ? [{ label: "City / Area", value: city }] : []),
+	...(founded ? [{ label: "Founded / Era", value: founded }] : []),
+	...(status ? [{ label: "Status", value: status }] : []),
+	...(updated
+		? [{ label: "Updated", value: formatDateToYYYYMMDD(updated) }]
+		: []),
+	...infobox,
+];
+---
+
+<MainGridLayout
+	title={title}
+	description={summary || `${title} - ${category}`}
+	ogImagePath={`/og/wiki/${slug}.png`}
+	headings={headings}
+>
+	<div class="flex flex-col gap-4 w-full">
+		<article data-pagefind-body class="card-base overflow-hidden relative w-full">
+			<div class="axia-split-bar" data-pagefind-ignore>
+				<span class="axia-split-date">{city || "Wiki"}</span>
+				<div class="axia-split-type" data-cat-tone={categoryTone}>
+					<span class="truncate">{category}</span>
+					{status && <span class="shrink-0 opacity-95">{status}</span>}
+				</div>
+			</div>
+
+			<div class="px-6 md:px-9 py-6">
+				<nav data-pagefind-ignore aria-label="Wiki breadcrumbs" class="flex flex-wrap items-center gap-2.5 mb-5 text-sm">
+					<a
+						href={url("/wiki/")}
+						class="inline-flex items-center gap-1.5 min-h-[44px] px-2 -ml-2 text-(--primary) font-medium hover:underline"
+					>
+						<Icon name="material-symbols:arrow-back" class="text-base" aria-hidden="true" />
+						<span>Wiki Hub</span>
+					</a>
+					<span class="text-neutral-400 dark:text-neutral-500" aria-hidden="true">/</span>
+					<a
+						href={url(`/wiki/?category=${categorySlug}`)}
+						class="inline-flex items-center min-h-[44px] px-2 text-neutral-700 dark:text-neutral-300 hover:text-(--primary) hover:underline"
+					>
+						{category}
+					</a>
+					<span class="text-neutral-400 dark:text-neutral-500" aria-hidden="true">/</span>
+					<a
+						href={url("/wiki/performers/")}
+						class="inline-flex items-center min-h-[44px] px-2 text-neutral-700 dark:text-neutral-300 hover:text-(--primary) hover:underline"
+					>
+						Performers
+					</a>
+				</nav>
+
+				<header class="pb-6 border-b border-(--line-divider) flex flex-col md:flex-row md:items-start gap-6">
+					<div class="min-w-0 flex-1">
+						<h2
+							data-pagefind-weight="10"
+							data-pagefind-meta="title"
+							class="text-2xl md:text-3xl font-extrabold text-[#2b314a] dark:text-slate-100 leading-tight"
+							style="font-family: var(--font-montserrat, sans-serif)"
+						>
+							{title}
+						</h2>
+
+						{aliases.length > 0 && (
+							<p class="mt-1.5 text-sm font-medium text-(--primary)">
+								Also known as: {aliases.join(", ")}
+							</p>
+						)}
+
+						{summary && (
+							<p class="mt-3 text-sm md:text-base text-[#4a5170] dark:text-slate-300 leading-relaxed">
+								{summary}
+							</p>
+						)}
+
+						{tags.length > 0 && (
+							<ul
+								role="list"
+								aria-label="Wiki tags"
+								class="flex flex-wrap gap-1.5 mt-4 list-none p-0 m-0"
+							>
+								{tags.map((tag) => (
+									<li class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content)">
+										#{tag}
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
+
+					<WikiInfobox
+						title={title}
+						category={category}
+						tone={categoryTone}
+						subtitle={aliases[0] || ""}
+						image={image}
+						rows={infoboxRows}
+						links={links}
+					/>
+				</header>
+
+				<div class="mt-6">
+					<Markdown class="markdown-content" pagefindBody={false}>
+						<Content />
+					</Markdown>
+				</div>
+			</div>
+		</article>
+
+		<WikiBacklinks items={backlinks} />
+	</div>
+</MainGridLayout>

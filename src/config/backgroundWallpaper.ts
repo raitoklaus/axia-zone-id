@@ -150,13 +150,13 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				{
 					name: "Events",
 					icon: "material-symbols:calendar-month-rounded",
-					url: "/wiki/events/",
+					url: "/events/",
 					showName: true,
 				},
 				{
-					name: "Performers",
-					icon: "material-symbols:groups-rounded",
-					url: "/wiki/performers/",
+					name: "Wiki",
+					icon: "material-symbols:menu-book-rounded",
+					url: "/wiki/",
 					showName: true,
 				},
 				{

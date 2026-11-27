@@ -16,18 +16,50 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 	// Home
 	links.push(LinkPresets.Home);
 
-	// Events Schedule & Calendar
+	// Events Schedule & Calendar (separated from Wiki)
 	links.push({
 		name: "Events",
-		url: "/wiki/events/",
+		url: "/events/",
 		icon: "material-symbols:calendar-month-rounded",
 	});
 
-	// Performer Wiki
+	// Upgraded ACG & Performer Wiki Dropdown
 	links.push({
-		name: "Performers",
-		url: "/wiki/performers/",
-		icon: "material-symbols:groups-rounded",
+		name: "Wiki",
+		url: "/wiki/",
+		icon: "material-symbols:menu-book-rounded",
+		children: [
+			{
+				name: "Wiki Hub",
+				url: "/wiki/",
+				icon: "material-symbols:auto-stories-rounded",
+			},
+			{
+				name: "Performers",
+				url: "/wiki/performers/",
+				icon: "material-symbols:groups-rounded",
+			},
+			{
+				name: "Event Series & EO",
+				url: "/wiki/?category=event-series",
+				icon: "material-symbols:festival-rounded",
+			},
+			{
+				name: "Axia Lore",
+				url: "/wiki/?category=axia-lore",
+				icon: "material-symbols:auto-awesome-rounded",
+			},
+			{
+				name: "ACG Scene",
+				url: "/wiki/?category=acg-scene",
+				icon: "material-symbols:music-note-rounded",
+			},
+			{
+				name: "Communities",
+				url: "/wiki/?category=communities",
+				icon: "material-symbols:diversity-3-rounded",
+			},
+		],
 	});
 
 	// Articles Dropdown
@@ -43,36 +75,19 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 	});
 
-	// More Dropdown (Community, Pages & Tools)
+	// More Dropdown (Community & Pages)
 	links.push({
 		name: "More",
 		url: "#",
 		icon: "material-symbols:apps-rounded",
 		children: [
 			LinkPresets.Dynamic,
-			LinkPresets.Projects,
 			LinkPresets.Gallery,
-			LinkPresets.Booknav,
 			LinkPresets.Friends,
 			LinkPresets.Guestbook,
+			LinkPresets.Booknav,
+			LinkPresets.Projects,
 			LinkPresets.About,
-			{
-				name: "Sveltia CMS",
-				url: "/admin/",
-				icon: "material-symbols:admin-panel-settings-rounded",
-			},
-			{
-				name: "Pages CMS",
-				url: "https://app.pagescms.org",
-				external: true,
-				icon: "material-symbols:edit-document-rounded",
-			},
-			{
-				name: "GitHub",
-				url: "https://github.com/raitoklaus/axia-zone-id",
-				external: true,
-				icon: "fa7-brands:github",
-			},
 		],
 	});
 

@@ -66,7 +66,7 @@ const jabodetabekCount = eventsWithMeta.filter(
 					</h2>
 				</div>
 				<p class="text-xs sm:text-sm text-[#4a5170] dark:text-slate-300 mt-1">
-					Focused on Kota Bandung events and major Jabodetabek conventions &amp; live shows
+					Jadwal pilihan event ACG di Kota Bandung dan big event di Jabodetabek
 				</p>
 			</div>
 			<div class="relative z-10 shrink-0 hidden sm:flex items-center gap-2">
@@ -314,7 +314,7 @@ const jabodetabekCount = eventsWithMeta.filter(
 				<div class="axia-sekai-card p-6 text-center">
 					<p class="text-sm text-[#4a5170] dark:text-slate-300">
 						No upcoming events are scheduled yet. Browse past appearances in the{" "}
-						<a href={url("/wiki/events/")} class="text-[#0c6fc4] dark:text-[#7ee8ff] font-semibold hover:underline">
+						<a href={url("/events/")} class="text-[#0c6fc4] dark:text-[#7ee8ff] font-semibold hover:underline">
 							event archive
 						</a>
 						.
@@ -336,15 +336,15 @@ const jabodetabekCount = eventsWithMeta.filter(
 			</button>
 		</div>
 
-		<nav aria-label="Full schedule and performer wiki" class="mt-5 flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
+		<nav aria-label="Full schedule and wiki" class="mt-5 flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
 			<a
-				href={url("/wiki/performers/")}
+				href={url("/wiki/")}
 				class="axia-stage-btn axia-stage-btn-outline"
 			>
-				<span>Performer Wiki</span>
+				<span>Explore Wiki</span>
 			</a>
 			<a
-				href={url("/wiki/events/")}
+				href={url("/events/")}
 				class="axia-stage-btn axia-stage-btn-cyan"
 			>
 				<span>All Events &amp; Calendar</span>
@@ -403,10 +403,10 @@ const jabodetabekCount = eventsWithMeta.filter(
 					) {
 						label = "This Weekend";
 					} else {
-						label = "In " + diffStart + " days";
+						label = "H-" + diffStart;
 					}
-				} else if (diffStart <= 30) {
-					label = "In " + diffStart + " days";
+				} else if (diffStart <= 60) {
+					label = "H-" + diffStart;
 				}
 
 				if (label) {

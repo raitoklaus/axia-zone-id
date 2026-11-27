@@ -1,0 +1,88 @@
+---
+import { Icon } from "astro-icon/components";
+import type { WikiBacklinkItem } from "@/utils/wiki-utils";
+
+interface Props {
+	items: WikiBacklinkItem[];
+	heading?: string;
+}
+
+const { items = [], heading = "Referenced By" } = Astro.props;
+
+function getKindBadgeClass(kind: WikiBacklinkItem["kind"]): string {
+	switch (kind) {
+		case "Event":
+			return "bg-sky-100 text-sky-900 border-sky-300 dark:bg-sky-950/70 dark:text-sky-200 dark:border-sky-700/60";
+		case "Wiki":
+			return "bg-violet-100 text-violet-900 border-violet-300 dark:bg-violet-950/70 dark:text-violet-200 dark:border-violet-700/60";
+		case "Performer":
+			return "bg-pink-100 text-pink-900 border-pink-300 dark:bg-pink-950/70 dark:text-pink-200 dark:border-pink-700/60";
+		default:
+			return "bg-neutral-100 text-neutral-800 border-neutral-300 dark:bg-neutral-800 dark:text-neutral-200 dark:border-neutral-700";
+	}
+}
+---
+
+{
+	items.length > 0 && (
+		<section
+			data-pagefind-ignore
+			aria-labelledby="wiki-backlinks-heading"
+			class="card-base p-5 md:p-7 w-full"
+		>
+			<div class="flex items-center justify-between gap-2 mb-4">
+				<div class="flex items-center gap-2.5">
+					<span class="axia-prism-bar" aria-hidden="true"></span>
+					<h2
+						id="wiki-backlinks-heading"
+						class="text-lg md:text-xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+						style="font-family: var(--font-montserrat, sans-serif)"
+					>
+						{heading} ({items.length})
+					</h2>
+				</div>
+				<Icon
+					name="material-symbols:link-rounded"
+					class="text-xl text-(--primary)"
+					aria-hidden="true"
+				/>
+			</div>
+
+			<ul
+				role="list"
+				class="grid gap-3 list-none p-0 m-0"
+				style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));"
+			>
+				{items.map((item) => (
+					<li>
+						<a
+							href={item.href}
+							class="flex flex-col gap-1.5 p-3.5 rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] hover:border-(--primary) transition-colors min-h-[64px]"
+						>
+							<div class="flex items-center justify-between gap-2">
+								<span
+									class={`inline-flex items-center px-2 py-0.5 rounded text-[0.68rem] font-bold uppercase tracking-wider border ${getKindBadgeClass(item.kind)}`}
+								>
+									{item.kind}
+								</span>
+								<Icon
+									name="material-symbols:chevron-right-rounded"
+									class="text-base text-(--primary) shrink-0"
+									aria-hidden="true"
+								/>
+							</div>
+							<div class="font-bold text-sm text-[#2b314a] dark:text-slate-100 leading-snug">
+								{item.title}
+							</div>
+							{item.subtitle && (
+								<div class="text-xs text-[#4a5170] dark:text-slate-300 truncate">
+									{item.subtitle}
+								</div>
+							)}
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}

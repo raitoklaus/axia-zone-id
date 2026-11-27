@@ -3,6 +3,7 @@ import type { GetStaticPaths } from "astro";
 import Pagination from "@/components/common/Pagination.astro";
 import PostPage from "@/components/layout/PostPage.astro";
 import UpcomingEventSchedule from "@/components/wiki/UpcomingEventSchedule.astro";
+import WikiSpotlightSection from "@/components/wiki/WikiSpotlightSection.astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -30,6 +31,7 @@ const heading =
 
 <MainGridLayout heading={heading}>
   {page.currentPage === 1 && <UpcomingEventSchedule />}
+  {page.currentPage === 1 && <WikiSpotlightSection />}
   <PostPage page={page} />
   {
     page.total > page.size && (

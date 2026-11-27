@@ -107,9 +107,12 @@ const allTags = [...new Set(albums.flatMap((a) => a.tags || []))].sort();
         </div>
       </>
     ) : (
-      <div class="card-base flex flex-col items-center justify-center py-16 text-neutral-400 dark:text-neutral-500">
-        <Icon name="material-symbols:photo-library" class="text-6xl mb-4 opacity-50" />
-        <p class="text-lg">{i18n(I18nKey.galleryNoAlbums)}</p>
+      <div class="card-base flex flex-col items-center justify-center py-16 px-6 text-center">
+        <Icon name="material-symbols:photo-library" class="text-6xl mb-4 text-(--primary) opacity-75" />
+        <p class="text-lg font-bold text-[#2b314a] dark:text-slate-100">{i18n(I18nKey.galleryNoAlbums)}</p>
+        <p class="text-sm text-[#4a5170] dark:text-slate-300 mt-1 max-w-md">
+          Upload photos into <code>public/gallery/&lt;album-id&gt;/</code> and register the album in Site Settings via CMS to display it here.
+        </p>
       </div>
     )}
   </div>

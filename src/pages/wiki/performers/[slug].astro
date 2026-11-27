@@ -2,12 +2,17 @@
 import { render } from "astro:content";
 import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
+import WikiBacklinks from "@/components/wiki/WikiBacklinks.astro";
+import WikiInfobox, {
+	type InfoboxRow,
+} from "@/components/wiki/WikiInfobox.astro";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 import { getEventUrl, removeFileExtension, url } from "@/utils/url-utils";
 import {
 	formatEventDateRange,
 	getAdmissionMeta,
 	getAllPerformers,
+	getBacklinksForTarget,
 	getEventStatusMeta,
 	getEventsForPerformer,
 	getPerformerInitials,
@@ -23,74 +28,90 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const { name, role, category, bio, socials, tags, avatar } = entry.data;
+const {
+	name,
+	role,
+	category,
+	bio,
+	socials,
+	tags,
+	avatar,
+	aliases,
+	city,
+	activeYears,
+	affiliation,
+	status,
+	infobox,
+} = entry.data;
+const slug = removeFileExtension(entry.id);
 const initials = getPerformerInitials(name);
 
-const { upcoming, past } = await getEventsForPerformer(entry.id);
-const resolvedAvatar = avatar
-	? avatar.startsWith("/")
-		? url(avatar)
-		: avatar
-	: "";
+const [{ upcoming, past }, backlinks] = await Promise.all([
+	getEventsForPerformer(entry.id),
+	getBacklinksForTarget("performers", entry.id),
+]);
+
+const infoboxRows: InfoboxRow[] = [
+	{ label: "Category", value: category || "Performer" },
+	{ label: "Role", value: role },
+	...(aliases.length > 0
+		? [{ label: "Aliases", value: aliases.join(", ") }]
+		: []),
+	...(city ? [{ label: "Base City", value: city }] : []),
+	...(activeYears ? [{ label: "Active Years", value: activeYears }] : []),
+	...(affiliation ? [{ label: "Affiliation", value: affiliation }] : []),
+	...(status ? [{ label: "Status", value: status }] : []),
+	...infobox,
+];
 ---
 
 <MainGridLayout
 	title={name}
 	description={bio || `${name} (${role})`}
+	ogImagePath={`/og/performers/${slug}.png`}
 	headings={headings}
 >
 	<div class="flex flex-col gap-4 w-full">
-		<article class="card-base overflow-hidden relative w-full">
-			<div class="axia-split-bar">
+		<article data-pagefind-body class="card-base overflow-hidden relative w-full">
+			<div class="axia-split-bar" data-pagefind-ignore>
 				<span class="axia-split-date">{category || "Performer"}</span>
 				<span class="axia-split-type" data-cat-tone="blog">
 					<span class="truncate">{role}</span>
 				</span>
 			</div>
 			<div class="px-6 md:px-9 py-6">
-			<nav aria-label="Wiki navigation" class="flex flex-wrap items-center gap-3 mb-5 text-sm">
+			<nav data-pagefind-ignore aria-label="Wiki navigation" class="flex flex-wrap items-center gap-2.5 mb-5 text-sm">
 				<a
-					href={url("/wiki/performers/")}
+					href={url("/wiki/")}
 					class="inline-flex items-center gap-1.5 min-h-[44px] px-2 -ml-2 text-(--primary) font-medium hover:underline"
 				>
 					<Icon name="material-symbols:arrow-back" class="text-base" aria-hidden="true" />
-					<span>Performer Wiki</span>
+					<span>Wiki Hub</span>
 				</a>
 				<span class="text-neutral-400 dark:text-neutral-500" aria-hidden="true">/</span>
 				<a
-					href={url("/wiki/events/")}
+					href={url("/wiki/performers/")}
+					class="inline-flex items-center min-h-[44px] px-2 text-(--primary) font-medium hover:underline"
+				>
+					Performers
+				</a>
+				<span class="text-neutral-400 dark:text-neutral-500" aria-hidden="true">/</span>
+				<a
+					href={url("/events/")}
 					class="inline-flex items-center min-h-[44px] px-2 text-neutral-700 dark:text-neutral-300 hover:text-(--primary) hover:underline"
 				>
-					Events & Schedule
+					Event Calendar
 				</a>
 			</nav>
 
-			<header class="flex flex-col sm:flex-row sm:items-start gap-5 pb-6 border-b border-(--line-divider)">
-				{resolvedAvatar ? (
-					<img
-						src={resolvedAvatar}
-						alt={name}
-						width="96"
-						height="96"
-						loading="eager"
-						decoding="async"
-						class="w-24 h-24 rounded-2xl object-cover shrink-0 bg-(--btn-regular-bg)"
-					/>
-				) : (
-					<div
-						aria-hidden="true"
-						class="w-24 h-24 rounded-2xl bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center text-2xl font-bold shrink-0"
-					>
-						{initials}
-					</div>
-				)}
-
+			<header class="flex flex-col md:flex-row md:items-start gap-6 pb-6 border-b border-(--line-divider)">
 				<div class="min-w-0 flex-1">
 					<div class="flex flex-wrap items-center gap-2.5">
 						<h2
 							data-pagefind-weight="10"
 							data-pagefind-meta="title"
-							class="text-2xl md:text-3xl font-bold text-neutral-900 dark:text-neutral-100 leading-tight"
+							class="text-2xl md:text-3xl font-extrabold text-[#2b314a] dark:text-slate-100 leading-tight"
+							style="font-family: var(--font-montserrat, sans-serif)"
 						>
 							{name}
 						</h2>
@@ -106,7 +127,7 @@ const resolvedAvatar = avatar
 					</p>
 
 					{bio && (
-						<p class="mt-2.5 text-sm md:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
+						<p class="mt-2.5 text-sm md:text-base text-[#4a5170] dark:text-slate-300 leading-relaxed">
 							{bio}
 						</p>
 					)}
@@ -124,40 +145,22 @@ const resolvedAvatar = avatar
 							))}
 						</ul>
 					)}
-
-					{socials.length > 0 && (
-						<ul
-							role="list"
-							aria-label="Performer social links"
-							class="flex flex-wrap items-center gap-2.5 mt-4 list-none p-0 m-0"
-						>
-							{socials.map((social) => (
-								<li>
-									<a
-										href={social.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="inline-flex items-center gap-2 min-h-[44px] px-3.5 py-2 rounded-lg text-sm font-medium border border-(--line-divider) text-neutral-800 dark:text-neutral-200 hover:border-(--primary) hover:text-(--primary) transition-colors"
-									>
-										{social.icon && (
-											<Icon name={social.icon} class="text-base shrink-0" aria-hidden="true" />
-										)}
-										<span>{social.label}</span>
-										<Icon
-											name="material-symbols:open-in-new-rounded"
-											class="text-sm opacity-75"
-											aria-hidden="true"
-										/>
-									</a>
-								</li>
-							))}
-						</ul>
-					)}
 				</div>
+
+				<WikiInfobox
+					title={name}
+					category={category || "Performer"}
+					tone="blog"
+					subtitle={role}
+					image={avatar}
+					initials={initials}
+					rows={infoboxRows}
+					links={socials}
+				/>
 			</header>
 
 			<div class="mt-6">
-				<Markdown class="markdown-content">
+				<Markdown class="markdown-content" pagefindBody={false}>
 					<Content />
 				</Markdown>
 			</div>
@@ -313,5 +316,7 @@ const resolvedAvatar = avatar
 				</div>
 			</div>
 		</section>
+
+		<WikiBacklinks items={backlinks} />
 	</div>
 </MainGridLayout>

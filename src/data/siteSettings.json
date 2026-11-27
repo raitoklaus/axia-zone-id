@@ -1,9 +1,19 @@
 {
 	"site": {
 		"title": "Axia Zone ID",
-		"subtitle": "Anime Blog, Event Schedule & Performer Wiki",
-		"description": "Anime and otaku blog, upcoming event schedule, and connected local performer and event wiki.",
-		"keywords": ["Firefly", "Fuwari", "Astro", "ACGN", "Axia Zone ID"],
+		"subtitle": "Zona kecil penikmat ACG Bandung & Indonesia sekaligus situs base Axia",
+		"description": "Web yang membahas skena Jejepangan dan Anime, Comic, Game (ACG) di Bandung dan Indonesia, sekaligus situs base bagi komunitas grup maupun karakter Axia. Berisi jadwal event, wiki event dan performer, serta ulasan dan pembahasan seputar skena ACG.",
+		"keywords": [
+			"Axia Zone ID",
+			"Axia",
+			"ACG Bandung",
+			"Event Jejepangan Bandung",
+			"Event ACG Indonesia",
+			"Performer Wiki",
+			"Wibu_Baleendah",
+			"Hayu UtaOdo",
+			"Raitoklaus"
+		],
 		"themeHue": 244,
 		"defaultMode": "light",
 		"pageWidth": 100,
@@ -35,9 +45,10 @@
 		"homeTextEnable": true,
 		"title": "Axia Zone ID",
 		"subtitles": [
-			"Indonesian ACG Blog, Event Calendar & Performer Wiki",
-			"Conventions, Mall Matsuri, Anisong Lives & Anikura Nights",
-			"Track Upcoming Lineups & Connect Performers Across Events"
+			"Zona kecil penikmat ACG di Bandung & Indonesia, sekaligus situs base Axia",
+			"Jadwal event Kota Bandung & big event Jabodetabek, wiki event, serta profil performer",
+			"Ulasan, catatan, dan pembahasan skena Jejepangan dan ACG lokal",
+			"Bagian dari @wibu_baleendah & @hayu_utaodo"
 		],
 		"typewriterEnable": true,
 		"dimOpacity": 0.24,
@@ -90,16 +101,16 @@
 	},
 	"announcement": {
 		"title": "",
-		"content": "Welcome to Axia Zone ID. Explore the Indonesian ACG Event Schedule and Performer Wiki.",
+		"content": "Selamat datang di Axia Zone ID! Pantau jadwal event ACG Kota Bandung & big event Jabodetabek, wiki performer, serta pembahasan skena Jejepangan terbaru.",
 		"closable": true,
 		"linkEnable": true,
-		"linkText": "Open Event Calendar",
-		"linkUrl": "/wiki/events/",
+		"linkText": "Buka Jadwal Event",
+		"linkUrl": "/events/",
 		"linkExternal": false
 	},
 	"profile": {
-		"name": "Axia Zone ID",
-		"bio": "Indonesian ACG blog, event calendar, and performer wiki.",
+		"name": "Raitoklaus",
+		"bio": "Zona kecil penikmat ACG Bandung & Indonesia sekaligus situs base Axia. Bagian dari @wibu_baleendah & @hayu_utaodo.",
 		"avatar": "assets/images/axia-avatar.jpg",
 		"links": [
 			{
@@ -109,27 +120,72 @@
 				"showName": false
 			},
 			{
+				"name": "Wibu_Baleendah (@wibu_baleendah)",
+				"icon": "fa7-brands:instagram",
+				"url": "https://www.instagram.com/wibu_baleendah/",
+				"showName": false
+			},
+			{
+				"name": "Hayu UtaOdo (@hayu_utaodo)",
+				"icon": "fa7-brands:instagram",
+				"url": "https://www.instagram.com/hayu_utaodo/",
+				"showName": false
+			},
+			{
 				"name": "Events",
 				"icon": "material-symbols:calendar-month-rounded",
-				"url": "/wiki/events/",
-				"showName": false
-			},
-			{
-				"name": "RSS",
-				"icon": "fa7-solid:rss",
-				"url": "/rss/",
-				"showName": false
-			},
-			{
-				"name": "Atom",
-				"icon": "fa7-solid:atom",
-				"url": "/atom/",
+				"url": "/events/",
 				"showName": false
 			}
 		]
 	},
-	"friends": [],
+	"friends": [
+		{
+			"title": "Wibu_Baleendah",
+			"imgurl": "/assets/images/partners/wibu-baleendah.svg",
+			"desc": "Komunitas penikmat Jejepangan & ACG area Baleendah dan Bandung Selatan (@wibu_baleendah).",
+			"siteurl": "https://www.instagram.com/wibu_baleendah/",
+			"tags": ["Community", "Bandung", "ACG"],
+			"weight": 20,
+			"enabled": true
+		},
+		{
+			"title": "Hayu UtaOdo",
+			"imgurl": "/assets/images/partners/hayu-utaodo.svg",
+			"desc": "Komunitas utaite, odottemita, dan panggung anisong Bandung & Indonesia (@hayu_utaodo).",
+			"siteurl": "https://www.instagram.com/hayu_utaodo/",
+			"tags": ["Community", "UtaOdo", "Anisong"],
+			"weight": 10,
+			"enabled": true
+		}
+	],
 	"booknav": [
+		{
+			"id": "communities",
+			"name": "Komunitas & Afiliasi",
+			"icon": "material-symbols:groups-rounded",
+			"desc": "Komunitas Jejepangan dan ACG yang terhubung dengan Axia Zone ID.",
+			"weight": 200,
+			"enabled": true,
+			"items": [
+				{
+					"title": "Wibu_Baleendah (@wibu_baleendah)",
+					"url": "https://www.instagram.com/wibu_baleendah/",
+					"desc": "Komunitas jejepangan & penikmat ACG area Baleendah dan Bandung Raya.",
+					"icon": "fa7-brands:instagram",
+					"weight": 10,
+					"enabled": true
+				},
+				{
+					"title": "Hayu UtaOdo (@hayu_utaodo)",
+					"url": "https://www.instagram.com/hayu_utaodo/",
+					"desc": "Komunitas utaite, odottemita, dan panggung anisong Bandung & sekitarnya.",
+					"icon": "fa7-brands:instagram",
+					"weight": 9,
+					"enabled": true
+				}
+			]
+		},
 		{
 			"id": "publishing",
 			"name": "Site & Publishing Tools",
@@ -175,12 +231,21 @@
 	],
 	"gallery": {
 		"columnWidth": 240,
-		"albums": []
+		"albums": [
+			{
+				"id": "axia-showcase",
+				"name": "Axia Zone & Wallpaper Showcase",
+				"description": "Koleksi visual utama karakter Axia dan wallpaper latar situs Axia Zone ID sebelum dokumentasi foto event komunitas ditambahkan.",
+				"date": "2026-11-27",
+				"location": "Kota Bandung",
+				"tags": ["Axia", "Showcase", "Artwork"]
+			}
+		]
 	},
 	"sponsor": {
 		"title": "",
 		"description": "",
-		"usage": "Support goes toward domain, tooling, and community event coverage.",
+		"usage": "Dukungan digunakan untuk biaya domain, perawatan situs, dan dokumentasi jadwal serta liputan event komunitas ACG.",
 		"showSponsorsList": false,
 		"showComment": false,
 		"showButtonInPost": false

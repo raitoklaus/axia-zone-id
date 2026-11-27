@@ -1,4 +1,3 @@
-import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import * as fs from "node:fs";
 import type { APIContext, GetStaticPaths } from "astro";
@@ -6,26 +5,127 @@ import type { FontDetails } from "takumi-js";
 import { ImageResponse } from "takumi-js/response";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
+import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import { removeFileExtension } from "@/utils/url-utils";
+import {
+	formatEventDateRange,
+	getAdmissionMeta,
+	getAllEvents,
+	getAllPerformers,
+	getAllWikiEntries,
+} from "@/utils/wiki-utils";
 
 export const prerender = true;
+
+type OgKind = "post" | "event" | "wiki" | "performer";
+
+interface OgPayload {
+	kind: OgKind;
+	badge: string;
+	title: string;
+	description: string;
+	metaRight: string;
+	accentColor: string;
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
 	if (!siteConfig.post.generateOgImages) {
 		return [];
 	}
 
-	const allPosts = await getCollection("posts");
-	const publishedPosts = allPosts.filter((post) => !post.data.draft);
+	const [allPosts, events, wikiEntries, performers] = await Promise.all([
+		getCollection("posts"),
+		getAllEvents(),
+		getAllWikiEntries(),
+		getAllPerformers(),
+	]);
 
-	return publishedPosts.map((post) => {
-		// 将 id 转换为 slug（移除扩展名）以匹配路由参数
-		const slug = removeFileExtension(post.id);
+	const postPaths = allPosts
+		.filter((post) => !post.data.draft)
+		.map((post) => {
+			const slug = removeFileExtension(post.id);
+			const payload: OgPayload = {
+				kind: "post",
+				badge: post.data.category || "Article",
+				title: post.data.title,
+				description: post.data.description || "",
+				metaRight: post.data.published.toLocaleDateString("en-US", {
+					year: "numeric",
+					month: "short",
+					day: "numeric",
+				}),
+				accentColor: "#38bdf8",
+			};
+			return {
+				params: { slug: `${slug}.png` },
+				props: { payload },
+			};
+		});
+
+	const eventPaths = events.map((event) => {
+		const slug = removeFileExtension(event.id);
+		const dateRange = formatEventDateRange(
+			event.data.startDate,
+			event.data.endDate,
+		);
+		const admission = getAdmissionMeta(event.data.entryType, event.data.htm);
+		const payload: OgPayload = {
+			kind: "event",
+			badge: event.data.eventType || "ACG Event",
+			title: event.data.title,
+			description: `${dateRange} | ${event.data.venue}, ${event.data.city}`,
+			metaRight: admission.label,
+			accentColor: "#ff6b9d",
+		};
 		return {
-			params: { slug: `${slug}.png` },
-			props: { post },
+			params: { slug: `events/${slug}.png` },
+			props: { payload },
 		};
 	});
+
+	const wikiPaths = wikiEntries.map((entry) => {
+		const slug = removeFileExtension(entry.id);
+		const updatedLabel = entry.data.updated
+			? `Updated ${formatDateToYYYYMMDD(entry.data.updated)}`
+			: entry.data.city || "Axia ACG Wiki";
+		const payload: OgPayload = {
+			kind: "wiki",
+			badge: entry.data.category,
+			title: entry.data.title,
+			description: entry.data.summary || "",
+			metaRight: updatedLabel,
+			accentColor: "#22d3ee",
+		};
+		return {
+			params: { slug: `wiki/${slug}.png` },
+			props: { payload },
+		};
+	});
+
+	const performerPaths = performers.map((performer) => {
+		const slug = removeFileExtension(performer.id);
+		const subtitle = [
+			performer.data.role,
+			performer.data.city,
+			performer.data.affiliation,
+		]
+			.filter(Boolean)
+			.join(" | ");
+		const payload: OgPayload = {
+			kind: "performer",
+			badge: performer.data.category || "Performer",
+			title: performer.data.name,
+			description: performer.data.bio || subtitle,
+			metaRight: performer.data.city || "Performer Wiki",
+			accentColor: "#a78bfa",
+		};
+		return {
+			params: { slug: `performers/${slug}.png` },
+			props: { payload },
+		};
+	});
+
+	return [...postPaths, ...eventPaths, ...wikiPaths, ...performerPaths];
 };
 
 // OG 图用的中文字体从 @fontsource 包本地读取，构建期不再请求 Google Fonts。
@@ -215,11 +315,11 @@ const loadImageAsArrayBuffer = async (
 
 export async function GET({
 	props,
-}: APIContext<{ post: CollectionEntry<"posts"> }>): Promise<Response> {
-	const { post } = props;
+}: APIContext<{ payload: OgPayload }>): Promise<Response> {
+	const { payload } = props;
 
 	// Load and get static assets
-	let iconPath = "/favicon/favicon-dark-192.png";
+	let iconPath = "/favicon/axia-192.png";
 	if (siteConfig.favicon.length > 0) {
 		const pngFavicon = siteConfig.favicon.find((f) =>
 			f.src.toLowerCase().endsWith(".png"),
@@ -228,18 +328,13 @@ export async function GET({
 	}
 
 	const hue = siteConfig.themeColor.hue;
-	const primaryColor = `hsl(${hue}, 90%, 65%)`;
-	const textColor = "hsl(0, 0%, 95%)";
-	const subtleTextColor = `hsl(${hue}, 10%, 75%)`;
-	const backgroundColor = `hsl(${hue}, 15%, 12%)`;
+	const primaryColor = payload.accentColor || `hsl(${hue}, 90%, 65%)`;
+	const textColor = "hsl(0, 0%, 96%)";
+	const subtleTextColor = `hsl(${hue}, 18%, 78%)`;
+	const backgroundColor = "#14192c";
 
-	const pubDate = post.data.published.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	});
-
-	const description = post.data.description;
+	const description = payload.description;
+	const pubDate = payload.metaRight;
 
 	return new ImageResponse(
 		{
@@ -251,6 +346,8 @@ export async function GET({
 					display: "flex",
 					flexDirection: "column",
 					backgroundColor: backgroundColor,
+					backgroundImage:
+						"radial-gradient(circle at 92% 12%, rgba(56, 189, 248, 0.22), transparent 46%), radial-gradient(circle at 8% 90%, rgba(255, 107, 157, 0.16), transparent 42%)",
 					fontFamily:
 						'"Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
 					padding: "60px",
@@ -263,32 +360,59 @@ export async function GET({
 								width: "100%",
 								display: "flex",
 								alignItems: "center",
+								justifyContent: "space-between",
 								gap: "20px",
 							},
 							children: [
 								{
-									type: "img",
+									type: "div",
 									props: {
-										src: "og-icon",
-										width: 48,
-										height: 48,
 										style: {
-											borderRadius: "10px",
-											width: 48,
-											height: 48,
-											objectFit: "cover",
+											display: "flex",
+											alignItems: "center",
+											gap: "18px",
 										},
+										children: [
+											{
+												type: "img",
+												props: {
+													src: "og-icon",
+													width: 52,
+													height: 52,
+													style: {
+														borderRadius: "12px",
+														width: 52,
+														height: 52,
+														objectFit: "cover",
+													},
+												},
+											},
+											{
+												type: "div",
+												props: {
+													style: {
+														fontSize: "34px",
+														fontWeight: 700,
+														color: subtleTextColor,
+													},
+													children: siteConfig.title,
+												},
+											},
+										],
 									},
 								},
 								{
 									type: "div",
 									props: {
 										style: {
-											fontSize: "36px",
-											fontWeight: 600,
-											color: subtleTextColor,
+											fontSize: "24px",
+											fontWeight: 700,
+											color: "#14192c",
+											backgroundColor: primaryColor,
+											padding: "8px 20px",
+											borderRadius: "999px",
 										},
-										children: siteConfig.title,
+										children: payload.badge,
 									},
 								},
 							],
@@ -331,7 +455,7 @@ export async function GET({
 												type: "div",
 												props: {
 													style: {
-														fontSize: "72px",
+														fontSize: "68px",
 														fontWeight: 700,
 														color: textColor,
 														marginLeft: "25px",
@@ -344,7 +468,7 @@ export async function GET({
 														display: "flex",
 														flexDirection: "column",
 													},
-													children: post.data.title,
+													children: payload.title,
 												},
 											},
 										],

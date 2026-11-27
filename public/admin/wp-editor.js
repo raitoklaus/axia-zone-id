@@ -1145,8 +1145,8 @@
 			return h(
 				PreviewLayout,
 				{
-					routeLabel: slug ? `/wiki/events/${slug}/` : "/wiki/events/draft/",
-					liveUrl: slug ? `${SITE_BASE}/wiki/events/${slug}/` : "",
+					routeLabel: slug ? `/events/${slug}/` : "/events/draft/",
+					liveUrl: slug ? `${SITE_BASE}/events/${slug}/` : "",
 					iframeDoc,
 				},
 				h(

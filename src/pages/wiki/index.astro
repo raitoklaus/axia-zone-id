@@ -1,0 +1,554 @@
+---
+import { Icon } from "astro-icon/components";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import { getPerformerUrl, getWikiUrl, url } from "@/utils/url-utils";
+import {
+	getAllPerformers,
+	getAllWikiEntries,
+	getPerformerInitials,
+	getWikiCategorySlug,
+	getWikiCategoryTone,
+	WIKI_CATEGORIES,
+} from "@/utils/wiki-utils";
+
+const title = "Axia ACG Wiki";
+const description =
+	"Ensiklopedia mini skena Jejepangan & ACG Bandung/Indonesia: lore Axia, direktori performer, seri event & EO, komunitas, serta panduan skena.";
+
+const [wikiEntries, performers] = await Promise.all([
+	getAllWikiEntries(),
+	getAllPerformers(),
+]);
+
+const categoryPortals = [
+	{
+		category: "Event Series & Organizers" as const,
+		slug: getWikiCategorySlug("Event Series & Organizers"),
+		icon: "material-symbols:festival-rounded",
+		desc: "Festival, seri matsuri, venue, dan event organizer.",
+	},
+	{
+		category: "Axia Lore & Community" as const,
+		slug: getWikiCategorySlug("Axia Lore & Community"),
+		icon: "material-symbols:auto-awesome-rounded",
+		desc: "Profil karakter Axia, lore, dan basis komunitas Axia Zone.",
+	},
+	{
+		category: "ACG & Jejepangan Scene" as const,
+		slug: getWikiCategorySlug("ACG & Jejepangan Scene"),
+		icon: "material-symbols:music-note-rounded",
+		desc: "Istilah skena: Anikura, Chika Idol, UtaOdo, dan Wotagei.",
+	},
+	{
+		category: "Communities & Circles" as const,
+		slug: getWikiCategorySlug("Communities & Circles"),
+		icon: "material-symbols:diversity-3-rounded",
+		desc: "Komunitas, circle kreator, dan grup kolaborasi lokal.",
+	},
+].map((portal) => ({
+	...portal,
+	count: wikiEntries.filter((e) => e.data.category === portal.category).length,
+}));
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="page-shell flex flex-col gap-4">
+		<header class="card-base axia-panel-header p-5 md:p-6 relative overflow-hidden">
+			<span class="axia-panel-watermark" aria-hidden="true">WIKI</span>
+			<div class="relative z-10 flex flex-wrap items-start justify-between gap-3">
+				<div class="min-w-0">
+					<div class="flex items-center gap-2.5">
+						<span class="axia-prism-bar" aria-hidden="true"></span>
+						<h2
+							class="text-xl md:text-2xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+							style="font-family: var(--font-montserrat, sans-serif)"
+						>
+							{title}
+						</h2>
+					</div>
+					<p class="text-sm text-[#4a5170] dark:text-slate-300 mt-1.5 max-w-2xl">
+						{description}
+					</p>
+				</div>
+				<div class="flex flex-wrap items-center gap-2 shrink-0">
+					<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-(--btn-regular-bg) text-(--btn-content) text-xs font-bold">
+						<Icon name="material-symbols:menu-book-rounded" class="text-sm" aria-hidden="true" />
+						<span>{wikiEntries.length} Articles</span>
+					</span>
+					<a
+						href={url("/wiki/performers/")}
+						class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2f3550] text-white dark:bg-[#0c6fc4] text-xs font-bold hover:opacity-90 transition-opacity"
+					>
+						<Icon name="material-symbols:groups-rounded" class="text-sm" aria-hidden="true" />
+						<span>{performers.length} Performers</span>
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- Category Portal Cards -->
+		<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+			<a
+				href={url("/wiki/performers/")}
+				class="axia-sekai-card p-4 flex flex-col justify-between gap-2 group"
+			>
+				<div class="flex items-center justify-between gap-2">
+					<span class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--primary) inline-flex items-center justify-center">
+						<Icon name="material-symbols:groups-rounded" class="text-xl" aria-hidden="true" />
+					</span>
+					<span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content)">
+						{performers.length} Profiles
+					</span>
+				</div>
+				<div>
+					<h3
+						class="font-bold text-base text-[#2b314a] dark:text-slate-100 group-hover:text-(--primary) transition-colors"
+						style="font-family: var(--font-montserrat, sans-serif)"
+					>
+						Performers Directory
+					</h3>
+					<p class="text-xs text-[#4a5170] dark:text-slate-300 mt-0.5 leading-relaxed">
+						Anisong Vocalist, Band, Chika Idol, Fandom Idol, Anikura DJ, Collective Group &amp; Cosplay.
+					</p>
+				</div>
+			</a>
+
+			{categoryPortals.map((portal) => (
+				<button
+					type="button"
+					data-portal-category={portal.slug}
+					class="wiki-portal-btn axia-sekai-card p-4 flex flex-col justify-between gap-2 text-left group cursor-pointer"
+				>
+					<div class="flex items-center justify-between gap-2 w-full">
+						<span class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--primary) inline-flex items-center justify-center">
+							<Icon name={portal.icon} class="text-xl" aria-hidden="true" />
+						</span>
+						<span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content)">
+							{portal.count} {portal.count === 1 ? "Entry" : "Entries"}
+						</span>
+					</div>
+					<div>
+						<h3
+							class="font-bold text-base text-[#2b314a] dark:text-slate-100 group-hover:text-(--primary) transition-colors"
+							style="font-family: var(--font-montserrat, sans-serif)"
+						>
+							{portal.category}
+						</h3>
+						<p class="text-xs text-[#4a5170] dark:text-slate-300 mt-0.5 leading-relaxed">
+							{portal.desc}
+						</p>
+					</div>
+				</button>
+			))}
+
+			<a
+				href={url("/events/")}
+				class="axia-sekai-card p-4 flex flex-col justify-between gap-2 group"
+			>
+				<div class="flex items-center justify-between gap-2">
+					<span class="w-9 h-9 rounded-lg bg-(--btn-regular-bg) text-(--primary) inline-flex items-center justify-center">
+						<Icon name="material-symbols:calendar-month-rounded" class="text-xl" aria-hidden="true" />
+					</span>
+					<span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-(--btn-regular-bg) text-(--btn-content)">
+						Schedule
+					</span>
+				</div>
+				<div>
+					<h3
+						class="font-bold text-base text-[#2b314a] dark:text-slate-100 group-hover:text-(--primary) transition-colors"
+						style="font-family: var(--font-montserrat, sans-serif)"
+					>
+						Event Calendar
+					</h3>
+					<p class="text-xs text-[#4a5170] dark:text-slate-300 mt-0.5 leading-relaxed">
+						Dedicated event schedule &amp; monthly calendar across Bandung, Jabodetabek &amp; Indonesia.
+					</p>
+				</div>
+			</a>
+		</div>
+
+		<!-- Search & Category Filter Bar -->
+		<wiki-hub-filter class="card-base p-4 sm:p-5 block">
+			<div class="relative mb-3">
+				<label for="wiki-hub-search" class="sr-only">
+					Search wiki entries by title, alias, summary, city, or tag
+				</label>
+				<Icon
+					name="material-symbols:search"
+					class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4a5170] dark:text-slate-400 text-lg pointer-events-none"
+					aria-hidden="true"
+				/>
+				<input
+					id="wiki-hub-search"
+					type="search"
+					data-wiki-search
+					placeholder="Search wiki articles by title, alias, city, category, or tag..."
+					class="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-md border border-(--line-divider) bg-transparent text-[#2b314a] dark:text-slate-100 placeholder-[#4a5170] dark:placeholder-slate-400 focus:border-[#0c6fc4] focus:ring-1 focus:ring-[#0c6fc4] transition-colors text-sm"
+				/>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter wiki entries by category">
+				<button
+					type="button"
+					data-wiki-category="all"
+					data-active
+					aria-pressed="true"
+					class="wiki-cat-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+				>
+					All Articles ({wikiEntries.length})
+				</button>
+				{WIKI_CATEGORIES.map((category) => {
+					const slug = getWikiCategorySlug(category);
+					const count = wikiEntries.filter((e) => e.data.category === category).length;
+					return (
+						<button
+							type="button"
+							data-wiki-category={slug}
+							aria-pressed="false"
+							class="wiki-cat-pill min-h-[44px] sm:min-h-[36px] px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+						>
+							{category} ({count})
+						</button>
+					);
+				})}
+			</div>
+		</wiki-hub-filter>
+
+		<!-- Wiki Article Cards Grid -->
+		{
+			wikiEntries.length > 0 ? (
+				<ul
+					role="list"
+					class="grid gap-4 list-none p-0 m-0"
+					style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));"
+				>
+					{wikiEntries.map((entry) => {
+						const catSlug = getWikiCategorySlug(entry.data.category);
+						const catTone = getWikiCategoryTone(entry.data.category);
+						const href = getWikiUrl(entry.id);
+						const searchBlob = [
+							entry.data.title,
+							entry.data.summary,
+							entry.data.city,
+							entry.data.category,
+							...entry.data.aliases,
+							...entry.data.tags,
+						]
+							.join(" ")
+							.toLowerCase();
+
+						return (
+							<li
+								class="wiki-entry-card flex"
+								data-category-slug={catSlug}
+								data-search-text={searchBlob}
+							>
+								<article class="axia-sekai-card w-full h-full flex flex-col">
+									<div class="axia-split-bar">
+										<span class="axia-split-date">
+											{entry.data.city || "Wiki"}
+										</span>
+										<div class="axia-split-type" data-cat-tone={catTone}>
+											<span class="truncate">{entry.data.category}</span>
+											{entry.data.featured && (
+												<span class="shrink-0 opacity-95">Featured</span>
+											)}
+										</div>
+									</div>
+
+									<div class="p-4 flex-1 flex flex-col gap-2.5">
+										<div>
+											<h3 class="text-base sm:text-lg font-bold text-[#2b314a] dark:text-slate-100 leading-snug">
+												<a href={href} class="hover:text-[#0c6fc4] dark:hover:text-[#7ee8ff] transition-colors">
+													{entry.data.title}
+												</a>
+											</h3>
+											{entry.data.aliases.length > 0 && (
+												<p class="text-xs text-(--primary) font-medium mt-0.5 truncate">
+													Also known as: {entry.data.aliases.join(", ")}
+												</p>
+											)}
+										</div>
+
+										{entry.data.summary && (
+											<p class="text-sm text-[#4a5170] dark:text-slate-300 leading-relaxed line-clamp-3">
+												{entry.data.summary}
+											</p>
+										)}
+
+										{entry.data.tags.length > 0 && (
+											<ul role="list" aria-label={`Tags for ${entry.data.title}`} class="flex flex-wrap gap-1.5 list-none p-0 m-0">
+												{entry.data.tags.slice(0, 4).map((tag) => (
+													<li class="px-2 py-0.5 rounded text-xs font-medium bg-(--btn-regular-bg) text-(--btn-content)">
+														#{tag}
+													</li>
+												))}
+											</ul>
+										)}
+
+										<div class="mt-auto pt-3 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2 text-xs text-[#4a5170] dark:text-slate-300">
+											<span>{entry.data.status || "Active"}</span>
+											<a
+												href={href}
+												class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
+												style="font-family: var(--font-montserrat, sans-serif)"
+											>
+												<span>Read Wiki</span>
+												<Icon name="material-symbols:chevron-right-rounded" class="text-base" aria-hidden="true" />
+											</a>
+										</div>
+									</div>
+								</article>
+							</li>
+						);
+					})}
+				</ul>
+			) : (
+				<div class="card-base p-8 text-center">
+					<p class="text-sm text-[#4a5170] dark:text-slate-300">
+						No wiki articles have been added yet. Add entries under <code>src/content/wiki/</code> or via CMS.
+					</p>
+				</div>
+			)
+		}
+
+		<div class="wiki-hub-empty hidden card-base flex-col items-center justify-center py-10 px-6 text-center">
+			<Icon
+				name="material-symbols:search-off-rounded"
+				class="text-4xl mb-2 text-[#4a5170] dark:text-slate-400"
+				aria-hidden="true"
+			/>
+			<p class="text-sm font-medium text-[#2b314a] dark:text-slate-200">
+				No wiki entries match the active search or category filter.
+			</p>
+			<button
+				type="button"
+				data-reset-wiki-hub
+				class="mt-3 min-h-[44px] px-4 py-2 rounded-full text-sm font-semibold bg-[#2f3550] text-white hover:bg-[#0c6fc4] cursor-pointer transition-colors"
+			>
+				Reset filters
+			</button>
+		</div>
+
+		<!-- Featured Performers Strip -->
+		{
+			performers.length > 0 && (
+				<section aria-labelledby="wiki-performers-preview" class="card-base p-5 md:p-6">
+					<div class="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-4 border-b border-(--line-divider)">
+						<div class="flex items-center gap-2.5">
+							<span class="axia-prism-bar" aria-hidden="true"></span>
+							<h2
+								id="wiki-performers-preview"
+								class="text-lg md:text-xl font-extrabold uppercase tracking-wide text-[#2b314a] dark:text-slate-100"
+								style="font-family: var(--font-montserrat, sans-serif)"
+							>
+								Featured Performers ({performers.length})
+							</h2>
+						</div>
+						<a
+							href={url("/wiki/performers/")}
+							class="axia-pill-cta axia-pill-cta-primary"
+						>
+							<span>All Performers</span>
+							<Icon name="material-symbols:chevron-right-rounded" class="text-base" aria-hidden="true" />
+						</a>
+					</div>
+
+					<ul
+						role="list"
+						class="grid gap-3 list-none p-0 m-0"
+						style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));"
+					>
+						{performers.slice(0, 6).map((performer) => (
+							<li>
+								<a
+									href={getPerformerUrl(performer.id)}
+									class="flex items-center gap-3 p-3 rounded-xl border border-(--line-divider) bg-(--page-bg)/60 dark:bg-white/[0.03] hover:border-(--primary) transition-colors"
+								>
+									<div
+										aria-hidden="true"
+										class="w-10 h-10 rounded-lg bg-(--btn-regular-bg) text-(--btn-content) flex items-center justify-center text-sm font-extrabold shrink-0"
+										style="font-family: var(--font-montserrat, sans-serif)"
+									>
+										{getPerformerInitials(performer.data.name)}
+									</div>
+									<div class="min-w-0">
+										<div class="font-bold text-sm text-[#2b314a] dark:text-slate-100 truncate">
+											{performer.data.name}
+										</div>
+										<div class="text-xs text-[#4a5170] dark:text-slate-300 truncate">
+											{performer.data.category || performer.data.role}
+										</div>
+									</div>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
+	</section>
+
+	<script slot="head" is:inline>
+		if (!customElements.get("wiki-hub-filter")) {
+			class WikiHubFilter extends HTMLElement {
+				selectedCategory = "all";
+				boundShell = null;
+				connectedCallback() {
+					this.addEventListener("click", this.handleClick);
+					this.addEventListener("input", this.handleInput);
+					window.addEventListener("popstate", this.handlePopState);
+					if (document.readyState === "loading") {
+						document.addEventListener("DOMContentLoaded", this.initReady, {
+							once: true,
+						});
+					} else {
+						queueMicrotask(this.initReady);
+					}
+				}
+				disconnectedCallback() {
+					this.removeEventListener("click", this.handleClick);
+					this.removeEventListener("input", this.handleInput);
+					window.removeEventListener("popstate", this.handlePopState);
+					document.removeEventListener("DOMContentLoaded", this.initReady);
+					if (this.boundShell) {
+						this.boundShell.removeEventListener("click", this.handleShellClick);
+						this.boundShell = null;
+					}
+				}
+				initReady = () => {
+					if (!this.isConnected) return;
+					this.bindShell();
+					this.syncFromUrl();
+				};
+				bindShell() {
+					var shell = this.closest(".page-shell");
+					if (shell && this.boundShell !== shell) {
+						if (this.boundShell) {
+							this.boundShell.removeEventListener(
+								"click",
+								this.handleShellClick,
+							);
+						}
+						shell.addEventListener("click", this.handleShellClick);
+						this.boundShell = shell;
+					}
+				}
+				handlePopState = () => {
+					this.syncFromUrl();
+				};
+				syncFromUrl() {
+					var params = new URLSearchParams(window.location.search);
+					var cat = (params.get("category") || "all").toLowerCase();
+					var validBtn = this.querySelector(
+						'button[data-wiki-category="' + cat + '"]',
+					);
+					this.selectedCategory = validBtn ? cat : "all";
+					this.syncButtons();
+					this.applyFilters();
+				}
+				syncUrlParam() {
+					try {
+						var nextUrl = new URL(window.location.href);
+						if (!this.selectedCategory || this.selectedCategory === "all") {
+							nextUrl.searchParams.delete("category");
+						} else {
+							nextUrl.searchParams.set("category", this.selectedCategory);
+						}
+						window.history.replaceState(null, "", nextUrl.pathname + nextUrl.search);
+					} catch {
+						// Ignore history update failures in restricted environments
+					}
+				}
+				handleShellClick = (e) => {
+					var portal = e.target.closest("[data-portal-category]");
+					if (portal) {
+						this.selectedCategory =
+							portal.getAttribute("data-portal-category") || "all";
+						this.syncButtons();
+						this.applyFilters();
+						this.syncUrlParam();
+						this.scrollIntoView({ behavior: "smooth", block: "nearest" });
+						return;
+					}
+					var resetBtn = e.target.closest("[data-reset-wiki-hub]");
+					if (resetBtn) {
+						this.selectedCategory = "all";
+						var input = this.querySelector("[data-wiki-search]");
+						if (input) input.value = "";
+						this.syncButtons();
+						this.applyFilters();
+						this.syncUrlParam();
+					}
+				};
+				handleClick = (e) => {
+					var button = e.target.closest("button[data-wiki-category]");
+					if (!button) return;
+					this.selectedCategory =
+						button.getAttribute("data-wiki-category") || "all";
+					this.syncButtons();
+					this.applyFilters();
+					this.syncUrlParam();
+				};
+				handleInput = () => {
+					this.applyFilters();
+				};
+				syncButtons() {
+					var self = this;
+					this.querySelectorAll("button[data-wiki-category]").forEach(function (btn) {
+						var active = btn.getAttribute("data-wiki-category") === self.selectedCategory;
+						btn.toggleAttribute("data-active", active);
+						btn.setAttribute("aria-pressed", String(active));
+					});
+				}
+				applyFilters() {
+					var container = this.closest(".page-shell");
+					if (!container) return;
+					var input = this.querySelector("[data-wiki-search]");
+					var query = (input && input.value ? input.value : "").toLowerCase().trim();
+					var cards = container.querySelectorAll(".wiki-entry-card");
+					var visibleCount = 0;
+
+					var self = this;
+					cards.forEach(function (card) {
+						var catMatch =
+							self.selectedCategory === "all" ||
+							card.getAttribute("data-category-slug") === self.selectedCategory;
+						var text = card.getAttribute("data-search-text") || "";
+						var searchMatch = !query || text.includes(query);
+						var visible = catMatch && searchMatch;
+						card.style.display = visible ? "" : "none";
+						if (visible) visibleCount += 1;
+					});
+
+					var empty = container.querySelector(".wiki-hub-empty");
+					if (empty) {
+						empty.classList.toggle("hidden", visibleCount > 0 || cards.length === 0);
+						empty.classList.toggle("flex", visibleCount === 0 && cards.length > 0);
+					}
+				}
+			}
+			customElements.define("wiki-hub-filter", WikiHubFilter);
+		}
+	</script>
+
+	<style>
+		.wiki-cat-pill {
+			background: var(--btn-regular-bg);
+			color: var(--btn-content);
+			border: 1px solid transparent;
+		}
+		.wiki-cat-pill:hover {
+			background: var(--btn-regular-bg-hover);
+		}
+		.wiki-cat-pill[data-active] {
+			background: #2f3550;
+			color: #fff;
+		}
+		:global(:root.dark) .wiki-cat-pill[data-active] {
+			background: #0c6fc4;
+			color: #fff;
+		}
+	</style>
+</MainGridLayout>

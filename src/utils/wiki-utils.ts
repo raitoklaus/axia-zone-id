@@ -9,11 +9,18 @@ import {
 	type EventStatus,
 	type EventTimezone,
 	type EventType,
+	PERFORMER_CATEGORIES,
+	WIKI_CATEGORIES,
+	type WikiCategory,
+	type WikiInfoboxItem,
+	type WikiLinkItem,
 } from "@/content.config";
 import { formatDateToYYYYMMDD, isDateOnly } from "@/utils/date-utils";
 import {
 	getEventUrl,
 	getPerformerUrl,
+	getPostUrlBySlug,
+	getWikiUrl,
 	removeFileExtension,
 } from "@/utils/url-utils";
 
@@ -27,6 +34,11 @@ export {
 	type EventStatus,
 	type EventTimezone,
 	type EventType,
+	PERFORMER_CATEGORIES,
+	WIKI_CATEGORIES,
+	type WikiCategory,
+	type WikiInfoboxItem,
+	type WikiLinkItem,
 };
 
 export type SerializedEventLineupItem = {
@@ -592,3 +604,191 @@ export {
 	type EventCategoryTone,
 	getEventCategoryTone,
 } from "@/utils/event-tone";
+
+export const WIKI_CATEGORY_SLUGS: Record<WikiCategory, string> = {
+	"Event Series & Organizers": "event-series",
+	"Axia Lore & Community": "axia-lore",
+	"ACG & Jejepangan Scene": "acg-scene",
+	"Communities & Circles": "communities",
+};
+
+export function getWikiCategorySlug(category: WikiCategory): string {
+	return WIKI_CATEGORY_SLUGS[category] || "acg-scene";
+}
+
+export function getWikiCategoryBySlug(slug: string): WikiCategory | null {
+	const normalized = slug.trim().toLowerCase();
+	for (const category of WIKI_CATEGORIES) {
+		if (WIKI_CATEGORY_SLUGS[category] === normalized) {
+			return category;
+		}
+	}
+	return null;
+}
+
+export function getWikiCategoryTone(
+	category: WikiCategory,
+): "expo" | "blog" | "anikura" | "matsuri" {
+	switch (category) {
+		case "Event Series & Organizers":
+			return "expo";
+		case "Axia Lore & Community":
+			return "blog";
+		case "ACG & Jejepangan Scene":
+			return "anikura";
+		case "Communities & Circles":
+			return "matsuri";
+		default:
+			return "blog";
+	}
+}
+
+export async function getAllWikiEntries(): Promise<CollectionEntry<"wiki">[]> {
+	const entries = await getCollection("wiki", ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true : true;
+	});
+
+	return entries.sort((a, b) => {
+		if (Boolean(a.data.featured) !== Boolean(b.data.featured)) {
+			return a.data.featured ? -1 : 1;
+		}
+		const aTime = a.data.updated?.getTime() ?? 0;
+		const bTime = b.data.updated?.getTime() ?? 0;
+		if (aTime !== bTime) {
+			return bTime - aTime;
+		}
+		return a.data.title.localeCompare(b.data.title, undefined, {
+			sensitivity: "base",
+		});
+	});
+}
+
+export type WikiBacklinkItem = {
+	kind: "Event" | "Wiki" | "Performer" | "Post";
+	title: string;
+	href: string;
+	subtitle: string;
+};
+
+function escapeRegExp(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function bodyReferencesTarget(
+	body: string | undefined,
+	collection: "wiki" | "performers" | "events",
+	slug: string,
+	resolvedPath: string,
+): boolean {
+	if (!body) return false;
+	const escapedSlug = escapeRegExp(slug);
+	const prefixes =
+		collection === "performers"
+			? "(?:(?:wiki/)?performers/)?"
+			: collection === "events"
+				? "(?:(?:wiki/)?events/)?"
+				: "(?:wiki/)?";
+	const wikiLinkRe = new RegExp(
+		`\\[\\[${prefixes}${escapedSlug}(?:[#|][^\\]]*)?\\]\\]`,
+		"i",
+	);
+	if (wikiLinkRe.test(body)) {
+		return true;
+	}
+	return body.toLowerCase().includes(resolvedPath.toLowerCase());
+}
+
+export async function getBacklinksForTarget(
+	collection: "wiki" | "performers" | "events",
+	entryId: string,
+): Promise<WikiBacklinkItem[]> {
+	const slug = removeFileExtension(entryId);
+	const resolvedPath =
+		collection === "performers"
+			? getPerformerUrl(entryId)
+			: collection === "events"
+				? getEventUrl(entryId)
+				: getWikiUrl(entryId);
+
+	const [wikiEntries, performers, events, posts] = await Promise.all([
+		getAllWikiEntries(),
+		getAllPerformers(),
+		getAllEvents(),
+		getCollection("posts", ({ data }) =>
+			import.meta.env.PROD ? data.draft !== true : true,
+		),
+	]);
+
+	const results: WikiBacklinkItem[] = [];
+	const seenHrefs = new Set<string>();
+
+	const addResult = (item: WikiBacklinkItem): void => {
+		if (seenHrefs.has(item.href)) return;
+		seenHrefs.add(item.href);
+		results.push(item);
+	};
+
+	for (const ev of events) {
+		if (collection === "events" && removeFileExtension(ev.id) === slug) {
+			continue;
+		}
+		const inLineup =
+			collection === "performers" &&
+			ev.data.lineup.some((ref) => removeFileExtension(ref.id) === slug);
+		if (
+			inLineup ||
+			bodyReferencesTarget(ev.body, collection, slug, resolvedPath)
+		) {
+			addResult({
+				kind: "Event",
+				title: ev.data.title,
+				href: getEventUrl(ev.id),
+				subtitle: `${formatEventDateRange(ev.data.startDate, ev.data.endDate)} · ${ev.data.city}`,
+			});
+		}
+	}
+
+	for (const entry of wikiEntries) {
+		if (collection === "wiki" && removeFileExtension(entry.id) === slug) {
+			continue;
+		}
+		if (bodyReferencesTarget(entry.body, collection, slug, resolvedPath)) {
+			addResult({
+				kind: "Wiki",
+				title: entry.data.title,
+				href: getWikiUrl(entry.id),
+				subtitle: entry.data.category,
+			});
+		}
+	}
+
+	for (const performer of performers) {
+		if (
+			collection === "performers" &&
+			removeFileExtension(performer.id) === slug
+		) {
+			continue;
+		}
+		if (bodyReferencesTarget(performer.body, collection, slug, resolvedPath)) {
+			addResult({
+				kind: "Performer",
+				title: performer.data.name,
+				href: getPerformerUrl(performer.id),
+				subtitle: performer.data.category || performer.data.role,
+			});
+		}
+	}
+
+	for (const post of posts) {
+		if (bodyReferencesTarget(post.body, collection, slug, resolvedPath)) {
+			addResult({
+				kind: "Post",
+				title: post.data.title,
+				href: getPostUrlBySlug(post.id),
+				subtitle: post.data.category || "Article",
+			});
+		}
+	}
+
+	return results;
+}

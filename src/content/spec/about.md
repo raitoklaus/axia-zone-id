@@ -1,11 +1,16 @@
-# About Axia Zone ID
+# Tentang Axia Zone ID
 
-**Axia Zone ID** is an Astro 7 anime and otaku blog, Indonesian ACG event schedule, and connected performer/event wiki powered by the [Firefly](https://github.com/CuteLeaf/Firefly) theme.
+**Axia Zone ID** adalah zona kecil bagi penikmat skena Jejepangan serta Anime, Comic, dan Game (**ACG**) di **Bandung** dan **Indonesia**, sekaligus situs base resmi bagi **Axia** (baik komunitas grup Axia maupun karakter Axia sendiri). Situs ini dikelola oleh **Raitoklaus** menggunakan Astro 7 dengan tema [Firefly](https://github.com/CuteLeaf/Firefly).
 
-## Features
+## Apa yang Ada di Sini
 
-- **Editorial Blog**: Articles with Expressive Code blocks, Mermaid diagrams, KaTeX math, callouts, and Obsidian-style `[[Wiki Links]]`.
-- **Indonesian ACG Event Calendar**: Month-grouped schedules and an interactive monthly calendar grid with filters for Region (`Jabodetabek`, `Jawa Barat`, `Jawa Timur`, etc.), Event Type, and Admission (`Free Entry` / `HTM`).
-- **Connected Performer Wiki**: Performer profiles automatically list upcoming and past event appearances.
+- **Jadwal & Wiki Event**: Informasi jadwal event pilihan di **Kota Bandung** dan **big event Jabodetabek** di halaman utama, lengkap dengan kalender bulanan interaktif dan arsip event lintas wilayah Indonesia (`Jawa Barat`, `Jabodetabek`, `Jawa Timur`, dan lainnya).
+- **Wiki Performer**: Direktori performer skena Jejepangan dan ACG (vokalis anisong, DJ anikura, cosplayer, hingga kreator) yang terhubung langsung ke jadwal tampil mendatang dan riwayat acara sebelumnya.
+- **Artikel, Review & Pembahasan Skena**: Catatan acara, ulasan, opini, dan topik pembahasan seputar perkembangan skena Jejepangan & ACG lokal.
+
+## Bagian dari Komunitas
+
+- **Wibu_Baleendah**: Instagram [@wibu_baleendah](https://www.instagram.com/wibu_baleendah/)
+- **Hayu UtaOdo**: Instagram [@hayu_utaodo](https://www.instagram.com/hayu_utaodo/)
 
 ::github{repo="raitoklaus/axia-zone-id"}

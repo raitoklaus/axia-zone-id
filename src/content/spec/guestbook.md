@@ -1,7 +1,7 @@
 ---
 title: "Guestbook"
-description: "Share event tips, performer updates, or site feedback."
+description: "Titip info event Bandung & Jabodetabek, update profil performer, atau ngobrol santai seputar skena ACG."
 ---
 
-- Keep discussions respectful and welcoming for everyone in the community.
-- Feel free to share upcoming Indonesian ACG events, venue updates, or performer suggestions.
+- Jaga diskusi tetap ramah, santai, dan saling menghargai di komunitas.
+- Bebas titip info jadwal event Jejepangan/ACG (terutama area Kota Bandung & big event Jabodetabek), koreksi data venue/HTM, atau usulan profil performer untuk masuk ke wiki.

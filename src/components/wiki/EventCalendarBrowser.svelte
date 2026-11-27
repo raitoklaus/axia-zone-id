@@ -10,6 +10,7 @@ type TimeFilter = "all" | "upcoming" | "past";
 type AdmissionFilter = "all" | "free" | "paid";
 type ViewMode = "list" | "calendar";
 
+const SAVED_EVENTS_STORAGE_KEY = "axia-saved-events-v1";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 let searchQuery = "";
@@ -17,6 +18,8 @@ let timeFilter: TimeFilter = "all";
 let admissionFilter: AdmissionFilter = "all";
 let regionFilter = "all";
 let eventTypeFilter = "all";
+let savedOnly = false;
+let savedSlugs: Set<string> = new Set();
 let activeView: ViewMode = "list";
 
 let todayYmd = "";
@@ -70,9 +73,9 @@ function getCountdownLabel(
 		if ((startDow === 0 || startDow === 6) && diffStart <= daysUntilSat + 1) {
 			return "This Weekend";
 		}
-		return `In ${diffStart} days`;
+		return `H-${diffStart}`;
 	}
-	if (diffStart <= 30) return `In ${diffStart} days`;
+	if (diffStart <= 60) return `H-${diffStart}`;
 	return "";
 }
 
@@ -118,9 +121,56 @@ function initDefaultMonth(sourceEvents: SerializedWikiEvent[]): void {
 	}
 }
 
+function readSavedEventSlugs(): Set<string> {
+	try {
+		const raw = window.localStorage.getItem(SAVED_EVENTS_STORAGE_KEY);
+		if (!raw) return new Set();
+		const parsed = JSON.parse(raw);
+		if (!Array.isArray(parsed)) return new Set();
+		return new Set(parsed.filter((v): v is string => typeof v === "string"));
+	} catch {
+		return new Set();
+	}
+}
+
+function toggleSavedEvent(slug: string): void {
+	const next = new Set(savedSlugs);
+	if (next.has(slug)) {
+		next.delete(slug);
+	} else {
+		next.add(slug);
+	}
+	savedSlugs = next;
+	try {
+		window.localStorage.setItem(
+			SAVED_EVENTS_STORAGE_KEY,
+			JSON.stringify(Array.from(next)),
+		);
+		window.dispatchEvent(new CustomEvent("axia-saved-events-change"));
+	} catch {
+		// Ignore storage write errors in private mode
+	}
+}
+
 onMount(() => {
 	todayYmd = getJakartaTodayYmd();
 	initDefaultMonth(events);
+	savedSlugs = readSavedEventSlugs();
+
+	const handleSavedSync = () => {
+		savedSlugs = readSavedEventSlugs();
+	};
+	const handleStorage = (ev: StorageEvent) => {
+		if (ev.key === SAVED_EVENTS_STORAGE_KEY) {
+			handleSavedSync();
+		}
+	};
+	window.addEventListener("storage", handleStorage);
+	window.addEventListener("axia-saved-events-change", handleSavedSync);
+	return () => {
+		window.removeEventListener("storage", handleStorage);
+		window.removeEventListener("axia-saved-events-change", handleSavedSync);
+	};
 });
 
 initDefaultMonth(events);
@@ -133,14 +183,19 @@ $: availableTypes = Array.from(
 	new Set(events.map((e) => e.eventType).filter(Boolean)),
 );
 
+$: savedCount = events.filter((e) => savedSlugs.has(e.slug)).length;
+
 $: hasActiveFilters =
 	searchQuery.trim() !== "" ||
 	timeFilter !== "all" ||
 	admissionFilter !== "all" ||
 	regionFilter !== "all" ||
-	eventTypeFilter !== "all";
+	eventTypeFilter !== "all" ||
+	savedOnly;
 
 $: filteredEvents = events.filter((ev) => {
+	if (savedOnly && !savedSlugs.has(ev.slug)) return false;
+
 	const timeMatch =
 		timeFilter === "all" ||
 		(timeFilter === "upcoming" ? ev.isUpcoming : !ev.isUpcoming);
@@ -296,6 +351,7 @@ function resetFilters(): void {
 	admissionFilter = "all";
 	regionFilter = "all";
 	eventTypeFilter = "all";
+	savedOnly = false;
 }
 
 function selectView(view: ViewMode, focusTab = false): void {
@@ -347,8 +403,7 @@ function autoSelectDayInMonth(): void {
 	const prefix = `${calendarYear}-${String(calendarMonth + 1).padStart(2, "0")}`;
 	const firstInMonth = filteredEvents.find(
 		(ev) =>
-			ev.startYmd.startsWith(prefix) ||
-			(ev.endYmd && ev.endYmd.startsWith(prefix)),
+			ev.startYmd.startsWith(prefix) || Boolean(ev.endYmd?.startsWith(prefix)),
 	);
 	if (firstInMonth) {
 		selectedDayYmd = firstInMonth.startYmd.startsWith(prefix)
@@ -460,6 +515,19 @@ function selectDayCell(cell: CalendarCell): void {
 						class:active={timeFilter === "past"}
 					>
 						Past Archive ({events.filter((e) => !e.isUpcoming).length})
+					</button>
+					<button
+						type="button"
+						on:click={() => (savedOnly = !savedOnly)}
+						aria-pressed={savedOnly}
+						class="filter-pill inline-flex items-center gap-1.5 min-h-[44px] px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+						class:active={savedOnly}
+					>
+						<Icon
+							icon={savedOnly ? "material-symbols:bookmark-rounded" : "material-symbols:bookmark-outline-rounded"}
+							class="text-base shrink-0"
+						/>
+						<span>Saved ({savedCount})</span>
 					</button>
 				</div>
 
@@ -682,7 +750,7 @@ function selectDayCell(cell: CalendarCell): void {
 															</ul>
 														{/if}
 
-														<div class="mt-auto pt-3 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
+														<div class="mt-auto pt-3 border-t border-black/8 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
 															<a
 																href={ev.href}
 																class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[36px] text-xs font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
@@ -692,18 +760,35 @@ function selectDayCell(cell: CalendarCell): void {
 																<Icon icon="material-symbols:chevron-right-rounded" class="text-base" />
 															</a>
 
-															{#if ev.ticketUrl}
-																<a
-																	href={ev.ticketUrl}
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	class="axia-pill-cta axia-pill-cta-primary"
+															<div class="flex items-center gap-2">
+																<button
+																	type="button"
+																	on:click={() => toggleSavedEvent(ev.slug)}
+																	aria-pressed={savedSlugs.has(ev.slug)}
+																	aria-label={savedSlugs.has(ev.slug) ? `Remove ${ev.title} from My Schedule` : `Save ${ev.title} to My Schedule`}
+																	class="save-event-btn inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors"
+																	class:saved={savedSlugs.has(ev.slug)}
 																>
-																	<span>Tickets</span>
-																	<span class="sr-only"> for {ev.title}</span>
-																	<Icon icon="material-symbols:open-in-new-rounded" class="text-sm shrink-0" />
-																</a>
-															{/if}
+																	<Icon
+																		icon={savedSlugs.has(ev.slug) ? "material-symbols:bookmark-rounded" : "material-symbols:bookmark-outline-rounded"}
+																		class="text-sm shrink-0"
+																	/>
+																	<span>{savedSlugs.has(ev.slug) ? "Saved" : "Save"}</span>
+																</button>
+
+																{#if ev.ticketUrl}
+																	<a
+																		href={ev.ticketUrl}
+																		target="_blank"
+																		rel="noopener noreferrer"
+																		class="axia-pill-cta axia-pill-cta-primary"
+																	>
+																		<span>Tickets</span>
+																		<span class="sr-only"> for {ev.title}</span>
+																		<Icon icon="material-symbols:open-in-new-rounded" class="text-sm shrink-0" />
+																	</a>
+																{/if}
+															</div>
 														</div>
 													</div>
 												</article>
@@ -786,6 +871,31 @@ function selectDayCell(cell: CalendarCell): void {
 																{/each}
 															</ul>
 														{/if}
+
+														<div class="mt-auto pt-3 border-t border-black/8 dark:border-white/10 flex items-center justify-between gap-2">
+															<a
+																href={ev.href}
+																class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-[36px] text-xs font-bold uppercase tracking-wider text-[#0c6fc4] dark:text-[#7ee8ff] hover:underline"
+																style="font-family: var(--font-montserrat, sans-serif)"
+															>
+																<span>Event Details</span>
+																<Icon icon="material-symbols:chevron-right-rounded" class="text-base" />
+															</a>
+															<button
+																type="button"
+																on:click={() => toggleSavedEvent(ev.slug)}
+																aria-pressed={savedSlugs.has(ev.slug)}
+																aria-label={savedSlugs.has(ev.slug) ? `Remove ${ev.title} from My Schedule` : `Save ${ev.title} to My Schedule`}
+																class="save-event-btn inline-flex items-center gap-1 min-h-[44px] sm:min-h-[34px] px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors"
+																class:saved={savedSlugs.has(ev.slug)}
+															>
+																<Icon
+																	icon={savedSlugs.has(ev.slug) ? "material-symbols:bookmark-rounded" : "material-symbols:bookmark-outline-rounded"}
+																	class="text-sm shrink-0"
+																/>
+																<span>{savedSlugs.has(ev.slug) ? "Saved" : "Save"}</span>
+															</button>
+														</div>
 													</div>
 												</article>
 											</li>
@@ -954,6 +1064,20 @@ function selectDayCell(cell: CalendarCell): void {
 												{/if}
 											</div>
 											<div class="flex flex-wrap items-center gap-2 shrink-0">
+												<button
+													type="button"
+													on:click={() => toggleSavedEvent(ev.slug)}
+													aria-pressed={savedSlugs.has(ev.slug)}
+													aria-label={savedSlugs.has(ev.slug) ? `Remove ${ev.title} from My Schedule` : `Save ${ev.title} to My Schedule`}
+													class="save-event-btn inline-flex items-center gap-1 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold cursor-pointer transition-colors"
+													class:saved={savedSlugs.has(ev.slug)}
+												>
+													<Icon
+														icon={savedSlugs.has(ev.slug) ? "material-symbols:bookmark-rounded" : "material-symbols:bookmark-outline-rounded"}
+														class="text-base shrink-0"
+													/>
+													<span>{savedSlugs.has(ev.slug) ? "Saved" : "Save"}</span>
+												</button>
 												<a
 													href={ev.href}
 													class="min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium border border-(--line-divider) hover:border-(--primary) hover:text-(--primary) inline-flex items-center"
@@ -1008,6 +1132,26 @@ function selectDayCell(cell: CalendarCell): void {
 	:global(:root.dark) .filter-pill.active {
 		background: #0c6fc4;
 		color: #fff;
+	}
+
+	.save-event-btn {
+		border: 1px solid var(--line-divider);
+		background: transparent;
+		color: var(--btn-content);
+	}
+	.save-event-btn:hover {
+		border-color: #0c6fc4;
+		color: #0c6fc4;
+	}
+	.save-event-btn.saved {
+		background: #0c6fc4;
+		border-color: #0c6fc4;
+		color: #ffffff;
+	}
+	:global(:root.dark) .save-event-btn.saved {
+		background: #0c6fc4;
+		border-color: #38bdf8;
+		color: #ffffff;
 	}
 
 	.view-tab {

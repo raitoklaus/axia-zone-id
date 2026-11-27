@@ -302,13 +302,45 @@ collections:
     folder: src/content/performers
     create: true
     slug: "{{slug}}"
-    summary: "{{name}} - {{role}}"
+    summary: "{{name}} ({{category}}) - {{role}}"
     fields:
       - { label: "Performer Name", name: "name", widget: "string", required: true }
       - { label: "Primary Role", name: "role", widget: "string", required: true }
-      - { label: "Category", name: "category", widget: "string", required: false }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "select",
+          options:
+            [
+              "Anisong Vocalist",
+              "Band",
+              "Chika Idol",
+              "Fandom Idol",
+              "Anikura DJ",
+              "Collective Group",
+              "Cosplayer",
+              "Creator / Other",
+            ],
+          required: false,
+        }
+      - { label: "Aliases / Stage Names", name: "aliases", widget: "list", required: false }
+      - { label: "Base City", name: "city", widget: "string", required: false }
+      - { label: "Active Years", name: "activeYears", widget: "string", required: false }
+      - { label: "Group / Collective / Community Affiliation", name: "affiliation", widget: "string", required: false }
+      - { label: "Status", name: "status", widget: "string", default: "Active", required: false }
       - { label: "Short Bio", name: "bio", widget: "text", required: false }
       - { label: "Avatar Image", name: "avatar", widget: "image", required: false }
+      - {
+          label: "Extra Infobox Rows",
+          name: "infobox",
+          widget: "list",
+          required: false,
+          fields:
+            [
+              { label: "Label", name: "label", widget: "string", required: true },
+              { label: "Value", name: "value", widget: "string", required: true },
+            ],
+        }
       - { label: "Tags", name: "tags", widget: "list", required: false }
       - {
           label: "Social Links",
@@ -322,6 +354,104 @@ collections:
               { label: "Iconify Icon", name: "icon", widget: "string", required: false },
             ],
         }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+      - {
+          label: "Wiki Content",
+          name: "body",
+          widget: "markdown",
+          modes: ["rich_text", "raw"],
+          buttons:
+            [
+              "heading-two",
+              "heading-three",
+              "heading-four",
+              "bold",
+              "italic",
+              "strikethrough",
+              "code",
+              "link",
+              "bulleted-list",
+              "numbered-list",
+              "quote",
+            ],
+          editor_components:
+            [
+              "image",
+              "code-block",
+              "wiki-link-card",
+              "callout",
+              "spoiler",
+              "image-grid",
+              "github-card",
+              "youtube-embed",
+              "mermaid-diagram",
+            ],
+        }
+
+  - name: wiki
+    label: Wiki Hub Articles
+    label_singular: Wiki Article
+    icon: menu_book
+    folder: src/content/wiki
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} ({{category}})"
+    fields:
+      - { label: "Article Title", name: "title", widget: "string", required: true }
+      - {
+          label: "Wiki Category",
+          name: "category",
+          widget: "select",
+          options:
+            [
+              "Event Series & Organizers",
+              "Axia Lore & Community",
+              "ACG & Jejepangan Scene",
+              "Communities & Circles",
+            ],
+          default: "ACG & Jejepangan Scene",
+          required: true,
+        }
+      - { label: "Summary", name: "summary", widget: "text", required: false }
+      - { label: "Aliases / Alternate Names", name: "aliases", widget: "list", required: false }
+      - { label: "City / Scope", name: "city", widget: "string", required: false }
+      - { label: "Status", name: "status", widget: "string", default: "Active", required: false }
+      - { label: "Founded / Era", name: "founded", widget: "string", required: false }
+      - {
+          label: "Last Updated",
+          name: "updated",
+          widget: "datetime",
+          format: "YYYY-MM-DD",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: false,
+        }
+      - { label: "Feature on Wiki Hub", name: "featured", widget: "boolean", default: false, required: false }
+      - { label: "Emblem / Cover Image", name: "image", widget: "image", required: false }
+      - {
+          label: "Infobox Rows",
+          name: "infobox",
+          widget: "list",
+          required: false,
+          fields:
+            [
+              { label: "Label", name: "label", widget: "string", required: true },
+              { label: "Value", name: "value", widget: "string", required: true },
+            ],
+        }
+      - {
+          label: "External Links",
+          name: "links",
+          widget: "list",
+          required: false,
+          fields:
+            [
+              { label: "Label", name: "label", widget: "string", required: true },
+              { label: "URL", name: "url", widget: "string", required: true },
+              { label: "Iconify Icon", name: "icon", widget: "string", required: false },
+            ],
+        }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
       - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
       - {
           label: "Wiki Content",
