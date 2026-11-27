@@ -26,7 +26,8 @@
 		"showLastModified": true,
 		"shareButtons": true,
 		"relatedPosts": true,
-		"showHomeWikiSpotlight": false
+		"showHomeWikiSpotlight": false,
+		"showLoadingScreen": true
 	},
 	"pages": {
 		"friends": true,

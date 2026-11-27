@@ -1,0 +1,455 @@
+---
+// Fullscreen chibi Axia loading screen modeled after pjsekai.sega.jp.
+// Uses compositor-only CSS transforms + opacity (no runtime JS animation library).
+---
+
+<div
+	id="axia-loading-screen"
+	class="axia-loader"
+	role="status"
+	aria-live="polite"
+	data-swup-ignore
+>
+	<span class="sr-only">Loading Axia Zone ID</span>
+
+	<div class="axia-loader-icon" aria-hidden="true">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 240 268"
+			width="240"
+			height="268"
+			preserveAspectRatio="xMidYMid meet"
+			class="axia-loader-svg"
+		>
+			<defs>
+				<linearGradient id="axia-fill-grad" x1="0" y1="1" x2="0" y2="0">
+					<stop offset="0%" stop-color="#0f86eb" />
+					<stop offset="55%" stop-color="#22c1ff" />
+					<stop offset="100%" stop-color="#6ae8ff" />
+				</linearGradient>
+
+				<path
+					id="axia-bob-shape"
+					d="M120 24
+					C68 24 37 58 29 112
+					C24 146 25 173 32 187
+					L40 198 L45 186 L53 199 L60 189 L64 196
+					Q116 212 170 194
+					L176 200 L182 188 L191 199 L197 187 L203 196
+					C212 178 215 148 210 110
+					C202 58 171 24 120 24 Z"
+				/>
+
+				<path
+					id="axia-face-shape"
+					d="M60 128
+					L73 136 L86 126 L98 137 L111 125 L125 135 L133 70
+					Q155 112 169 148
+					Q174 176 170 194
+					Q116 212 64 196
+					Q54 178 60 128 Z"
+				/>
+
+				<!-- Hair interior mask: white inside bob hair, black inside face plate -->
+				<mask id="axia-hair-mask">
+					<use href="#axia-bob-shape" fill="#ffffff" />
+					<use href="#axia-face-shape" fill="#000000" />
+				</mask>
+			</defs>
+
+			<!-- Layer 1: White outer sticker halo -->
+			<use
+				href="#axia-bob-shape"
+				fill="#ffffff"
+				stroke="#ffffff"
+				stroke-width="18"
+				stroke-linejoin="round"
+				stroke-linecap="round"
+			/>
+
+			<!-- Layer 2: Soft icy-white chibi base fill -->
+			<use href="#axia-bob-shape" fill="#edf8ff" />
+
+			<!-- Layer 3: Rising Axia electric-azure liquid fill inside hair silhouette -->
+			<g mask="url(#axia-hair-mask)">
+				<rect
+					class="axia-fill-rect"
+					x="16"
+					y="18"
+					width="208"
+					height="196"
+					fill="url(#axia-fill-grad)"
+				/>
+			</g>
+
+			<!-- Layer 4: Clean face plate + soft blush cheeks -->
+			<use href="#axia-face-shape" fill="#ffffff" />
+			<ellipse cx="70" cy="174" rx="11" ry="8" fill="#ffd9e2" opacity="0.72" />
+			<ellipse cx="158" cy="174" rx="11" ry="8" fill="#ffd9e2" opacity="0.72" />
+
+			<!-- Layer 5: Chibi Axia line-art, bangs, hair clips, eyes, and smug smile -->
+			<g
+				fill="none"
+				stroke="#444466"
+				stroke-width="4.2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<!-- Outer bob contour -->
+				<path
+					d="M120 24
+					C68 24 37 58 29 112
+					C24 146 25 173 32 187
+					L40 198 L45 186 L53 199 L60 189 L64 196
+					C64 182 58 168 59 148"
+				/>
+				<path
+					d="M170 156
+					C172 174 170 186 170 194
+					L176 200 L182 188 L191 199 L197 187 L203 196
+					C212 178 215 148 210 110
+					C202 58 171 24 120 24"
+				/>
+
+				<!-- Chin contour -->
+				<path d="M64 196 Q116 212 170 194" />
+
+				<!-- Inner bob cheek strands & bangs with tall right forehead gap -->
+				<path d="M52 88 C50 110 53 125 60 132 L73 137 L82 118" />
+				<path d="M84 114 L86 128 L98 138 L108 117" />
+				<path d="M110 114 L112 127 L125 135 C127 110 130 85 133 68" />
+				<path d="M133 68 C147 94 159 124 170 162" />
+
+				<!-- Subtle top hair crown & lock lines -->
+				<path d="M104 38 C82 48 68 68 62 94" stroke-width="2.6" opacity="0.7" />
+				<path d="M136 37 C157 46 173 66 181 96" stroke-width="2.6" opacity="0.7" />
+				<path d="M194 98 C199 125 198 156 193 178" stroke-width="2.6" opacity="0.7" />
+
+				<!-- Forehead specular dashes matching Axia's bangs highlights -->
+				<line x1="76" y1="67" x2="77" y2="73" stroke="#7dcfff" stroke-width="3.4" />
+				<line x1="85" y1="68" x2="86" y2="73" stroke="#7dcfff" stroke-width="3.2" />
+				<line x1="106" y1="69" x2="112" y2="69" stroke="#7dcfff" stroke-width="3" />
+
+				<!-- Diagonal sky-blue hair clips (viewer left) -->
+				<rect
+					x="30"
+					y="96"
+					width="24"
+					height="7.5"
+					rx="3.75"
+					transform="rotate(20 42 100)"
+					fill="#42ceff"
+					stroke="#444466"
+					stroke-width="2.8"
+				/>
+				<rect
+					x="30"
+					y="110"
+					width="24"
+					height="7.5"
+					rx="3.75"
+					transform="rotate(14 42 114)"
+					fill="#42ceff"
+					stroke="#444466"
+					stroke-width="2.8"
+				/>
+
+				<!-- Confident angled brows -->
+				<path d="M62 124 Q81 129 94 134" stroke-width="2.8" />
+				<path d="M161 122 Q144 128 131 135" stroke-width="2.8" />
+
+				<!-- Open smug Y-gleam eyes (fades out during blink) -->
+				<g class="axia-eyes-open">
+					<!-- Left eye -->
+					<g>
+						<circle cx="78" cy="151" r="11" fill="#138ded" stroke="#444466" stroke-width="3.2" />
+						<path d="M69 152 A9 9 0 0 0 87 152 Z" fill="#46d8ff" stroke="none" />
+						<circle cx="78" cy="148" r="3.4" fill="#2c3554" stroke="none" />
+						<path
+							d="M73 147 L78 151 L83 147 M78 151 L78 158"
+							stroke="#ffffff"
+							stroke-width="2.4"
+						/>
+						<rect x="61" y="138" width="34" height="6.2" rx="3" fill="#444466" stroke="none" />
+					</g>
+
+					<!-- Right eye -->
+					<g>
+						<circle cx="144" cy="151" r="11" fill="#138ded" stroke="#444466" stroke-width="3.2" />
+						<path d="M135 152 A9 9 0 0 0 153 152 Z" fill="#46d8ff" stroke="none" />
+						<circle cx="144" cy="148" r="3.4" fill="#2c3554" stroke="none" />
+						<path
+							d="M139 147 L144 151 L149 147 M144 151 L144 158"
+							stroke="#ffffff"
+							stroke-width="2.4"
+						/>
+						<rect x="127" y="138" width="34" height="6.2" rx="3" fill="#444466" stroke="none" />
+					</g>
+				</g>
+
+				<!-- Closed blink frame -->
+				<g class="axia-eyes-closed">
+					<path d="M63 145 Q78 152 93 145" stroke-width="4" />
+					<path d="M129 145 Q144 152 159 145" stroke-width="4" />
+				</g>
+
+				<!-- Nose dot & smug smile -->
+				<circle cx="101" cy="168" r="1.4" fill="#444466" stroke="none" />
+				<path d="M101 180 Q114 188 126 179" stroke-width="3.6" />
+			</g>
+
+			<!-- Layer 6: Three pulsing PJSekai loading dots -->
+			<g class="axia-dot axia-dot-1" style="transform-origin: 76px 242px">
+				<circle cx="76" cy="242" r="13" fill="#ffffff" />
+				<circle cx="76" cy="242" r="8.5" fill="#444466" />
+			</g>
+			<g class="axia-dot axia-dot-2" style="transform-origin: 120px 242px">
+				<circle cx="120" cy="242" r="13" fill="#ffffff" />
+				<circle cx="120" cy="242" r="8.5" fill="#444466" />
+			</g>
+			<g class="axia-dot axia-dot-3" style="transform-origin: 164px 242px">
+				<circle cx="164" cy="242" r="13" fill="#ffffff" />
+				<circle cx="164" cy="242" r="8.5" fill="#444466" />
+			</g>
+		</svg>
+	</div>
+</div>
+
+<noscript>
+	<style>
+		#axia-loading-screen {
+			display: none !important;
+		}
+	</style>
+</noscript>
+
+<style is:global>
+	.axia-loader {
+		position: fixed;
+		inset: 0;
+		z-index: 999999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		pointer-events: none;
+		opacity: 1;
+		transition: opacity 0.45s ease;
+	}
+
+	.axia-loader::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		width: 200%;
+		height: 100%;
+		background: linear-gradient(90deg, #b3fffd 0%, #e3e6ff 50%, #fde5f5 100%);
+		will-change: transform;
+	}
+
+	:root.dark .axia-loader::before {
+		background: linear-gradient(90deg, #0f1526 0%, #1b2442 50%, #241b3d 100%);
+	}
+
+	.axia-loader.is-loaded {
+		opacity: 0;
+	}
+
+	.axia-loader.is-hidden {
+		display: none !important;
+	}
+
+	.axia-loader-icon {
+		position: relative;
+		z-index: 1;
+		width: clamp(120px, 32vw, 156px);
+	}
+
+	@media (min-width: 768px) {
+		.axia-loader-icon {
+			width: clamp(140px, 10.5vw, 180px);
+		}
+	}
+
+	.axia-loader-svg {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	/* Static reduced-motion defaults: calm mid-fill pose, open eyes, visible dots */
+	.axia-fill-rect {
+		transform: translateY(38%);
+		will-change: transform;
+	}
+
+	.axia-eyes-closed {
+		opacity: 0;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.axia-loader::before {
+			animation: axia-bg-drift 10s ease-in-out infinite;
+		}
+
+		.axia-fill-rect {
+			animation: axia-hair-rise 2.13s cubic-bezier(0.333, 0, 0.667, 1) infinite;
+		}
+
+		.axia-eyes-open {
+			animation: axia-blink-open 2.13s steps(1, end) infinite;
+		}
+
+		.axia-eyes-closed {
+			animation: axia-blink-closed 2.13s steps(1, end) infinite;
+		}
+
+		.axia-dot {
+			animation: axia-dot-pulse 1.06s cubic-bezier(0.333, 0, 0.667, 1) infinite;
+			will-change: transform;
+		}
+
+		.axia-dot-2 {
+			animation-delay: 0.18s;
+		}
+
+		.axia-dot-3 {
+			animation-delay: 0.36s;
+		}
+	}
+
+	@keyframes axia-bg-drift {
+		0%,
+		100% {
+			transform: translate3d(0%, 0, 0);
+		}
+		50% {
+			transform: translate3d(-50%, 0, 0);
+		}
+	}
+
+	@keyframes axia-hair-rise {
+		0% {
+			transform: translate3d(0, 100%, 0);
+		}
+		78% {
+			transform: translate3d(0, 0%, 0);
+		}
+		100% {
+			transform: translate3d(0, 0%, 0);
+		}
+	}
+
+	@keyframes axia-blink-open {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		58%,
+		65% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes axia-blink-closed {
+		0%,
+		100% {
+			opacity: 0;
+		}
+		58%,
+		65% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes axia-dot-pulse {
+		0%,
+		100% {
+			transform: scale(0.67);
+		}
+		42% {
+			transform: scale(1);
+		}
+		75% {
+			transform: scale(0.67);
+		}
+	}
+
+	@media (forced-colors: active) {
+		.axia-loader::before {
+			background: Canvas;
+		}
+		.axia-dot circle:last-child {
+			fill: CanvasText;
+		}
+	}
+</style>
+
+<script is:inline data-swup-ignore-script>
+	(function () {
+		var loader = document.getElementById("axia-loading-screen");
+		if (!loader) return;
+
+		try {
+			var params = new URLSearchParams(window.location.search);
+			if (params.get("preview-loader") === "1") {
+				return;
+			}
+		} catch {}
+
+		var startTime = performance.now();
+		var reducedMotion =
+			window.matchMedia &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		var minDisplayMs = reducedMotion ? 80 : 650;
+		var maxDisplayMs = 2400;
+		var dismissed = false;
+
+		function finalizeHide() {
+			loader.classList.add("is-hidden");
+			loader.setAttribute("aria-hidden", "true");
+			if (loader.parentNode) {
+				loader.parentNode.removeChild(loader);
+			}
+		}
+
+		function dismissLoader() {
+			if (dismissed) return;
+			dismissed = true;
+			loader.classList.add("is-loaded");
+
+			if (
+				reducedMotion ||
+				(typeof loader.getAnimations === "function" &&
+					loader.getAnimations().length === 0)
+			) {
+				finalizeHide();
+				return;
+			}
+
+			var done = false;
+			var completeOnce = function () {
+				if (done) return;
+				done = true;
+				finalizeHide();
+			};
+
+			loader.addEventListener("transitionend", completeOnce, { once: true });
+			window.setTimeout(completeOnce, 600);
+		}
+
+		function scheduleDismissOnReady() {
+			var elapsed = performance.now() - startTime;
+			var remaining = Math.max(0, minDisplayMs - elapsed);
+			window.setTimeout(dismissLoader, remaining);
+		}
+
+		if (document.readyState === "complete") {
+			scheduleDismissOnReady();
+		} else {
+			window.addEventListener("load", scheduleDismissOnReady, { once: true });
+		}
+
+		window.setTimeout(dismissLoader, maxDisplayMs);
+	})();
+</script>

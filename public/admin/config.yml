@@ -722,6 +722,7 @@ collections:
               - { label: "Show Share Buttons", name: "shareButtons", widget: "boolean" }
               - { label: "Show Related Posts", name: "relatedPosts", widget: "boolean" }
               - { label: "Show Homepage Wiki Spotlight", name: "showHomeWikiSpotlight", widget: "boolean", default: false, required: false }
+              - { label: "Show Loading Screen", name: "showLoadingScreen", widget: "boolean", default: true, required: false }
           - label: "Page Toggles"
             name: "pages"
             widget: "object"

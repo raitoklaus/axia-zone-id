@@ -675,6 +675,9 @@ content:
           - name: showHomeWikiSpotlight
             label: Show Homepage Wiki Spotlight
             type: boolean
+          - name: showLoadingScreen
+            label: Show Loading Screen
+            type: boolean
             default: false
       - name: pages
         label: Page Toggles

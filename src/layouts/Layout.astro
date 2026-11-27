@@ -3,6 +3,7 @@ import GoogleAnalytics from "@components/analytics/GoogleAnalytics.astro";
 import La51Analytics from "@components/analytics/La51Analytics.astro";
 import MicrosoftClarity from "@components/analytics/MicrosoftClarity.astro";
 import UmamiAnalytics from "@components/analytics/UmamiAnalytics.astro";
+import AxiaLoadingScreen from "@components/features/AxiaLoadingScreen.astro";
 import CodeGroupManager from "@components/features/CodeGroupManager.astro";
 import FancyboxManager from "@components/features/FancyboxManager.astro";
 import FloatingLyrics from "@components/features/FloatingLyrics.astro";
@@ -14,6 +15,7 @@ import SakuraEffect from "@components/features/SakuraEffect.astro";
 import WavesEffect from "@components/features/WavesEffect.astro";
 import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 import BrowserChrome from "@/components/layout/BrowserChrome.astro";
+import siteSettings from "@/data/siteSettings.json";
 
 import {
 	analyticsConfig,
@@ -540,6 +542,7 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
     ]}
   >
     <BrowserChrome />
+    {siteSettings.site.showLoadingScreen !== false && <AxiaLoadingScreen />}
     <!-- 首帧前按运行时壁纸模式翻转卡片透明类（布局已由 data-wallpaper-mode 属性规则接管） -->
     <script is:inline>
       (function () {
