@@ -287,6 +287,15 @@ export default defineConfig({
 				) {
 					return false;
 				}
+				if (
+					pathname === "/wiki/events/" ||
+					pathname.startsWith("/wiki/events/") ||
+					pathname === "/search/" ||
+					pathname === "/rss/" ||
+					pathname === "/atom/"
+				) {
+					return false;
+				}
 				if (pathname === "/sponsor/" && !siteConfig.pages.sponsor) {
 					return false;
 				}

@@ -82,6 +82,18 @@ const replaysBlockSelector = replays?.blockSelector?.trim();
 				}
 
 				document.addEventListener('astro:page-load', applyOutboundTracking)
+
+				const bindSwupHook = () => {
+					const w = window
+					if (w.__axiaUmamiSwupBound) return
+					if (w.swup?.hooks) {
+						w.swup.hooks.on('content:replace', applyOutboundTracking)
+						w.__axiaUmamiSwupBound = true
+					}
+				}
+
+				bindSwupHook()
+				document.addEventListener('swup:enable', bindSwupHook)
 			})()
 		</script>
 	)

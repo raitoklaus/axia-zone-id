@@ -652,6 +652,12 @@ content:
           - name: timezone
             label: Site Timezone (IANA)
             type: string
+          - name: uiLang
+            label: UI Language
+            type: select
+            default: en
+            options:
+              values: [en, id]
           - name: postsPerPage
             label: Posts Per Page
             type: number
@@ -1047,3 +1053,23 @@ content:
           - name: showButtonInPost
             label: Show Support Button in Posts
             type: boolean
+      - name: analytics
+        label: Analytics (Umami)
+        type: object
+        fields:
+          - name: umamiWebsiteId
+            label: Umami Website ID
+            type: string
+            description: Leave blank to disable analytics. Cookie-free privacy analytics powered by Umami.
+          - name: umamiScriptUrl
+            label: Umami Script URL
+            type: string
+            default: https://cloud.umami.is/script.js
+          - name: trackOutboundLinks
+            label: Track Outbound Links
+            type: boolean
+            default: true
+          - name: collectWebVitals
+            label: Collect Core Web Vitals
+            type: boolean
+            default: true

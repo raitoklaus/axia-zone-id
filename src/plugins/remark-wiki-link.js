@@ -41,12 +41,11 @@ const COLLECTIONS = [
 const MARKDOWN_EXTENSION = /\.(?:md|mdx|markdown)$/i;
 const WIKI_LINK = /!?\[\[([^[\]\n]+)\]\]/g;
 const STANDALONE_WIKI_LINK = /^\[\[([^[\]\n]+)\]\]$/;
-const SKIPPED_NODE_TYPES = new Set([
-	"link",
-	"linkReference",
-	"mdxJsxFlowElement",
-	"mdxJsxTextElement",
-]);
+const SKIPPED_NODE_TYPES = new Set(["link", "linkReference"]);
+
+function isJsxNode(node) {
+	return node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement";
+}
 
 const frontmatterCache = new Map();
 
@@ -607,6 +606,9 @@ function createWikiLink(value, context) {
 			const resolvedId = toEntryId(resolved.meta, resolved.collection.dir);
 			pageUrl = createEntryUrl(resolved.collection, resolvedId, context.base);
 		} else {
+			console.warn(
+				`[remark-wiki-link] Unresolved wiki link "[[${value}]]"${context.filePath ? ` in ${context.filePath}` : ""}`,
+			);
 			const fallbackCollection =
 				COLLECTIONS.find((c) => c.key === parsed.collectionKey) ??
 				COLLECTIONS[0];
@@ -685,15 +687,24 @@ function tryCreateCardFromParagraph(node, context) {
 	return createWikiLinkCard(parsed, context);
 }
 
-function transformNode(node, context) {
+function transformNode(node, context, inJsx = false) {
 	if (SKIPPED_NODE_TYPES.has(node.type) || !Array.isArray(node.children)) {
 		return;
 	}
+	if (
+		isJsxNode(node) &&
+		typeof node.name === "string" &&
+		node.name.toLowerCase() === "a"
+	) {
+		return;
+	}
+
+	const insideJsx = inJsx || isJsxNode(node);
 
 	for (let index = 0; index < node.children.length; index++) {
 		const child = node.children[index];
 
-		const card = tryCreateCardFromParagraph(child, context);
+		const card = insideJsx ? null : tryCreateCardFromParagraph(child, context);
 		if (card) {
 			node.children[index] = card;
 			continue;
@@ -708,7 +719,7 @@ function transformNode(node, context) {
 			continue;
 		}
 
-		transformNode(child, context);
+		transformNode(child, context, insideJsx);
 	}
 }
 
@@ -719,10 +730,14 @@ function transformNode(node, context) {
 export function remarkWikiLink(options = {}) {
 	const base = typeof options.base === "string" ? options.base : "/";
 	return (tree, file) => {
+		const filePath = file?.path
+			? path.relative(process.cwd(), file.path).replaceAll("\\", "/")
+			: "";
 		const context = {
 			base,
+			filePath,
 			currentDir: file?.path ? path.dirname(file.path) : null,
 		};
-		transformNode(tree, context);
+		transformNode(tree, context, false);
 	};
 }

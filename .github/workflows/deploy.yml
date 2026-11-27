@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   schedule:
     # Daily 00:00 WIB (17:00 UTC) so completed events automatically roll into Past Archive
     - cron: "0 17 * * *"
@@ -25,34 +27,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
           # 版本取自 package.json 的 packageManager 字段，避免多处维护
           run_install: false
-          
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
+      - name: Run Astro check
+        run: pnpm check
+
+      - name: Run TypeScript check
+        run: pnpm type-check
+
       - name: Build site
         run: pnpm run build
 
+      - name: Check internal links
+        run: pnpm run check:links
+
       - name: Create .nojekyll file
         run: touch dist/.nojekyll
-      
+
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: dist  # Astro默认构建输出目录
           include-hidden-files: true  # Keep .nojekyll (excluded by default since v4)
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

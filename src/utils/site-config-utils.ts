@@ -28,6 +28,7 @@ function normalizeSiteLang(
 	if (v === "ru" || v === "ru_ru" || v === "ru-ru") return "ru";
 	if (v === "ko" || v === "ko_kr" || v === "ko-kr") return "ko";
 	if (v === "es" || v === "es_es" || v === "es-es") return "es";
+	if (v === "id" || v === "id_id" || v === "id-id") return "id";
 	if (
 		v === "en" ||
 		v === "en_us" ||
@@ -65,6 +66,9 @@ export function getOgLocale(lang: string): string {
 		case "es":
 		case "es_es":
 			return "es_ES";
+		case "id":
+		case "id_id":
+			return "id_ID";
 		default:
 			return "en_US";
 	}

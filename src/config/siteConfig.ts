@@ -15,8 +15,10 @@ const resolvePostLayoutMode = (mode: string): "list" | "grid" => {
 };
 
 // 定义站点语言
-// 语言代码，例如：'zh_CN', 'zh_TW', 'en', 'ja', 'ru', 'ko', 'es'。
-const SITE_LANG = resolveSiteLang("en");
+// 语言代码，支持 'en' 与 'id'，并可通过 siteSettings.site.uiLang 或 PUBLIC_SITE_LANG 切换
+const SITE_LANG = resolveSiteLang(
+	siteSettings.site.uiLang === "id" ? "id" : "en",
+);
 
 // 页面开关配置 - 控制特定页面的访问权限，设为false会返回404并自动隐藏对应的导航栏菜单项
 const pages = resolvePageToggles({

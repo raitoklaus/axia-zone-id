@@ -20,6 +20,7 @@
 		"navbarTitle": "Axia Zone ID",
 		"siteStartDate": "2025-01-01",
 		"timezone": "Asia/Jakarta",
+		"uiLang": "en",
 		"postsPerPage": 10,
 		"defaultPostLayout": "list",
 		"categoryBar": true,
@@ -266,5 +267,11 @@
 		"showSponsorsList": false,
 		"showComment": false,
 		"showButtonInPost": false
+	},
+	"analytics": {
+		"umamiWebsiteId": "",
+		"umamiScriptUrl": "https://cloud.umami.is/script.js",
+		"trackOutboundLinks": true,
+		"collectWebVitals": true
 	}
 }

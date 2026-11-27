@@ -1,4 +1,12 @@
+import siteSettings from "../data/siteSettings.json";
 import type { AnalyticsConfig } from "../types/analyticsConfig";
+
+const umamiWebsiteId = siteSettings.analytics?.umamiWebsiteId?.trim() || "";
+const umamiScriptUrl =
+	siteSettings.analytics?.umamiScriptUrl?.trim() ||
+	"https://cloud.umami.is/script.js";
+const trackOutboundLinks = siteSettings.analytics?.trackOutboundLinks ?? true;
+const collectWebVitals = siteSettings.analytics?.collectWebVitals ?? true;
 
 export const analyticsConfig: AnalyticsConfig = {
 	// Google Analytics ID
@@ -8,15 +16,15 @@ export const analyticsConfig: AnalyticsConfig = {
 	// Umami 统计配置
 	umamiAnalytics: {
 		// Umami Website ID
-		websiteId: "",
+		websiteId: umamiWebsiteId,
 		// Umami JS地址，支持使用自建
-		scriptUrl: "https://cloud.umami.is/script.js",
+		scriptUrl: umamiScriptUrl,
 		// Umami 会话回放脚本地址，支持使用自建
 		replaysScriptUrl: "https://cloud.umami.is/recorder.js",
 		// 是否追踪出站链接
-		trackOutboundLinks: true,
+		trackOutboundLinks,
 		// 是否收集浏览器性能指标
-		collectWebVitals: false,
+		collectWebVitals,
 		// 会话回放配置
 		replays: {
 			// 是否启用会话回放

@@ -715,6 +715,14 @@ collections:
               - { label: "Navbar Title", name: "navbarTitle", widget: "string" }
               - { label: "Site Start Date (YYYY-MM-DD)", name: "siteStartDate", widget: "string" }
               - { label: "Site Timezone (IANA)", name: "timezone", widget: "string" }
+              - {
+                  label: "UI Language",
+                  name: "uiLang",
+                  widget: "select",
+                  options: ["en", "id"],
+                  default: "en",
+                  required: false,
+                }
               - { label: "Posts Per Page", name: "postsPerPage", widget: "number", value_type: "int", min: 1 }
               - { label: "Default Post List Layout", name: "defaultPostLayout", widget: "select", options: ["list", "grid"] }
               - { label: "Show Category Bar", name: "categoryBar", widget: "boolean" }
@@ -921,3 +929,37 @@ collections:
               - { label: "Show Sponsors List", name: "showSponsorsList", widget: "boolean" }
               - { label: "Show Comments", name: "showComment", widget: "boolean" }
               - { label: "Show Support Button in Posts", name: "showButtonInPost", widget: "boolean" }
+          - label: "Analytics (Umami)"
+            name: "analytics"
+            widget: "object"
+            collapsed: true
+            fields:
+              - {
+                  label: "Umami Website ID",
+                  name: "umamiWebsiteId",
+                  widget: "string",
+                  default: "",
+                  required: false,
+                  hint: "Leave blank to disable analytics. Cookie-free privacy analytics powered by Umami.",
+                }
+              - {
+                  label: "Umami Script URL",
+                  name: "umamiScriptUrl",
+                  widget: "string",
+                  default: "https://cloud.umami.is/script.js",
+                  required: false,
+                }
+              - {
+                  label: "Track Outbound Links",
+                  name: "trackOutboundLinks",
+                  widget: "boolean",
+                  default: true,
+                  required: false,
+                }
+              - {
+                  label: "Collect Core Web Vitals",
+                  name: "collectWebVitals",
+                  widget: "boolean",
+                  default: true,
+                  required: false,
+                }
