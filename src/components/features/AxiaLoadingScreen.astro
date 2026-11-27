@@ -22,32 +22,53 @@
 			class="axia-loader-svg"
 		>
 			<defs>
-				<linearGradient id="axia-fill-grad" x1="0" y1="1" x2="0" y2="0">
-					<stop offset="0%" stop-color="#0f86eb" />
-					<stop offset="55%" stop-color="#22c1ff" />
-					<stop offset="100%" stop-color="#6ae8ff" />
+				<linearGradient id="axia-hair-grad" x1="0" y1="1" x2="0" y2="0">
+					<stop offset="0%" stop-color="#593834" />
+					<stop offset="55%" stop-color="#6e4943" />
+					<stop offset="100%" stop-color="#875d55" />
 				</linearGradient>
 
 				<path
 					id="axia-bob-shape"
-					d="M120 24
-					C68 24 37 58 29 112
-					C24 146 25 173 32 187
-					L40 198 L45 186 L53 199 L60 189 L64 196
-					Q116 212 170 194
-					L176 200 L182 188 L191 199 L197 187 L203 196
-					C212 178 215 148 210 110
-					C202 58 171 24 120 24 Z"
+					d="M115 20
+					C72 20 43 44 31 86
+					C23 116 21 154 23 178
+					C25 191 31 200 39 203
+					C42 204 45 201 47 198
+					C49 203 52 206.5 55 206.5
+					C58 206.5 60 201 61 195
+					C74 201 90 203.5 106 203
+					C122 202.5 137 199 147 194
+					C147 200 147.5 206.5 149.5 206.5
+					C151.5 206.5 153 203 154 200
+					C155.5 204 157 206.5 159 206.5
+					C161.5 206.5 164 201 165.5 196
+					C167.5 200.5 170 203.5 172.5 203
+					C175 202.5 177 199.5 178 197.5
+					C181 201.5 186 203.5 191 202
+					C194 201 196 199.5 197.5 201
+					C201 203 206 201 210 194
+					C216 183 218 160 218 134
+					C218 96 208 60 185 40
+					C165 24 142 20 115 20 Z"
 				/>
 
 				<path
 					id="axia-face-shape"
-					d="M60 128
-					L73 136 L86 126 L98 137 L111 125 L125 135 L133 70
-					Q155 112 169 148
-					Q174 176 170 194
-					Q116 212 64 196
-					Q54 178 60 128 Z"
+					d="M57 118
+					C56 134 53.5 148 53.5 164
+					C53.5 178 56 188 61 195
+					C74 201 90 203.5 106 203
+					C122 202.5 137 199 147 194
+					C149 178 149.5 162 148.5 146
+					C146 126 137 102 126 79
+					C122 98 119 118 117 134
+					Q112 138 106 131
+					Q100 138 92 138
+					Q86 138 83 133
+					Q78 139 71 134
+					Q65 138 60 131
+					Z"
 				/>
 
 				<!-- Hair interior mask: white inside bob hair, black inside face plate -->
@@ -55,6 +76,10 @@
 					<use href="#axia-bob-shape" fill="#ffffff" />
 					<use href="#axia-face-shape" fill="#000000" />
 				</mask>
+
+				<clipPath id="axia-face-clip">
+					<use href="#axia-face-shape" />
+				</clipPath>
 			</defs>
 
 			<!-- Layer 1: White outer sticker halo -->
@@ -67,149 +92,177 @@
 				stroke-linecap="round"
 			/>
 
-			<!-- Layer 2: Soft icy-white chibi base fill -->
-			<use href="#axia-bob-shape" fill="#edf8ff" />
+			<!-- Layer 2: Soft warm-white chibi base fill -->
+			<use href="#axia-bob-shape" fill="#fbf5f3" />
 
-			<!-- Layer 3: Rising Axia electric-azure liquid fill inside hair silhouette -->
+			<!-- Layer 3: Rising Axia chestnut-brown hair gradient inside hair silhouette -->
 			<g mask="url(#axia-hair-mask)">
 				<rect
 					class="axia-fill-rect"
-					x="16"
+					x="18"
 					y="18"
-					width="208"
-					height="196"
-					fill="url(#axia-fill-grad)"
+					width="204"
+					height="192"
+					fill="url(#axia-hair-grad)"
 				/>
 			</g>
 
 			<!-- Layer 4: Clean face plate + soft blush cheeks -->
-			<use href="#axia-face-shape" fill="#ffffff" />
-			<ellipse cx="70" cy="174" rx="11" ry="8" fill="#ffd9e2" opacity="0.72" />
-			<ellipse cx="158" cy="174" rx="11" ry="8" fill="#ffd9e2" opacity="0.72" />
+			<use href="#axia-face-shape" fill="#fff9f8" />
+			<g clip-path="url(#axia-face-clip)">
+				<ellipse cx="63" cy="178" rx="13" ry="11" fill="#ffd8dc" opacity="0.78" />
+				<ellipse cx="137" cy="179" rx="13" ry="11" fill="#ffd8dc" opacity="0.78" />
+			</g>
 
 			<!-- Layer 5: Chibi Axia line-art, bangs, hair clips, eyes, and smug smile -->
 			<g
 				fill="none"
-				stroke="#444466"
-				stroke-width="4.2"
+				stroke="#2a1b2e"
+				stroke-width="3.6"
 				stroke-linecap="round"
 				stroke-linejoin="round"
 			>
-				<!-- Outer bob contour -->
+				<!-- Outer bob & chin contour -->
+				<use href="#axia-bob-shape" fill="none" />
+
+				<!-- Inner hair-to-face boundary, bangs, and tall right inverted-V parting -->
 				<path
-					d="M120 24
-					C68 24 37 58 29 112
-					C24 146 25 173 32 187
-					L40 198 L45 186 L53 199 L60 189 L64 196
-					C64 182 58 168 59 148"
+					d="M57 118
+					C56 134 53.5 148 53.5 164
+					C53.5 178 56 188 61 195"
 				/>
 				<path
-					d="M170 156
-					C172 174 170 186 170 194
-					L176 200 L182 188 L191 199 L197 187 L203 196
-					C212 178 215 148 210 110
-					C202 58 171 24 120 24"
+					d="M60 131
+					Q65 138 71 134
+					Q78 139 83 133
+					Q86 138 92 138
+					Q100 138 106 131
+					Q112 138 117 134
+					C119 118 122 98 126 79
+					C137 102 146 126 148.5 146
+					C149.5 162 149 178 147 194"
 				/>
 
-				<!-- Chin contour -->
-				<path d="M64 196 Q116 212 170 194" />
+				<!-- Bang lock separation strokes & slender parting lock -->
+				<path d="M71 134 C71.5 120 72 104 72 92" stroke-width="2.1" />
+				<path d="M83 133 C84 118 85 102 86 88" stroke-width="2.1" />
+				<path d="M106 131 C108 118 110 106 112 94" stroke-width="2.1" />
+				<path d="M137 110 C142 126 144 138 144 146" stroke-width="2.1" />
 
-				<!-- Inner bob cheek strands & bangs with tall right forehead gap -->
-				<path d="M52 88 C50 110 53 125 60 132 L73 137 L82 118" />
-				<path d="M84 114 L86 128 L98 138 L108 117" />
-				<path d="M110 114 L112 127 L125 135 C127 110 130 85 133 68" />
-				<path d="M133 68 C147 94 159 124 170 162" />
-
-				<!-- Subtle top hair crown & lock lines -->
-				<path d="M104 38 C82 48 68 68 62 94" stroke-width="2.6" opacity="0.7" />
-				<path d="M136 37 C157 46 173 66 181 96" stroke-width="2.6" opacity="0.7" />
-				<path d="M194 98 C199 125 198 156 193 178" stroke-width="2.6" opacity="0.7" />
+				<!-- Interior hair flow lines -->
+				<path d="M105 28 C82 34 65 49 56 72" stroke-width="2.1" />
+				<path d="M126 30 C145 40 156 56 164 78" stroke-width="2.1" />
+				<path d="M37 124 C32 152 34 178 44 196" stroke-width="2.1" />
+				<path d="M49 166 C48 182 50 194 54 203" stroke-width="2.1" />
+				<path d="M164 82 C175 118 176 160 165 196" stroke-width="2.1" />
+				<path d="M189 96 C198 134 197 168 184 198" stroke-width="2.1" />
+				<path d="M205 132 C209 158 206 180 197 199" stroke-width="2.1" />
+				<path d="M215 126 C221 146 220 168 215 182" stroke-width="1.8" />
 
 				<!-- Forehead specular dashes matching Axia's bangs highlights -->
-				<line x1="76" y1="67" x2="77" y2="73" stroke="#7dcfff" stroke-width="3.4" />
-				<line x1="85" y1="68" x2="86" y2="73" stroke="#7dcfff" stroke-width="3.2" />
-				<line x1="106" y1="69" x2="112" y2="69" stroke="#7dcfff" stroke-width="3" />
+				<rect x="73" y="73" width="3.2" height="8.5" rx="1.6" fill="#87a4c4" stroke="none" />
+				<rect x="78.8" y="74.5" width="3" height="6.2" rx="1.5" fill="#87a4c4" stroke="none" />
+				<circle cx="87.5" cy="78.3" r="1.6" fill="#87a4c4" stroke="none" />
+				<rect x="99.5" y="77.8" width="5.2" height="2.6" rx="1.3" fill="#87a4c4" stroke="none" />
+				<circle cx="108.2" cy="78.8" r="1.5" fill="#87a4c4" stroke="none" />
 
-				<!-- Diagonal sky-blue hair clips (viewer left) -->
+				<!-- Twin diagonal sky-blue hair clips (viewer left) -->
 				<rect
-					x="30"
-					y="96"
-					width="24"
-					height="7.5"
-					rx="3.75"
-					transform="rotate(20 42 100)"
-					fill="#42ceff"
-					stroke="#444466"
-					stroke-width="2.8"
+					x="37"
+					y="103.2"
+					width="22"
+					height="5.6"
+					rx="2.8"
+					transform="rotate(21 48 106)"
+					fill="#4fd2ff"
+					stroke="#2a1b2e"
+					stroke-width="2.6"
 				/>
 				<rect
-					x="30"
-					y="110"
-					width="24"
-					height="7.5"
-					rx="3.75"
-					transform="rotate(14 42 114)"
-					fill="#42ceff"
-					stroke="#444466"
-					stroke-width="2.8"
+					x="37"
+					y="115.7"
+					width="21"
+					height="5.6"
+					rx="2.8"
+					transform="rotate(17 47.5 118.5)"
+					fill="#4fd2ff"
+					stroke="#2a1b2e"
+					stroke-width="2.6"
 				/>
 
-				<!-- Confident angled brows -->
-				<path d="M62 124 Q81 129 94 134" stroke-width="2.8" />
-				<path d="M161 122 Q144 128 131 135" stroke-width="2.8" />
+				<!-- Confident angled brows & right upper-eyelid crease -->
+				<path d="M61 119 Q74 125 87 127" stroke-width="2.3" />
+				<path d="M142 114 Q129 123 113 127" stroke-width="2.3" />
+				<path d="M118 134 L132 134" stroke="#5d3b44" stroke-width="1.8" />
 
-				<!-- Open smug Y-gleam eyes (fades out during blink) -->
+				<!-- Open half-lidded jitome Y-gleam eyes (fades out during blink) -->
 				<g class="axia-eyes-open">
 					<!-- Left eye -->
 					<g>
-						<circle cx="78" cy="151" r="11" fill="#138ded" stroke="#444466" stroke-width="3.2" />
-						<path d="M69 152 A9 9 0 0 0 87 152 Z" fill="#46d8ff" stroke="none" />
-						<circle cx="78" cy="148" r="3.4" fill="#2c3554" stroke="none" />
 						<path
-							d="M73 147 L78 151 L83 147 M78 151 L78 158"
-							stroke="#ffffff"
-							stroke-width="2.4"
+							d="M62.5 144.5 L80.7 144.5 L80.7 154 C80.7 161 76.8 164.5 71.6 164.5 C66.4 164.5 62.5 161 62.5 154 Z"
+							fill="#1567d8"
+							stroke="#2a1b2e"
+							stroke-width="2.8"
 						/>
-						<rect x="61" y="138" width="34" height="6.2" rx="3" fill="#444466" stroke="none" />
+						<path
+							d="M64.2 154.5 C64.8 160.2 68 162.8 71.6 162.8 C75.2 162.8 78.4 160.2 79 154.5 C76.6 156.6 74.2 157.5 71.6 157.5 C69 157.5 66.6 156.6 64.2 154.5 Z"
+							fill="#39ceff"
+							stroke="none"
+						/>
+						<path
+							d="M66.2 148.5 L71.6 153 L77 148.5 M71.6 153 L71.6 161.2"
+							stroke="#edfaff"
+							stroke-width="2.3"
+						/>
+						<rect x="53" y="139.5" width="33" height="6" rx="2.8" fill="#2a1b2e" stroke="none" />
 					</g>
 
 					<!-- Right eye -->
 					<g>
-						<circle cx="144" cy="151" r="11" fill="#138ded" stroke="#444466" stroke-width="3.2" />
-						<path d="M135 152 A9 9 0 0 0 153 152 Z" fill="#46d8ff" stroke="none" />
-						<circle cx="144" cy="148" r="3.4" fill="#2c3554" stroke="none" />
 						<path
-							d="M139 147 L144 151 L149 147 M144 151 L144 158"
-							stroke="#ffffff"
+							d="M123 144.5 L144 144.5 L144 154.5 C144 161.8 139.5 165.3 133.5 165.3 C127.5 165.3 123 161.8 123 154.5 Z"
+							fill="#1567d8"
+							stroke="#2a1b2e"
+							stroke-width="2.8"
+						/>
+						<path
+							d="M124.8 155 C125.5 161 129.2 163.6 133.5 163.6 C137.8 163.6 141.5 161 142.2 155 C139.4 157.2 136.5 158.2 133.5 158.2 C130.5 158.2 127.6 157.2 124.8 155 Z"
+							fill="#39ceff"
+							stroke="none"
+						/>
+						<path
+							d="M127.4 148.5 L133.5 153.6 L139.6 148.5 M133.5 153.6 L133.5 162"
+							stroke="#edfaff"
 							stroke-width="2.4"
 						/>
-						<rect x="127" y="138" width="34" height="6.2" rx="3" fill="#444466" stroke="none" />
+						<rect x="114" y="139" width="36" height="6.2" rx="2.8" fill="#2a1b2e" stroke="none" />
 					</g>
 				</g>
 
 				<!-- Closed blink frame -->
 				<g class="axia-eyes-closed">
-					<path d="M63 145 Q78 152 93 145" stroke-width="4" />
-					<path d="M129 145 Q144 152 159 145" stroke-width="4" />
+					<path d="M54 147 Q71 153 86 146.5" stroke-width="3.6" />
+					<path d="M114 146.5 Q133 153 150 147" stroke-width="3.6" />
 				</g>
 
 				<!-- Nose dot & smug smile -->
-				<circle cx="101" cy="168" r="1.4" fill="#444466" stroke="none" />
-				<path d="M101 180 Q114 188 126 179" stroke-width="3.6" />
+				<circle cx="91" cy="167" r="1.35" fill="#2a1b2e" stroke="none" />
+				<path d="M91.5 181 Q104 188 116 179.5" stroke-width="3.2" />
 			</g>
 
 			<!-- Layer 6: Three pulsing PJSekai loading dots -->
 			<g class="axia-dot axia-dot-1" style="transform-origin: 76px 242px">
 				<circle cx="76" cy="242" r="13" fill="#ffffff" />
-				<circle cx="76" cy="242" r="8.5" fill="#444466" />
+				<circle cx="76" cy="242" r="8.5" fill="#2a1b2e" />
 			</g>
 			<g class="axia-dot axia-dot-2" style="transform-origin: 120px 242px">
 				<circle cx="120" cy="242" r="13" fill="#ffffff" />
-				<circle cx="120" cy="242" r="8.5" fill="#444466" />
+				<circle cx="120" cy="242" r="8.5" fill="#2a1b2e" />
 			</g>
 			<g class="axia-dot axia-dot-3" style="transform-origin: 164px 242px">
 				<circle cx="164" cy="242" r="13" fill="#ffffff" />
-				<circle cx="164" cy="242" r="8.5" fill="#444466" />
+				<circle cx="164" cy="242" r="8.5" fill="#2a1b2e" />
 			</g>
 		</svg>
 	</div>
@@ -279,7 +332,7 @@
 
 	/* Static reduced-motion defaults: calm mid-fill pose, open eyes, visible dots */
 	.axia-fill-rect {
-		transform: translateY(38%);
+		transform: translateY(25%);
 		will-change: transform;
 	}
 
