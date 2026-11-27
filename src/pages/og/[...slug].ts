@@ -3,9 +3,11 @@ import * as fs from "node:fs";
 import type { APIContext, GetStaticPaths } from "astro";
 import type { FontDetails } from "takumi-js";
 import { ImageResponse } from "takumi-js/response";
+import { galleryConfig } from "@/config/galleryConfig";
 import { profileConfig } from "@/config/profileConfig";
 import { siteConfig } from "@/config/siteConfig";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
+import { getAlbumCover, scanAlbumPhotos } from "@/utils/gallery-utils";
 import { removeFileExtension } from "@/utils/url-utils";
 import {
 	formatEventDateRange,
@@ -17,7 +19,7 @@ import {
 
 export const prerender = true;
 
-type OgKind = "post" | "event" | "wiki" | "performer";
+type OgKind = "post" | "event" | "wiki" | "performer" | "gallery" | "page";
 
 interface OgPayload {
 	kind: OgKind;
@@ -26,7 +28,30 @@ interface OgPayload {
 	description: string;
 	metaRight: string;
 	accentColor: string;
+	coverImage: string;
 }
+
+const DEFAULT_COVERS = {
+	home: "assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
+	post: "assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
+	event: "assets/images/DesktopWallpaper/axia-d12-lantern-festival.webp",
+	wiki: "assets/images/DesktopWallpaper/axia-d10-cloud-balcony.webp",
+	performer: "assets/images/DesktopWallpaper/axia-d02-stage-shards.webp",
+	gallery: "assets/images/DesktopWallpaper/axia-d05-ocean-boardwalk.webp",
+	about: "assets/images/DesktopWallpaper/axia-d08-pastel-sofa.webp",
+	guestbook: "assets/images/DesktopWallpaper/axia-d06-sakura-sky.webp",
+} as const;
+
+const resolveCoverCandidate = (
+	image: string | undefined,
+	fallback: string,
+): string => {
+	const cleaned = image?.trim() || "";
+	if (!cleaned || cleaned === "api") {
+		return fallback;
+	}
+	return cleaned;
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
 	if (!siteConfig.post.generateOgImages) {
@@ -55,9 +80,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 					day: "numeric",
 				}),
 				accentColor: "#38bdf8",
+				coverImage: resolveCoverCandidate(post.data.image, DEFAULT_COVERS.post),
 			};
 			return {
-				params: { slug: `${slug}.png` },
+				params: { slug: `${slug}.jpg` },
 				props: { payload },
 			};
 		});
@@ -76,9 +102,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 			description: `${dateRange} | ${event.data.venue}, ${event.data.city}`,
 			metaRight: admission.label,
 			accentColor: "#ff6b9d",
+			coverImage: resolveCoverCandidate(event.data.image, DEFAULT_COVERS.event),
 		};
 		return {
-			params: { slug: `events/${slug}.png` },
+			params: { slug: `events/${slug}.jpg` },
 			props: { payload },
 		};
 	});
@@ -95,9 +122,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 			description: entry.data.summary || "",
 			metaRight: updatedLabel,
 			accentColor: "#22d3ee",
+			coverImage: resolveCoverCandidate(entry.data.image, DEFAULT_COVERS.wiki),
 		};
 		return {
-			params: { slug: `wiki/${slug}.png` },
+			params: { slug: `wiki/${slug}.jpg` },
 			props: { payload },
 		};
 	});
@@ -118,14 +146,145 @@ export const getStaticPaths: GetStaticPaths = async () => {
 			description: performer.data.bio || subtitle,
 			metaRight: performer.data.city || "Performer Wiki",
 			accentColor: "#a78bfa",
+			coverImage: resolveCoverCandidate(
+				performer.data.avatar,
+				DEFAULT_COVERS.performer,
+			),
 		};
 		return {
-			params: { slug: `performers/${slug}.png` },
+			params: { slug: `performers/${slug}.jpg` },
 			props: { payload },
 		};
 	});
 
-	return [...postPaths, ...eventPaths, ...wikiPaths, ...performerPaths];
+	const galleryPaths = galleryConfig.albums.map((album) => {
+		const photos = scanAlbumPhotos(album.id);
+		const cover = getAlbumCover(album, photos);
+		const metaRight = [`${photos.length} Photos`, album.location || ""]
+			.filter(Boolean)
+			.join(" | ");
+		const payload: OgPayload = {
+			kind: "gallery",
+			badge: "Gallery Album",
+			title: album.name,
+			description:
+				album.description ||
+				`Koleksi ${photos.length} visual pilihan di Axia Zone ID.`,
+			metaRight,
+			accentColor: "#38bdf8",
+			coverImage: resolveCoverCandidate(cover, DEFAULT_COVERS.gallery),
+		};
+		return {
+			params: { slug: `gallery/${album.id}.jpg` },
+			props: { payload },
+		};
+	});
+
+	const pageEntries: Array<{ slug: string; payload: OgPayload }> = [
+		{
+			slug: "pages/home.jpg",
+			payload: {
+				kind: "page",
+				badge: "ACG Base & Schedule",
+				title: siteConfig.title,
+				description: siteConfig.subtitle || siteConfig.description || "",
+				metaRight: "Bandung & Indonesia",
+				accentColor: "#38bdf8",
+				coverImage: DEFAULT_COVERS.home,
+			},
+		},
+		{
+			slug: "pages/events.jpg",
+			payload: {
+				kind: "page",
+				badge: "Event Calendar",
+				title: "Events & Schedule",
+				description:
+					"Jadwal dan arsip event Jejepangan & ACG di Bandung, Jabodetabek, dan seluruh Indonesia.",
+				metaRight: `${events.length} Events Indexed`,
+				accentColor: "#ff6b9d",
+				coverImage: DEFAULT_COVERS.event,
+			},
+		},
+		{
+			slug: "pages/wiki.jpg",
+			payload: {
+				kind: "page",
+				badge: "Wiki Hub",
+				title: "Axia ACG Wiki",
+				description:
+					"Ensiklopedia mini skena Jejepangan & ACG Bandung/Indonesia: lore Axia, performer, seri event, dan komunitas.",
+				metaRight: `${wikiEntries.length} Articles | ${performers.length} Performers`,
+				accentColor: "#22d3ee",
+				coverImage: DEFAULT_COVERS.wiki,
+			},
+		},
+		{
+			slug: "pages/performers.jpg",
+			payload: {
+				kind: "page",
+				badge: "Performer Wiki",
+				title: "Performer Directory",
+				description:
+					"Direktori performer skena Jejepangan & ACG lokal lengkap dengan profil dan jadwal tampil.",
+				metaRight: `${performers.length} Performers`,
+				accentColor: "#a78bfa",
+				coverImage: DEFAULT_COVERS.performer,
+			},
+		},
+		{
+			slug: "pages/gallery.jpg",
+			payload: {
+				kind: "page",
+				badge: "Showcase",
+				title: "Axia Gallery",
+				description:
+					"Koleksi artwork karakter Axia, wallpaper desktop & mobile, serta dokumentasi visual.",
+				metaRight: `${galleryConfig.albums.length} Albums`,
+				accentColor: "#38bdf8",
+				coverImage: DEFAULT_COVERS.gallery,
+			},
+		},
+		{
+			slug: "pages/about.jpg",
+			payload: {
+				kind: "page",
+				badge: "About",
+				title: `About ${siteConfig.title}`,
+				description: siteConfig.subtitle || siteConfig.description || "",
+				metaRight: "Kota Bandung",
+				accentColor: "#38bdf8",
+				coverImage: DEFAULT_COVERS.about,
+			},
+		},
+		{
+			slug: "pages/guestbook.jpg",
+			payload: {
+				kind: "page",
+				badge: "Guestbook",
+				title: "Guestbook & Info Event",
+				description:
+					"Titip info event Bandung & Jabodetabek, update profil performer, atau ngobrol santai seputar skena ACG.",
+				metaRight: "Community Board",
+				accentColor: "#22d3ee",
+				coverImage: DEFAULT_COVERS.guestbook,
+			},
+		},
+	];
+
+	const pagePaths = pageEntries.map(({ slug, payload }) => ({
+		params: { slug },
+		props: { payload },
+	}));
+
+	return [
+		...postPaths,
+		...eventPaths,
+		...wikiPaths,
+		...performerPaths,
+		...galleryPaths,
+		...pagePaths,
+	];
 };
 
 // OG 图用的中文字体从 @fontsource 包本地读取，构建期不再请求 Google Fonts。
@@ -273,10 +432,14 @@ const loadImageAsArrayBuffer = async (
 			if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
 			buffer = Buffer.from(await res.arrayBuffer());
 		} else {
-			const normalized = imagePath.replace(/^\.\//, "");
+			const normalized = imagePath.replace(/^\/+/, "").replace(/^\.\//, "");
 
 			// Try resolving the file in order: src/ -> public/ -> path as-is
-			const candidatePaths = [`./src/${normalized}`, `./public/${normalized}`];
+			const candidatePaths = [
+				`./src/${normalized}`,
+				`./public/${normalized}`,
+				normalized,
+			];
 
 			const foundPath = candidatePaths.find((p) => fs.existsSync(p));
 
@@ -343,205 +506,118 @@ export async function GET({
 				style: {
 					height: "100%",
 					width: "100%",
+					position: "relative",
 					display: "flex",
 					flexDirection: "column",
 					backgroundColor: backgroundColor,
-					backgroundImage:
-						"radial-gradient(circle at 92% 12%, rgba(56, 189, 248, 0.22), transparent 46%), radial-gradient(circle at 8% 90%, rgba(255, 107, 157, 0.16), transparent 42%)",
+					overflow: "hidden",
 					fontFamily:
 						'"Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-					padding: "60px",
 				},
 				children: [
 					{
-						type: "div",
+						type: "img",
 						props: {
+							src: "og-cover",
+							width: 1200,
+							height: 630,
 							style: {
-								width: "100%",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "space-between",
-								gap: "20px",
+								position: "absolute",
+								top: 0,
+								left: 0,
+								width: 1200,
+								height: 630,
+								objectFit: "cover",
+								objectPosition: "50% 25%",
 							},
-							children: [
-								{
-									type: "div",
-									props: {
-										style: {
-											display: "flex",
-											alignItems: "center",
-											gap: "18px",
-										},
-										children: [
-											{
-												type: "img",
-												props: {
-													src: "og-icon",
-													width: 52,
-													height: 52,
-													style: {
-														borderRadius: "12px",
-														width: 52,
-														height: 52,
-														objectFit: "cover",
-													},
-												},
-											},
-											{
-												type: "div",
-												props: {
-													style: {
-														fontSize: "34px",
-														fontWeight: 700,
-														color: subtleTextColor,
-													},
-													children: siteConfig.title,
-												},
-											},
-										],
-									},
-								},
-								{
-									type: "div",
-									props: {
-										style: {
-											fontSize: "24px",
-											fontWeight: 700,
-											color: "#14192c",
-											backgroundColor: primaryColor,
-											padding: "8px 20px",
-											borderRadius: "999px",
-										},
-										children: payload.badge,
-									},
-								},
-							],
 						},
 					},
-
 					{
 						type: "div",
 						props: {
 							style: {
+								position: "absolute",
+								top: 0,
+								left: 0,
+								width: 1200,
+								height: 630,
+								backgroundImage:
+									"linear-gradient(96deg, rgba(13, 18, 34, 0.94) 0%, rgba(15, 22, 42, 0.84) 48%, rgba(15, 22, 42, 0.32) 100%)",
+							},
+						},
+					},
+					{
+						type: "div",
+						props: {
+							style: {
+								position: "relative",
+								height: "100%",
+								width: "100%",
 								display: "flex",
 								flexDirection: "column",
-								justifyContent: "center",
-								flexGrow: 1,
-								gap: "20px",
+								padding: "54px 60px",
 							},
 							children: [
 								{
 									type: "div",
 									props: {
 										style: {
-											display: "flex",
-											alignItems: "flex-start",
-										},
-										children: [
-											{
-												type: "div",
-												props: {
-													style: {
-														width: "10px",
-														height: "68px",
-														backgroundColor: primaryColor,
-														borderRadius: "6px",
-														marginTop: "14px",
-														flexShrink: 0,
-													},
-												},
-											},
-											{
-												type: "div",
-												props: {
-													style: {
-														fontSize: "68px",
-														fontWeight: 700,
-														color: textColor,
-														marginLeft: "25px",
-														overflow: "hidden",
-														textOverflow: "ellipsis",
-														lineClamp: 3,
-														WebkitLineClamp: 3,
-														WebkitBoxOrient: "vertical",
-														"text-fit": "grow per-line-all",
-														display: "flex",
-														flexDirection: "column",
-													},
-													children: payload.title,
-												},
-											},
-										],
-									},
-								},
-								...(description
-									? [
-											{
-												type: "div",
-												props: {
-													style: {
-														fontSize: "32px",
-														color: subtleTextColor,
-														paddingLeft: "35px",
-														overflow: "hidden",
-														textOverflow: "ellipsis",
-														lineClamp: 2,
-														WebkitLineClamp: 2,
-														WebkitBoxOrient: "vertical",
-														"text-fit": "grow per-line-all",
-														display: "flex",
-														flexDirection: "column",
-													},
-													children: description,
-												},
-											},
-										]
-									: []),
-							],
-						},
-					},
-					{
-						type: "div",
-						props: {
-							style: {
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								width: "100%",
-							},
-							children: [
-								{
-									type: "div",
-									props: {
-										style: {
+											width: "100%",
 											display: "flex",
 											alignItems: "center",
+											justifyContent: "space-between",
 											gap: "20px",
 										},
 										children: [
 											{
-												type: "img",
+												type: "div",
 												props: {
-													src: "og-avatar",
-													width: 60,
-													height: 60,
 													style: {
-														borderRadius: "50%",
-														width: 60,
-														height: 60,
-														objectFit: "cover",
+														display: "flex",
+														alignItems: "center",
+														gap: "16px",
 													},
+													children: [
+														{
+															type: "img",
+															props: {
+																src: "og-icon",
+																width: 50,
+																height: 50,
+																style: {
+																	borderRadius: "12px",
+																	width: 50,
+																	height: 50,
+																	objectFit: "cover",
+																},
+															},
+														},
+														{
+															type: "div",
+															props: {
+																style: {
+																	fontSize: "32px",
+																	fontWeight: 700,
+																	color: textColor,
+																},
+																children: siteConfig.title,
+															},
+														},
+													],
 												},
 											},
 											{
 												type: "div",
 												props: {
 													style: {
-														fontSize: "28px",
-														fontWeight: 600,
-														color: textColor,
+														fontSize: "22px",
+														fontWeight: 700,
+														color: "#0f162a",
+														backgroundColor: primaryColor,
+														padding: "8px 20px",
+														borderRadius: "999px",
 													},
-													children: profileConfig.name,
+													children: payload.badge,
 												},
 											},
 										],
@@ -550,8 +626,148 @@ export async function GET({
 								{
 									type: "div",
 									props: {
-										style: { fontSize: "28px", color: subtleTextColor },
-										children: pubDate,
+										style: {
+											display: "flex",
+											flexDirection: "column",
+											justifyContent: "center",
+											flexGrow: 1,
+											gap: "18px",
+											maxWidth: "780px",
+										},
+										children: [
+											{
+												type: "div",
+												props: {
+													style: {
+														display: "flex",
+														alignItems: "flex-start",
+													},
+													children: [
+														{
+															type: "div",
+															props: {
+																style: {
+																	width: "10px",
+																	height: "64px",
+																	backgroundColor: primaryColor,
+																	borderRadius: "6px",
+																	marginTop: "12px",
+																	flexShrink: 0,
+																},
+															},
+														},
+														{
+															type: "div",
+															props: {
+																style: {
+																	fontSize: "62px",
+																	fontWeight: 700,
+																	color: textColor,
+																	marginLeft: "22px",
+																	overflow: "hidden",
+																	textOverflow: "ellipsis",
+																	lineClamp: 3,
+																	WebkitLineClamp: 3,
+																	WebkitBoxOrient: "vertical",
+																	"text-fit": "grow per-line-all",
+																	display: "flex",
+																	flexDirection: "column",
+																},
+																children: payload.title,
+															},
+														},
+													],
+												},
+											},
+											...(description
+												? [
+														{
+															type: "div",
+															props: {
+																style: {
+																	fontSize: "29px",
+																	color: subtleTextColor,
+																	paddingLeft: "32px",
+																	overflow: "hidden",
+																	textOverflow: "ellipsis",
+																	lineClamp: 2,
+																	WebkitLineClamp: 2,
+																	WebkitBoxOrient: "vertical",
+																	"text-fit": "grow per-line-all",
+																	display: "flex",
+																	flexDirection: "column",
+																},
+																children: description,
+															},
+														},
+													]
+												: []),
+										],
+									},
+								},
+								{
+									type: "div",
+									props: {
+										style: {
+											display: "flex",
+											justifyContent: "space-between",
+											alignItems: "center",
+											width: "100%",
+										},
+										children: [
+											{
+												type: "div",
+												props: {
+													style: {
+														display: "flex",
+														alignItems: "center",
+														gap: "16px",
+													},
+													children: [
+														{
+															type: "img",
+															props: {
+																src: "og-avatar",
+																width: 56,
+																height: 56,
+																style: {
+																	borderRadius: "50%",
+																	width: 56,
+																	height: 56,
+																	objectFit: "cover",
+																	border: "2px solid rgba(255,255,255,0.65)",
+																},
+															},
+														},
+														{
+															type: "div",
+															props: {
+																style: {
+																	fontSize: "26px",
+																	fontWeight: 600,
+																	color: textColor,
+																},
+																children: profileConfig.name,
+															},
+														},
+													],
+												},
+											},
+											{
+												type: "div",
+												props: {
+													style: {
+														fontSize: "24px",
+														fontWeight: 600,
+														color: textColor,
+														backgroundColor: "rgba(15, 22, 42, 0.72)",
+														padding: "8px 18px",
+														borderRadius: "999px",
+													},
+													children: pubDate,
+												},
+											},
+										],
 									},
 								},
 							],
@@ -563,10 +779,15 @@ export async function GET({
 		{
 			width: 1200,
 			height: 630,
-			format: "png",
+			format: "jpeg",
+			quality: 84,
 			images: {
 				cache: "auto",
 				sources: [
+					{
+						src: "og-cover",
+						data: () => loadImageAsArrayBuffer(payload.coverImage),
+					},
 					{
 						src: "og-avatar",
 						data: () => loadImageAsArrayBuffer(profileConfig.avatar ?? ""),
@@ -579,7 +800,7 @@ export async function GET({
 			},
 			fonts: loadOgFonts(),
 			headers: {
-				"Content-Type": "image/png",
+				"Content-Type": "image/jpeg",
 				"Cache-Control": "public, max-age=31536000, immutable",
 			},
 		},

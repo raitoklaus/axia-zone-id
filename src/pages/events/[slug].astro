@@ -77,7 +77,7 @@ const coverBasePath = getFileDirFromPath(entry.filePath || "");
 const absoluteEventUrl =
 	toAbsoluteUrl(getEventUrl(entry.id), siteConfig.site_url) ??
 	siteConfig.site_url;
-const ogEventImagePath = `/og/events/${slug}.png`;
+const ogEventImagePath = `/og/events/${slug}.jpg`;
 const absoluteOgImageUrl =
 	toAbsoluteUrl(ogEventImagePath, siteConfig.site_url) ?? siteConfig.site_url;
 const resolvedJsonLdImage =

@@ -31,7 +31,7 @@ const heading =
 		: `${i18n(I18nKey.home)} · ${page.currentPage}`;
 ---
 
-<MainGridLayout heading={heading}>
+<MainGridLayout heading={heading} ogImagePath="/og/pages/home.jpg">
   {page.currentPage === 1 && <UpcomingEventSchedule />}
   {page.currentPage === 1 && showHomeWikiSpotlight && <WikiSpotlightSection />}
   <PostPage page={page} />
