@@ -451,8 +451,11 @@
 		var reducedMotion =
 			window.matchMedia &&
 			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-		var minDisplayMs = reducedMotion ? 80 : 1200;
-		var maxDisplayMs = 2400;
+		var finishHoldMs = 180;
+		var animFallbackMs = 1750;
+		var maxDisplayMs = 3200;
+		var pageReady = false;
+		var animDone = false;
 		var dismissed = false;
 
 		function finalizeHide() {
@@ -488,16 +491,53 @@
 			window.setTimeout(completeOnce, 600);
 		}
 
-		function scheduleDismissOnReady() {
-			var elapsed = performance.now() - startTime;
-			var remaining = Math.max(0, minDisplayMs - elapsed);
-			window.setTimeout(dismissLoader, remaining);
+		function tryDismiss() {
+			if (pageReady && animDone) {
+				dismissLoader();
+			}
 		}
 
-		if (document.readyState === "complete") {
-			scheduleDismissOnReady();
+		function markPageReady() {
+			if (pageReady) return;
+			pageReady = true;
+			tryDismiss();
+		}
+
+		function markAnimDone() {
+			if (animDone) return;
+			animDone = true;
+			tryDismiss();
+		}
+
+		if (reducedMotion) {
+			animDone = true;
+			var onReducedReady = function () {
+				var remaining = Math.max(0, 80 - (performance.now() - startTime));
+				window.setTimeout(markPageReady, remaining);
+			};
+			if (document.readyState === "complete") {
+				onReducedReady();
+			} else {
+				window.addEventListener("load", onReducedReady, { once: true });
+			}
 		} else {
-			window.addEventListener("load", scheduleDismissOnReady, { once: true });
+			var fillEl = loader.querySelector(".axia-fill-rect");
+			if (fillEl) {
+				fillEl.addEventListener(
+					"animationend",
+					function () {
+						window.setTimeout(markAnimDone, finishHoldMs);
+					},
+					{ once: true },
+				);
+			}
+			window.setTimeout(markAnimDone, animFallbackMs);
+
+			if (document.readyState === "complete") {
+				markPageReady();
+			} else {
+				window.addEventListener("load", markPageReady, { once: true });
+			}
 		}
 
 		window.setTimeout(dismissLoader, maxDisplayMs);
