@@ -1,4 +1,4 @@
-# Tentang Axia Zone ID
+## Tentang Axia Zone ID
 
 **Axia Zone ID** adalah zona kecil bagi penikmat skena Jejepangan serta Anime, Comic, dan Game (**ACG**) di **Bandung** dan **Indonesia**, sekaligus situs base resmi bagi **Axia** (baik komunitas grup Axia maupun karakter Axia sendiri). Situs ini dikelola oleh **Raitoklaus** menggunakan Astro 7 dengan tema [Firefly](https://github.com/CuteLeaf/Firefly).
 

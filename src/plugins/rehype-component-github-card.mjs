@@ -67,12 +67,12 @@ export function GithubCardComponent(properties, children) {
 			: "Repository details unavailable",
 	);
 
-	const nStars = h(`div#${cardUuid}-stars`, { class: "gc-stars" }, "—");
-	const nForks = h(`div#${cardUuid}-forks`, { class: "gc-forks" }, "—");
+	const nStars = h(`div#${cardUuid}-stars`, { class: "gc-stars" }, "-");
+	const nForks = h(`div#${cardUuid}-forks`, { class: "gc-forks" }, "-");
 	const nLicense = h(
 		`div#${cardUuid}-license`,
 		{ class: "gc-license" },
-		hasData ? data.license || "no-license" : "—",
+		hasData ? data.license || "no-license" : "-",
 	);
 
 	return h(

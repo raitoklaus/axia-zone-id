@@ -6,7 +6,7 @@ backend:
 
 site_url: https://axia.zone.id/
 display_url: https://axia.zone.id/
-logo_url: /favicon/firefly-192.png
+logo_url: /favicon/axia-192.png
 media_folder: public/uploads
 public_folder: /uploads
 media_libraries:

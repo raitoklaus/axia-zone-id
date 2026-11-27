@@ -6,7 +6,7 @@
 
 - **Site Identity**: Curated by **Raitoklaus**; part of **Wibu_Baleendah** (`@wibu_baleendah`) and **Hayu UtaOdo** (`@hayu_utaodo`), serving both the Axia community base and character lore.
 - **Language Convention (Hybrid)**: Clean English UI chrome (navbar, buttons, filters, stats labels) paired with Bahasa Indonesia editorial copy, announcements, articles, and wiki content. Avoid em dashes (`—`) in user-facing UI/copy.
-- **Framework**: Astro 7 (`astro.config.mjs`) with Swup page transitions, `@astrojs/mdx`, and `build: { inlineStylesheets: "always" }` (CSS is inlined into `<head>` so GitHub Pages' 10-minute HTML cache and slower/VPN connections never render stale or unstyled HTML).
+- **Framework**: Astro 7 (`astro.config.mjs`) with Swup page transitions, `@astrojs/mdx`, and `build: { inlineStylesheets: "auto" }` (keeps `<head>` compact around 20-26 KB so WhatsApp/social preview crawlers parse all OG tags reliably).
 - **UI & Styling**: Svelte 5 islands, Tailwind CSS 4 (`@tailwindcss/vite`), Stylus (`src/styles/markdown-extend.styl`), Firefly CSS custom properties (`src/styles/variables.styl`), and Project SEKAI x Axia accents (`src/styles/axia-theme.css`).
 - **Language & Quality**: TypeScript (`--isolatedDeclarations`), Biome formatter/linter (tabs for indentation, double quotes for JS/TS strings), and Pagefind static search (`scripts/run-pagefind.ts`).
 - **Package Manager**: `pnpm` (enforced by `preinstall` in `package.json`).
@@ -24,7 +24,7 @@
 - `src/pages/wiki/events/`: Static `noindex` redirect pages (`index.astro` -> `/events/`, `[slug].astro` -> `/events/[slug]/`) preserving legacy links
 - `src/components/wiki/`: `UpcomingEventSchedule.astro`, `EventCalendarBrowser.svelte`, `WikiSpotlightSection.astro`, `WikiInfobox.astro`, and `WikiBacklinks.astro`
 - `src/components/widget/SiteStats.astro`: Sidebar statistics including Posts, Events, Performers, Wiki Articles, and combined last activity date
-- `src/pages/og/[...slug].ts`: Build-time 1200x630 Axia OG PNG generator for Posts, Events (`/og/events/<slug>.png`), Wiki (`/og/wiki/<slug>.png`), and Performers (`/og/performers/<slug>.png`)
+- `src/pages/og/[...slug].ts`: Build-time 1200x630 Axia OG JPEG generator (`quality: 84`) using each item's cover artwork and metadata for Posts (`/og/<slug>.jpg`), Events (`/og/events/<slug>.jpg`), Wiki (`/og/wiki/<slug>.jpg`), Performers (`/og/performers/<slug>.jpg`), Gallery Albums (`/og/gallery/<album>.jpg`), and Hub Pages (`/og/pages/<page>.jpg`)
 - `src/utils/wiki-utils.ts` & `src/utils/url-utils.ts`: Collection queries, date/status/countdown helpers, backlink resolver (`getBacklinksForTarget`), and route builders (`url`, `getEventUrl`, `getPerformerUrl`, `getWikiUrl`)
 - `src/plugins/remark-wiki-link.js`: Obsidian-style `[[Wiki Links]]` resolver across `posts`, `performers`, `wiki`, and `events`
 - `src/config/`: Split site configuration (`siteConfig.ts`, `navBarConfig.ts`, `musicConfig.ts`, `backgroundWallpaper.ts`, etc.) backed by `src/data/siteSettings.json` with types in `src/types/`
@@ -160,7 +160,7 @@ All schemas live in `src/content.config.ts`.
 - Follow Biome formatting (tabs, double quotes). Keep `src/types` aligned with `src/config`.
 - Always route internal links through `url()` / `getPerformerUrl()` / `getEventUrl()` / `getWikiUrl()` with trailing slashes (`trailingSlash: "always"`).
 - `MainGridLayout.astro` renders the page `<h1 class="sr-only">`; start visible headings inside pages at `<h2>`.
-- **Do NOT pass `postSlug` on non-post pages** (`MainGridLayout.astro` treats `isPostPage = !!postSlug`). Use `ogImagePath="/og/<type>/<slug>.png"` instead for Event/Wiki/Performer OG preview cards.
+- **Do NOT pass `postSlug` on non-post pages** (`MainGridLayout.astro` treats `isPostPage = !!postSlug`). Use `ogImagePath="/og/<type>/<slug>.jpg"` instead for Event/Wiki/Performer/Gallery/Hub OG preview cards.
 - **Avoid nested `data-pagefind-body` roots**: When putting `data-pagefind-body` on an outer `<article>` (`events/[slug].astro`, `wiki/[slug].astro`, `performers/[slug].astro`), pass `pagefindBody={false}` to `<Markdown>` and mark navigation breadcrumbs, action toolbars, and `WikiBacklinks` with `data-pagefind-ignore`.
 - **Asset resolution inside reusable Wiki components**: Use `<ImageWrapper>` so both Vite-bundled `src/assets/...` paths and public CMS `/uploads/...` paths work cleanly.
 - Before committing code or content schema changes, run `pnpm check`, `pnpm type-check`, and `pnpm build`.
@@ -179,7 +179,7 @@ All schemas live in `src/content.config.ts`.
 - **GitHub Repository**: `https://github.com/raitoklaus/axia-zone-id` (`origin`), tracking Firefly theme updates on `upstream` (`https://github.com/CuteLeaf/Firefly.git`, push disabled).
 - **Automated Deployment**: `.github/workflows/deploy.yml` builds with Node.js 22 and pnpm on every push to `main` and via a daily `0 17 * * *` UTC cron (00:00 WIB) to keep upcoming/past event rollovers fresh, deploying `dist/` to GitHub Pages.
   - `src/config/siteConfig.ts` sets `site_url: "https://axia.zone.id"`.
-  - `astro.config.mjs` sets `BASE_PATH = "/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`), and keeps `build: { inlineStylesheets: "always" }`.
+  - `astro.config.mjs` sets `BASE_PATH = "/"`, passed to `base`, `remarkWikiLink`, and Pagefind (`baseUrl`), and uses `build: { inlineStylesheets: "auto" }`.
 - **Dual Online / Mobile CMS (Swappable Anytime)**:
   - **Pages CMS**: Open `https://app.pagescms.org` on desktop or mobile and connect `raitoklaus/axia-zone-id`. Configured in `.pages.yml` with zero OAuth server needed.
   - **Sveltia CMS**: Open `https://axia.zone.id/admin/` (configured in `public/admin/index.html`, `public/admin/config.yml`, `public/admin/wp-theme.css`, `public/admin/wp-preview.css`, and `public/admin/wp-editor.js`). Styled like the WordPress Admin dashboard and editor, with custom block inserters (`Wiki Link Card`, `Callout Box`, `Spoiler Text`, `Image Gallery Grid`, `GitHub Repository Card`, `YouTube Embed`, `Mermaid Diagram`), live preview templates (`Live Draft` + `Published Site (1:1)`), and searchable `relation` dropdowns for `events.lineup`; sign in directly with a GitHub Personal Access Token (PAT) or add an external OAuth proxy `base_url` later.

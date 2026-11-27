@@ -149,7 +149,9 @@ const jabodetabekCount = eventsWithMeta.filter(
 										</time>
 										<div class="axia-split-type" data-cat-tone={categoryTone}>
 											<span class="truncate">
-												{event.data.eventType || "ACG Event"}
+												{event.data.eventType
+													? event.data.eventType.split(" / ")[0]
+													: "ACG Event"}
 											</span>
 											<span class="shrink-0 opacity-95">
 												{statusMeta.label}

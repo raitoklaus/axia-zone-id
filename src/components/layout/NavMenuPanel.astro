@@ -419,6 +419,15 @@ const navTitle = siteConfig.navbar.title || siteConfig.title;
         }
     });
 
+    document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        const panel = document.getElementById("nav-menu-panel");
+        if (panel && !panel.classList.contains("float-panel-closed")) {
+            panel.classList.add("float-panel-closed");
+            document.getElementById("nav-menu-switch")?.focus();
+        }
+    });
+
     function markActiveNav() {
         const path = location.pathname;
         document.querySelectorAll(".mobile-menu-item[data-nav-href]").forEach((item) => {
