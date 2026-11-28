@@ -12,6 +12,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { createRequire } from "node:module";
 import path from "node:path";
 import matter from "gray-matter";
+import sharp from "sharp";
 import type { Plugin, ViteDevServer } from "vite";
 
 const localReq = createRequire(import.meta.url);
@@ -933,29 +934,47 @@ export function axiaStudioPlugin(): Plugin {
 							}
 							const base =
 								sanitizeSlug(rawName.slice(0, -ext.length)) || "upload";
+							const rawBuf = Buffer.from(match[1], "base64");
+							if (rawBuf.length > 15 * 1024 * 1024) {
+								sendJson(res, 413, { error: "File exceeds 15 MB limit" });
+								return;
+							}
+							const keepVerbatim = ext === ".svg" || ext === ".gif";
+							let finalExt = ext;
+							let outBuf: Buffer = rawBuf;
+							if (!keepVerbatim) {
+								outBuf = await sharp(rawBuf)
+									.rotate()
+									.resize({
+										width: 1920,
+										height: 1920,
+										fit: "inside",
+										withoutEnlargement: true,
+									})
+									.webp({ quality: 80 })
+									.toBuffer();
+								finalExt = ".webp";
+							}
 							mkdirSync(UPLOADS_DIR, { recursive: true });
-							let finalName = `${base}${ext}`;
+							let finalName = `${base}${finalExt}`;
 							let target = path.resolve(UPLOADS_DIR, finalName);
 							if (existsSync(target)) {
-								finalName = `${base}-${Date.now().toString(36)}${ext}`;
+								finalName = `${base}-${Date.now().toString(36)}${finalExt}`;
 								target = path.resolve(UPLOADS_DIR, finalName);
 							}
 							if (!target.startsWith(UPLOADS_DIR + path.sep)) {
 								sendJson(res, 400, { error: "Invalid path" });
 								return;
 							}
-							const buf = Buffer.from(match[1], "base64");
-							if (buf.length > 15 * 1024 * 1024) {
-								sendJson(res, 413, { error: "File exceeds 15 MB limit" });
-								return;
-							}
-							writeFileSync(target, buf);
+							writeFileSync(target, outBuf);
 							const valuePath = `/uploads/${finalName}`;
 							sendJson(res, 201, {
 								ok: true,
 								name: finalName,
 								valuePath,
 								previewUrl: valuePath,
+								originalBytes: rawBuf.length,
+								optimizedBytes: outBuf.length,
 							});
 							return;
 						}

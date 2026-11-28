@@ -59,3 +59,21 @@ export function getAlbumCover(album: GalleryAlbum, photos: string[]): string {
 	const coverFile = photos.find((p) => /\/cover\./i.test(p));
 	return coverFile || photos[0] || "";
 }
+
+/**
+ * Resolve the build-time resized WebP thumbnail URL for a local gallery photo.
+ * Falls back to the original image path during local dev or for non-raster/external URLs.
+ */
+export function getGalleryThumbUrl(photoSrc: string): string {
+	if (!photoSrc || import.meta.env.DEV) {
+		return photoSrc;
+	}
+	const clean = photoSrc.split("?")[0]?.split("#")[0] || "";
+	const match = clean.match(
+		/^(?:.*)?\/gallery\/(?!_thumbs\/)([^/]+)\/([^/]+)\.(?:jpe?g|png|webp|avif)$/i,
+	);
+	if (!match) {
+		return photoSrc;
+	}
+	return withBase(`/gallery/_thumbs/${match[1]}/${match[2]}.webp`);
+}

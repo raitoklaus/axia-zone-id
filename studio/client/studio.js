@@ -1342,7 +1342,7 @@ function renderMediaTab(forPicker = false) {
 	return `
 		<div class="upload-zone" id="media-upload-zone">
 			<strong>Drop an image here or click to upload</strong>
-			<div class="entry-meta">Saves directly to public/uploads/ (webp, png, jpg, svg, gif)</div>
+			<div class="entry-meta">Auto-converts to WebP (max 1920px, metadata stripped) in public/uploads/</div>
 			<input type="file" id="media-file-input" accept="image/*" class="is-hidden" />
 		</div>
 		<div class="pill-bar">
@@ -1728,7 +1728,11 @@ function bindMediaZone(container, onUploaded) {
 					}),
 				});
 				await refreshMedia();
-				showToast(`Uploaded ${uploaded.valuePath}`);
+				const sizeNote =
+					uploaded.originalBytes && uploaded.optimizedBytes
+						? ` (${(uploaded.originalBytes / 1024).toFixed(0)} KB -> ${(uploaded.optimizedBytes / 1024).toFixed(0)} KB)`
+						: "";
+				showToast(`Uploaded ${uploaded.valuePath}${sizeNote}`);
 				onUploaded();
 			} catch (err) {
 				showToast(`Upload error: ${err.message}`);
