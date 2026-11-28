@@ -67,7 +67,18 @@
 			"assets/images/DesktopWallpaper/axia-d09-twilight-dock.webp",
 			"assets/images/DesktopWallpaper/axia-d10-cloud-balcony.webp",
 			"assets/images/DesktopWallpaper/axia-d11-aquarium-jellyfish.webp",
-			"assets/images/DesktopWallpaper/axia-d12-lantern-festival.webp"
+			"assets/images/DesktopWallpaper/axia-d12-lantern-festival.webp",
+			"assets/images/DesktopWallpaper/axia-d13-prism-reach.webp",
+			"assets/images/DesktopWallpaper/axia-d14-sunset-rail.webp",
+			"assets/images/DesktopWallpaper/axia-d15-azure-beams.webp",
+			"assets/images/DesktopWallpaper/axia-d16-dark-prism-stage.webp",
+			"assets/images/DesktopWallpaper/axia-d17-sunlit-shore.webp",
+			"assets/images/DesktopWallpaper/axia-d18-pop-cyan-clouds.webp",
+			"assets/images/DesktopWallpaper/axia-d19-sky-breeze.webp",
+			"assets/images/DesktopWallpaper/axia-d20-summer-seaside.webp",
+			"assets/images/DesktopWallpaper/axia-d21-cerulean-horizon.webp",
+			"assets/images/DesktopWallpaper/axia-d22-neon-rim-night.webp",
+			"assets/images/DesktopWallpaper/axia-d23-rooftop-cityline.webp"
 		],
 		"mobileImages": [
 			"assets/images/MobileWallpaper/axia-m01-blue-sky.webp",
@@ -76,7 +87,8 @@
 			"assets/images/MobileWallpaper/axia-m04-starry-night.webp",
 			"assets/images/MobileWallpaper/axia-m05-dusk-dock.webp",
 			"assets/images/MobileWallpaper/axia-m06-rainy-window.webp",
-			"assets/images/MobileWallpaper/axia-m07-concert-night.webp"
+			"assets/images/MobileWallpaper/axia-m07-concert-night.webp",
+			"assets/images/MobileWallpaper/axia-m08-rainy-gaze.webp"
 		],
 		"position": "50% 20%",
 		"wavesEnable": true,
@@ -245,16 +257,16 @@
 			{
 				"id": "axia-showcase",
 				"name": "Axia Character & Artwork Showcase",
-				"description": "Koleksi ilustrasi karakter, key visual, dan chibi resmi Axia Zone ID.",
-				"date": "2026-11-27",
+				"description": "Koleksi ilustrasi karakter, key visual, flat-design graphic art, dan chibi resmi Axia Zone ID.",
+				"date": "2026-11-28",
 				"location": "Kota Bandung",
 				"tags": ["Axia", "Showcase", "Artwork"]
 			},
 			{
 				"id": "axia-wallpapers",
 				"name": "Axia Wallpaper Collection",
-				"description": "Koleksi wallpaper desktop (16:9) dan mobile (9:16) bertema Axia untuk latar situs maupun koleksi pribadi.",
-				"date": "2026-11-27",
+				"description": "Koleksi wallpaper desktop (16:9) dan mobile (9:16) bertema Axia, termasuk seri flat-design grafis baru, untuk latar situs maupun koleksi pribadi.",
+				"date": "2026-11-28",
 				"location": "Kota Bandung",
 				"tags": ["Axia", "Wallpaper", "Desktop", "Mobile"]
 			}

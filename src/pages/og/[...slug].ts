@@ -35,10 +35,10 @@ const DEFAULT_COVERS = {
 	home: "assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
 	post: "assets/images/DesktopWallpaper/axia-d01-prism-sky.webp",
 	event: "assets/images/DesktopWallpaper/axia-d12-lantern-festival.webp",
-	wiki: "assets/images/DesktopWallpaper/axia-d10-cloud-balcony.webp",
-	performer: "assets/images/DesktopWallpaper/axia-d02-stage-shards.webp",
-	gallery: "assets/images/DesktopWallpaper/axia-d05-ocean-boardwalk.webp",
-	about: "assets/images/DesktopWallpaper/axia-d08-pastel-sofa.webp",
+	wiki: "assets/images/DesktopWallpaper/axia-d15-azure-beams.webp",
+	performer: "assets/images/DesktopWallpaper/axia-d16-dark-prism-stage.webp",
+	gallery: "assets/images/DesktopWallpaper/axia-d13-prism-reach.webp",
+	about: "assets/images/DesktopWallpaper/axia-d19-sky-breeze.webp",
 	guestbook: "assets/images/DesktopWallpaper/axia-d06-sakura-sky.webp",
 } as const;
 
