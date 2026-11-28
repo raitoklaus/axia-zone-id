@@ -22,6 +22,7 @@ export const getStaticPaths = (async ({ paginate }) => {
 const { page } = Astro.props;
 
 const len = page.data.length;
+const showHomeSchedule = siteSettings.site.showHomeSchedule !== false;
 const showHomeWikiSpotlight = siteSettings.site.showHomeWikiSpotlight === true;
 
 // 列表页隐藏的 h1：首屏用站点标题，后续页用「首页 · 页码」，避免空 h1
@@ -32,7 +33,7 @@ const heading =
 ---
 
 <MainGridLayout heading={heading} ogImagePath="/og/pages/home.jpg">
-  {page.currentPage === 1 && <UpcomingEventSchedule />}
+  {page.currentPage === 1 && showHomeSchedule && <UpcomingEventSchedule />}
   {page.currentPage === 1 && showHomeWikiSpotlight && <WikiSpotlightSection />}
   <PostPage page={page} />
   {

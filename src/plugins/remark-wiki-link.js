@@ -5,11 +5,24 @@
  */
 
 import { readdirSync, readFileSync, statSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { slug } from "github-slugger";
 import matter from "gray-matter";
 import { getApiUrlList, processCoverImageSync } from "../utils/image-utils";
+
+const req = createRequire(import.meta.url);
+const matterReq = createRequire(req.resolve("gray-matter"));
+const yamlEngine = matterReq("js-yaml");
+const MATTER_OPTIONS = {
+	engines: {
+		yaml: {
+			parse: (str) => yamlEngine.load(str) ?? {},
+			stringify: (obj) => yamlEngine.dump(obj, { lineWidth: -1 }),
+		},
+	},
+};
 
 const COLLECTIONS = [
 	{
@@ -156,7 +169,7 @@ function readMetaFile(filePath) {
 
 	let data;
 	try {
-		data = matter(readFileSync(filePath, "utf8")).data ?? {};
+		data = matter(readFileSync(filePath, "utf8"), MATTER_OPTIONS).data ?? {};
 	} catch {
 		return null;
 	}

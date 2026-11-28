@@ -27,6 +27,7 @@
 		"showLastModified": true,
 		"shareButtons": true,
 		"relatedPosts": true,
+		"showHomeSchedule": true,
 		"showHomeWikiSpotlight": false,
 		"showLoadingScreen": true
 	},
@@ -285,5 +286,75 @@
 		"umamiScriptUrl": "https://cloud.umami.is/script.js",
 		"trackOutboundLinks": true,
 		"collectWebVitals": true
+	},
+	"sidebar": {
+		"enable": true,
+		"position": "both",
+		"tabletSidebar": "left",
+		"hideSidebarOnPostPage": false,
+		"left": [
+			{
+				"type": "profile",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": true
+			},
+			{
+				"type": "announcement",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": true
+			},
+			{
+				"type": "music",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": true
+			},
+			{
+				"type": "categories",
+				"enable": true,
+				"position": "sticky",
+				"showOnPostPage": true
+			},
+			{
+				"type": "tags",
+				"enable": true,
+				"position": "sticky",
+				"showOnPostPage": true
+			}
+		],
+		"right": [
+			{
+				"type": "dynamic",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": true
+			},
+			{
+				"type": "stats",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": false
+			},
+			{
+				"type": "siteInfo",
+				"enable": true,
+				"position": "top",
+				"showOnPostPage": false
+			},
+			{
+				"type": "calendar",
+				"enable": true,
+				"position": "sticky",
+				"showOnPostPage": false
+			},
+			{
+				"type": "sidebarToc",
+				"enable": true,
+				"position": "sticky",
+				"showOnPostPage": true
+			}
+		]
 	}
 }

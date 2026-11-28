@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Axia Live Studio - Local Site Builder &amp; Editor</title>
+		<link rel="icon" type="image/png" href="/favicon/axia-32.png" />
+		<link rel="stylesheet" href="/__studio/studio.css" />
+	</head>
+	<body>
+		<div id="studio-app" class="studio-shell">
+			<header class="studio-topbar">
+				<div class="topbar-group">
+					<div class="brand-badge">
+						<img src="/favicon/axia-32.png" alt="Axia" width="22" height="22" />
+						<span>Axia Studio</span>
+						<span class="dev-pill">LOCAL DEV</span>
+					</div>
+					<div class="mode-tabs" role="tablist" aria-label="Studio workspace modes">
+						<button type="button" class="mode-tab is-active" data-tab="design">Design</button>
+						<button type="button" class="mode-tab" data-tab="layout">Layout</button>
+						<button type="button" class="mode-tab" data-tab="content">Content</button>
+						<button type="button" class="mode-tab" data-tab="media">Media</button>
+						<button type="button" class="mode-tab" data-tab="publish">Publish</button>
+					</div>
+				</div>
+
+				<div class="topbar-group route-controls">
+					<select id="quick-route-select" aria-label="Quick navigate preview route">
+						<option value="/">Home (/)</option>
+						<option value="/events/">Events (/events/)</option>
+						<option value="/wiki/">Wiki Hub (/wiki/)</option>
+						<option value="/wiki/performers/">Performers (/wiki/performers/)</option>
+						<option value="/gallery/">Gallery (/gallery/)</option>
+						<option value="/dynamic/">Moments (/dynamic/)</option>
+						<option value="/projects/">Projects (/projects/)</option>
+						<option value="/friends/">Friends (/friends/)</option>
+						<option value="/about/">About (/about/)</option>
+						<option value="/posts/axia-zone-feature-showcase/">Showcase Post</option>
+					</select>
+					<input
+						id="route-url-input"
+						type="text"
+						value="/"
+						aria-label="Preview path"
+						placeholder="/events/"
+					/>
+					<button type="button" id="edit-current-btn" class="btn-ghost is-hidden">
+						Edit Entry
+					</button>
+				</div>
+
+				<div class="topbar-group">
+					<button type="button" id="inspect-toggle-btn" class="btn-ghost" title="Click-to-edit sections on the live page">
+						Inspect
+					</button>
+					<label class="autosave-toggle" title="Automatically save changes to disk after 600ms for live Astro reload">
+						<input type="checkbox" id="autosave-checkbox" />
+						<span>Auto-Save</span>
+					</label>
+					<div class="viewport-group">
+						<button type="button" class="vp-btn is-active" data-vp="desktop">Desktop</button>
+						<button type="button" class="vp-btn" data-vp="tablet">Tablet</button>
+						<button type="button" class="vp-btn" data-vp="mobile">Mobile</button>
+					</div>
+					<button type="button" id="reload-frame-btn" class="btn-ghost" title="Reload preview frame">
+						Reload
+					</button>
+					<button type="button" id="discard-btn" class="btn-ghost" disabled>
+						Discard
+					</button>
+					<button type="button" id="save-btn" class="btn-primary" disabled>
+						<span class="dirty-dot" aria-hidden="true"></span>
+						<span>Save</span>
+					</button>
+				</div>
+			</header>
+
+			<div class="studio-body">
+				<aside id="workbench" class="workbench" aria-label="Editor controls"></aside>
+
+				<div id="resizer" class="resizer" aria-hidden="true"></div>
+
+				<main class="preview-pane">
+					<div id="preview-wrapper" class="preview-wrapper vp-desktop">
+						<iframe
+							id="preview-frame"
+							src="/"
+							title="Live Axia Zone ID Preview"
+						></iframe>
+					</div>
+				</main>
+			</div>
+
+			<div id="toast" class="toast" role="status" aria-live="polite"></div>
+		</div>
+
+		<div id="modal-backdrop" class="modal-backdrop is-hidden" role="dialog" aria-modal="true">
+			<div id="modal-panel" class="modal-panel"></div>
+		</div>
+
+		<script type="module" src="/__studio/studio.js"></script>
+	</body>
+</html>

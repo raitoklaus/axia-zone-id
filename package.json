@@ -8,6 +8,7 @@
   "packageManager": "pnpm@12.23.0",
   "scripts": {
     "dev": "astro dev",
+    "studio": "astro dev --open /__studio/",
     "start": "astro dev",
     "check": "astro check",
     "check:links": "tsx scripts/check-internal-links.ts",

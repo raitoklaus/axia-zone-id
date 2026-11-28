@@ -4,7 +4,11 @@
 		return;
 	}
 
-	const SITE_BASE = "https://axia.zone.id";
+	const SITE_BASE =
+		window.location.hostname === "localhost" ||
+		window.location.hostname === "127.0.0.1"
+			? window.location.origin
+			: "https://axia.zone.id";
 
 	const escapeHtml = (value) =>
 		String(value ?? "")

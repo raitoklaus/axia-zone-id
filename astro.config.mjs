@@ -56,6 +56,7 @@ import { remarkPlantuml } from "./src/plugins/remark-plantuml.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { remarkWikiLink } from "./src/plugins/remark-wiki-link.js";
 import { collectUsedFontCssVars } from "./src/utils/fontHelper";
+import { axiaStudioPlugin } from "./studio/vite-studio-plugin";
 
 if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
@@ -374,7 +375,7 @@ export default defineConfig({
 		}),
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [tailwindcss(), axiaStudioPlugin()],
 		server: {
 			watch: {
 				ignored: ["**/package/**", "**/Firefly-docs/**"],

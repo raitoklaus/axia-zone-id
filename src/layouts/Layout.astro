@@ -618,6 +618,11 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
 
     <!-- GitHub 卡片客户端实时补全（forks/stars） -->
     <GithubCardManager />
+    {
+      import.meta.env.DEV && (
+        <script is:inline data-swup-ignore-script src="/__studio/bridge.js" />
+      )
+    }
   </body>
 </html>
 
