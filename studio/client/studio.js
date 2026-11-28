@@ -72,6 +72,7 @@ const state = {
 	activeTab: "design",
 	viewport: "desktop",
 	inspect: false,
+	inlineEdit: false,
 	autoSave: false,
 	previewRoute: "/",
 	settings: null,
@@ -101,6 +102,7 @@ const els = {
 	quickRoute: document.getElementById("quick-route-select"),
 	editCurrentBtn: document.getElementById("edit-current-btn"),
 	inspectBtn: document.getElementById("inspect-toggle-btn"),
+	inlineEditBtn: document.getElementById("inline-edit-btn"),
 	autosaveCheckbox: document.getElementById("autosave-checkbox"),
 	saveBtn: document.getElementById("save-btn"),
 	discardBtn: document.getElementById("discard-btn"),
@@ -313,6 +315,7 @@ async function saveAll(silent = false) {
 }
 
 function discardAll() {
+	const hadInlineOrEntryEdit = state.inlineEdit || isEntryDirty();
 	if (isSettingsDirty()) {
 		state.settings = JSON.parse(state.savedSettingsStr);
 		sendPreviewPatch();
@@ -327,6 +330,9 @@ function discardAll() {
 	}
 	updateDirtyButtons();
 	renderWorkbench();
+	if (hadInlineOrEntryEdit) {
+		els.frame.contentWindow?.location.reload();
+	}
 	showToast("Reverted unsaved changes");
 }
 
@@ -351,6 +357,20 @@ async function refreshGitStatus() {
 }
 
 async function openContentEntry(collection, slug, navigateFrame = true) {
+	if (
+		state.activeEntry &&
+		state.activeEntry.collection === collection &&
+		state.activeEntry.slug === slug &&
+		isEntryDirty()
+	) {
+		state.activeTab = "content";
+		setActiveTabButton("content");
+		renderWorkbench();
+		if (navigateFrame && state.activeEntry.route) {
+			navigatePreview(state.activeEntry.route);
+		}
+		return;
+	}
 	const entry = await apiFetch(
 		`/content/entry?collection=${encodeURIComponent(collection)}&slug=${encodeURIComponent(slug)}`,
 	);
@@ -2268,8 +2288,29 @@ function bindTopBarAndGlobalEvents() {
 
 	els.inspectBtn.addEventListener("click", () => {
 		state.inspect = !state.inspect;
+		if (state.inspect && state.inlineEdit) {
+			state.inlineEdit = false;
+			els.inlineEditBtn.classList.remove("is-active");
+			postToFrame({ type: "axia-studio:inline-edit", enabled: false });
+		}
 		els.inspectBtn.classList.toggle("is-active", state.inspect);
 		postToFrame({ type: "axia-studio:inspect", enabled: state.inspect });
+	});
+
+	els.inlineEditBtn.addEventListener("click", () => {
+		state.inlineEdit = !state.inlineEdit;
+		if (state.inlineEdit && state.inspect) {
+			state.inspect = false;
+			els.inspectBtn.classList.remove("is-active");
+			postToFrame({ type: "axia-studio:inspect", enabled: false });
+		}
+		els.inlineEditBtn.classList.toggle("is-active", state.inlineEdit);
+		postToFrame({ type: "axia-studio:inline-edit", enabled: state.inlineEdit });
+		showToast(
+			state.inlineEdit
+				? "Inline Text mode enabled - click highlighted text in preview"
+				: "Inline Text mode turned off",
+		);
 	});
 
 	els.autosaveCheckbox.addEventListener("change", () => {
@@ -2331,7 +2372,66 @@ function bindTopBarAndGlobalEvents() {
 	});
 
 	// Messages from bridge.js inside iframe
-	window.addEventListener("message", (event) => {
+	const replaceInlineBodyText = (body, oldText, newText) => {
+		if (!oldText) return null;
+		if (body.includes(oldText)) {
+			const idx = body.indexOf(oldText);
+			return `${body.slice(0, idx)}${newText}${body.slice(idx + oldText.length)}`;
+		}
+		const lines = body.split(/\r?\n/);
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i];
+			const prefixMatch = line.match(
+				/^(\s*(?:#{1,6}\s+|[-*+]\s+|\d+\.\s+|>\s+))(.+)$/,
+			);
+			if (prefixMatch && prefixMatch[2].trim() === oldText.trim()) {
+				lines[i] = `${prefixMatch[1]}${newText}`;
+				return lines.join("\n");
+			}
+		}
+		return null;
+	};
+
+	let inlineLoadPromise = null;
+	let inlineLoadKey = "";
+
+	const ensureEntryLoadedForInline = async (pathname) => {
+		const match = findEntryByRoute(pathname || state.previewRoute);
+		if (!match) return null;
+		const key = `${match.collection}:${match.slug}`;
+		if (
+			state.activeEntry &&
+			state.activeEntry.collection === match.collection &&
+			state.activeEntry.slug === match.slug
+		) {
+			return state.activeEntry;
+		}
+		if (inlineLoadPromise && inlineLoadKey === key) {
+			return inlineLoadPromise;
+		}
+		inlineLoadKey = key;
+		inlineLoadPromise = apiFetch(
+			`/content/entry?collection=${encodeURIComponent(match.collection)}&slug=${encodeURIComponent(match.slug)}`,
+		)
+			.then((entry) => {
+				state.activeCollection = match.collection;
+				state.activeEntry = entry;
+				state.rawContentMode = false;
+				state.savedEntryStr = JSON.stringify({
+					data: entry.data,
+					body: entry.body,
+					raw: null,
+				});
+				return state.activeEntry;
+			})
+			.finally(() => {
+				inlineLoadPromise = null;
+				inlineLoadKey = "";
+			});
+		return inlineLoadPromise;
+	};
+
+	window.addEventListener("message", async (event) => {
 		if (event.origin !== window.location.origin) return;
 		const msg = event.data;
 		if (!msg || typeof msg !== "object") return;
@@ -2342,8 +2442,81 @@ function bindTopBarAndGlobalEvents() {
 			if (state.inspect) {
 				postToFrame({ type: "axia-studio:inspect", enabled: true });
 			}
+			if (state.inlineEdit) {
+				postToFrame({ type: "axia-studio:inline-edit", enabled: true });
+			}
 			if (isSettingsDirty()) {
 				sendPreviewPatch();
+			}
+		} else if (msg.type === "axia-studio:inline-change") {
+			if (msg.kind === "setting" && msg.key && state.settings) {
+				if (msg.key === "banner.subtitles.0") {
+					if (!Array.isArray(state.settings.banner.subtitles)) {
+						state.settings.banner.subtitles = [];
+					}
+					state.settings.banner.subtitles[0] = String(msg.newText || "");
+					const subTa = els.workbench.querySelector("[data-banner-subtitles]");
+					if (subTa) {
+						subTa.value = state.settings.banner.subtitles.join("\n");
+					}
+				} else {
+					setNestedPath(state.settings, msg.key, String(msg.newText || ""));
+					const matchingInput = els.workbench.querySelector(
+						`[data-setting="${msg.key}"]`,
+					);
+					if (matchingInput) {
+						matchingInput.value = String(msg.newText || "");
+					}
+				}
+				scheduleAutoSave();
+			} else if (
+				msg.kind === "entry-field" ||
+				msg.kind === "entry-body-replace"
+			) {
+				const entry = await ensureEntryLoadedForInline(msg.pathname);
+				if (!entry) return;
+				if (msg.kind === "entry-field") {
+					if (msg.field === "titleOrName") {
+						const k = entry.collection === "performers" ? "name" : "title";
+						entry.data[k] = String(msg.newText || "");
+						const inp = els.workbench.querySelector(`[data-fm="${k}"]`);
+						if (inp) inp.value = entry.data[k];
+					} else if (msg.field === "summaryOrBio") {
+						const k =
+							entry.collection === "performers"
+								? "bio"
+								: entry.collection === "wiki"
+									? "summary"
+									: "description";
+						entry.data[k] = String(msg.newText || "");
+						const inp = els.workbench.querySelector(`[data-fm="${k}"]`);
+						if (inp) inp.value = entry.data[k];
+					} else if (msg.field === "role") {
+						entry.data.role = String(msg.newText || "");
+						const inp = els.workbench.querySelector('[data-fm="role"]');
+						if (inp) inp.value = entry.data.role;
+					}
+					scheduleAutoSave();
+				} else if (msg.kind === "entry-body-replace") {
+					const updatedBody = replaceInlineBodyText(
+						entry.body || "",
+						String(msg.oldText || ""),
+						String(msg.newText || ""),
+					);
+					if (updatedBody !== null) {
+						entry.body = updatedBody;
+						const bodyTa = els.workbench.querySelector("#entry-body-textarea");
+						if (bodyTa) bodyTa.value = updatedBody;
+						scheduleAutoSave();
+					} else {
+						state.activeTab = "content";
+						setActiveTabButton("content");
+						renderWorkbench();
+						showToast(
+							"Formatted Markdown block - finish editing this block in Content Editor",
+						);
+					}
+				}
 			}
 		} else if (msg.type === "axia-studio:select") {
 			if (msg.target === "design" || msg.target === "layout") {
